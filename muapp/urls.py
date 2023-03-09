@@ -16,14 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from . import views
+from muapp import views
 
 urlpatterns = [
-    path('', views.index),
-    path('index',views.index),
-    # path('404', views.404),
-    path('about',views.about),
-    path('blog',views.blog),
-    path('feature',views.feature),
-    path('product',views.product),
+    # path('404', views.404, name='404'),
+    path('', views.index, name='index'),
+    path('about/',views.about, name='about'),
+    path('blog/',views.blog, name='blog'),
+    path('feature/',views.feature, name='feature'),
+    path('product/',views.product, name='product'),
 ]
