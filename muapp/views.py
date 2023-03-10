@@ -138,7 +138,7 @@ def get_loc_data():# 현재 위치를 바탕으로 db에서 주소 이름 찾는
 
     return address
 
-def weatherToHtml():
+#def weatherToHtml():
     ## 날씨 아이콘 띄울 수 있는 초단기예보 받아오기 
         # const weatherState = (ptyCode, skyCode) => {
         #     switch (ptyCode) {
