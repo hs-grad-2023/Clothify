@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+<<<<<<< Updated upstream
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link active">Home</a>
     <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
@@ -41,13 +42,13 @@
             <div class="card-body p-4">
     
                 <div class="d-flex">
-                <h6 class="flex-grow-1">경기도 화성시</h6>
+                <h6 class="flex-grow-1" id="LocationNow">경기도 화성시</h6> 
                 <h6 id="TodayDate">15:07</h6>
                 </div>
     
                 <div class="d-flex flex-column text-center mt-5 mb-4">
                 <h6 id="Temperature" class="display-4 mb-0 font-weight-bold" style="color: #1C2331;"></h6>
-                <span id="Weather" class="small" style="color: #868B94">Stormy</span>
+                <span id="WeatherStatus" class="small" style="color: #868B94">Stormy</span>
                 </div>
             </div>
             </div>
@@ -56,142 +57,13 @@
         </div>
     
     </div>
-    <!-- 날씨 및 위치 표시 부분 End -->
+    <!-- 날씨 및 위치 표시 템플릿 End -->
 
     
-
-    <!-- 날씨 API Start-->
-    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
-    <script>
-        const serviceKey='ooH%2FvlpPYqrSdkp8Upqz6g%2FJ7KWVBVtEJ%2FQ6MzBpkZzgkP%2FivR3R506uj4hq7YOI65VcUm5MxTf6GNgOP0ffiA%3D%3D';
-        const dataType = 'JSON';
-        const numOfRows = '250'; //500은 되어야 TMN, TMX가 뜸; 
-        const today = new Date();
-        const baseDate = String(today.getFullYear())+((today.getMonth()+1)<10 ? '0'+String(today.getMonth()+1):String(today.getMonth()+1))+(today.getDate()<10 ? '0'+String(today.getDate()):String(today.getDate()));
-        let baseTime='0200';
-        //let nx, ny;
-        const nx = '57';
-        const ny = '119';
-        
-        // 최저, 최고온도 가져올때는 베이스타임이 중요치 않음, 오히려 오류나서 지움
-        // 날씨 API의 baseTime이 0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300 딱 8가지임
-        // if(today.getHours()<5){
-        //     baseTime='0200'}
-        // else if(today.getHours()<8){
-        //     baseTime='0500'}
-        // else if(today.getHours()<11){
-        //     baseTime='0800'}
-        // else if(today.getHours()<14){
-        //     baseTime='1100'}
-        // else if(today.getHours()<17){
-        //     baseTime='1400'}
-        // else if(today.getHours()<20){
-        //     baseTime='1700'}
-        // else if(today.getHours()<23){
-        //     baseTime='2000'}
-        // else{
-        //     baseTime='2300'
-        // }
-
-        document.getElementById('TodayDate').innerHTML = today.getFullYear() +'-'+ today.getMonth()+1 + '-' +  today.getDate();
-
-        //위치데이터는 추후 수정 예정 nx=57, ny=119는 화성시 봉담읍
-        // <JQuery 방식>
-        $.ajaxSetup({async: false});
-        $.getJSON('http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey='+serviceKey+'&numOfRows='+numOfRows+'&pageNo=1&dataType='+dataType+'&base_date='+baseDate+'&base_time='+baseTime+'&nx='+nx+'&ny='+ny, function(data){
-            $.each(data.response.body.items.item,function(i,tmps){
-                if(tmps.category == 'TMN')//일최저기온
-                    document.getElementById('Temperature').innerHTML += tmps.fcstValue + '℃ / ';
-                if(tmps.category == 'TMX')//일최고기온
-                    document.getElementById('Temperature').innerHTML += tmps.fcstValue + '℃';
-                if(tmps.category == 'POP' && tmps.baseTime == tmps.fcstTime)//강수확률
-                    document.getElementById('Weather').innerHTML = '비가 올 확률은 ' +tmps.fcstValue + '% 입니다 :)';
-                else if(tmps.category == 'POP' && tmps.fcstTime=='0300')
-                    document.getElementById('Weather').innerHTML = '비가 올 확률은 ' +tmps.fcstValue + '% 입니다 :)';
-            })
-        });
-    </script>
-    <!-- 날씨 API End -->
-
-    <!-- 위치 API Start-->
-    <script>
-        // navigator.geolocation.getCurrentPosition((position) => {
-
-        //     doSomething(position.coords.latitude, position.coords.longitude);
-        // });
-
-        // function readTextFile(file) {
-        //     var rawFile = new XMLHttpRequest();
-        //     rawFile.open("GET", file, false);
-        //     rawFile.onreadystatechange = function () {
-        //         if(rawFile.readyState === 4)
-        //         {
-        //             if(rawFile.status === 200 || rawFile.status == 0)
-        //             {
-        //                 var allText = rawFile.responseText;
-        //                 alert(allText);
-        //             }
-        //         }
-        //     };
-        //     rawFile.send(null);
-        // }
-
-        // readTextFile("file:///D:/grad-job/location.txt");
-
-
-        if (navigator.geolocation) {
-            // GPS를 지원하면
-            navigator.geolocation.getCurrentPosition(
-            (position) => {
-                // position 객체 내부에 timestamp(현재 시간)와 coords 객체
-                const time = new Date(position.timestamp);
-                console.log(position);
-                console.log(`현재시간 : ${time}`);
-                console.log(`latitude 위도 : ${position.coords.latitude}`);
-                console.log(`longitude 경도 : ${position.coords.longitude}`);
-                console.log(`altitude 고도 : ${position.coords.altitude}`);
-            },
-            (error) => {
-                console.error(error);
-            },
-            {
-                enableHighAccuracy: false,
-                maximumAge: 0,
-                timeout: Infinity,
-            }
-            );
-        } else {
-            alert("GPS를 지원하지 않습니다");
-        }
-    </script>
-    <!-- 위치 API End -->
-
-
-
-
-    <!-- About Start -->
-    <!-- 
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="about-img position-relative overflow-hidden p-5 pe-0">
-                        <img class="img-fluid w-100" src="img/about.jpg">
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <h1 class="display-5 mb-4">Best Organic Fruits And Vegetables</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Tempor erat elitr rebum at clita</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Clita duo justo magna dolore erat amet</p>
-                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Read More</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-    <!-- About End -->
+    <!-- 날씨 정보 web에 띄우기 Start-->
+    
+    
+    <!-- 날씨 정보 web에 띄우기 End -->
 
 
     <!-- Feature Start -->
