@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="/" class="nav-item nav-link">Home</a>
-    <a href="/about/" class="nav-item nav-link active">About Us</a>
-    <a href="/product/" class="nav-item nav-link">Products</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link active">About Us</a>
+    <a href="{% url 'product' %}" class="nav-item nav-link">Products</a>
 {% endblock %}
 {% block content %}
 

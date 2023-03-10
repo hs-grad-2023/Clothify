@@ -1,9 +1,20 @@
 /********** Template CSS **********/
 :root {
-    --primary: #3CB815;
-    --secondary: #F65005;
+    --primary: #1aabf4;
+    --secondary: #05b70e;
     --light: #F7F8FC;
     --dark: #111111;
+}
+
+@font-face {
+    font-family: 'TheJamsil5Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+.jamsil{
+    font-family: 'TheJamsil5Bold';
+    font-weight: 700;
 }
 
 .back-to-top {
@@ -25,7 +36,7 @@
 }
 
 .bg-icon {
-    background: url(../img/bg-icon.png) center center repeat;
+    background: url(../img/bg-icon1.png) center center repeat;
     background-size: contain;
 }
 
@@ -125,6 +136,7 @@
     .navbar .navbar-nav .nav-link {
         padding: 10px 0;
     }
+    
 }
 
 @media (min-width: 992px) {
@@ -144,6 +156,7 @@
         transition: .5s;
         opacity: 1;
     }
+    
 }
 
 
@@ -156,8 +169,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: start;
+    /* text-align: start; */
     z-index: 1;
+}
+@media (min-width: 1081px) {
+    .carousel-caption {
+        
+        bottom: 450px;
+        
+    }
+
 }
 
 .carousel-control-prev,

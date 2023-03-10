@@ -3,13 +3,13 @@
 <html lang="ko">    
 <head>
     <meta charset="utf-8">
-    <title>Foody - Organic Food Website Template</title>
+    <title>Clothify</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+    <link href="{% static 'img/favicon.ico' %}" rel="shortcut icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +44,8 @@
         <!-- cf. follow등 info nav바 삭제함 -->
 
         <nav class="navbar navbar-expand-lg navbar-light py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
-            <a href="index.html" class="navbar-brand ms-4 ms-lg-0">
-                <h1 class="fw-bold text-primary m-0">F<span class="text-secondary">oo</span>dy</h1>
+            <a href="{% url 'index' %}" class="navbar-brand ms-4 ms-lg-0">
+                <h1 class="fw-bold m-0 jamsil" style="color: #0b83f7; text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">C<span class="fs-1" style="color: #6fa8dc;">lo<span class="fs-3">th</span></span><span class="fs-4" style="color: #8fce00;">ify</span></h1>
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -60,7 +60,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Closet</a>
                         {% endblock closet %}
                         <div class="dropdown-menu m-0">
-                            <a href="/blog/" class="dropdown-item">My clothes</a>
+                            <a href="{% url 'blog' %}" class="dropdown-item">My clothes</a>
                             <a href="/" class="dropdown-item">Try on</a>
                             <!-- cf. 사용 안할 것 같은 것들 임시로 지워둠 -->
                             <!-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
@@ -77,7 +77,7 @@
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="">
                         <small class="fa fa-user text-body"></small>
                     </a>
-                    <a href="/blog/" class="btn-sm-square bg-white rounded-circle ms-3">
+                    <a href="{% url 'blog' %}" class="btn-sm-square bg-white rounded-circle ms-3">
                         <small class="fa fa-anchor text-body"></small>
                     </a>
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="">
@@ -96,8 +96,8 @@
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h1 class="fw-bold text-primary mb-4">F<span class="text-secondary">oo</span>dy</h1>
-                    <p>Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita</p>
+                    <h1 class="fw-bold mb-1" style="color: #0b83f7; font-size: 40px">C<span class="fs-1" style="color: #6fa8dc;">lo<span class="fs-3">th</span></span><span class="fs-4" style="color: #8fce00;">ify</span></h1>
+                    <p class="jamsil">옷을 손쉽게 관리한다는 뜻으로, "Cloth"와 "Simplify"의 합성어입니다.</p>
                     <div class="d-flex pt-2">
                         <a class="btn btn-square btn-outline-light rounded-circle me-1" href=""><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-square btn-outline-light rounded-circle me-1" href=""><i class="fab fa-facebook-f"></i></a>
@@ -133,12 +133,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a href="#">Your Site Name</a>, All Right Reserved.
+                        &copy; <a href="#">Clothify</a>, All Right Reserved.
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                        <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                        {% comment %} Designed By <a href="https://htmlcodex.com">HTML Codex</a>
+                        <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a> {% endcomment %}
                     </div>
                 </div>
             </div>

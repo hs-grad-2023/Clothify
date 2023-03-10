@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="/" class="nav-item nav-link">Home</a>
-    <a href="/about/" class="nav-item nav-link">About Us</a>
-    <a href="/product/" class="nav-item nav-link">Products</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+    <a href="{% url 'product' %}" class="nav-item nav-link">Products</a>
 {% endblock %}
 {% block closet %}
     <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Closet</a>
@@ -18,7 +18,7 @@
                     <li class="breadcrumb-item"><a class="text-body" href="#">ㅋㅋ</a></li>
                     <li class="breadcrumb-item"><a class="text-body" href="#">Pages</a></li>
                     <li class="breadcrumb-item text-dark active" aria-current="page">Blog Grid</li>
-                </ol>
+                </ol> 
             </nav>
         </div>
     </div>

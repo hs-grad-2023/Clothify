@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="/" class="nav-item nav-link active">Home</a>
-    <a href="/about/" class="nav-item nav-link">About Us</a>
-    <a href="/product/" class="nav-item nav-link">Products</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link active">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+    <a href="{% url 'product' %}" class="nav-item nav-link">Products</a>
 {% endblock %}
 {% block content %}
     <!-- 배너 -->
@@ -12,14 +12,14 @@
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="{% static 'img/carousel-1.jpg' %}" alt="Image">
+                    <img class="w-100" src="{% static 'img/carousel-5-1.jpg' %}" alt="Image">
                     <div class="carousel-caption">
                         <div class="container">
                             <div class="row justify-content-start">
-                                <div class="col-lg-7">
-                                    <h1 class="display-2 mb-5 animated slideInDown">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
-                                    <a href="" class="btn btn-primary rounded-pill py-sm-3 px-sm-5">피팅하기</a>
-                                    <a href="" class="btn btn-secondary rounded-pill py-sm-3 px-sm-5 ms-3">코디북 모으기</a>
+                                <div class="col-8-auto">
+                                    <h1 class="display-1 mb-5 animated slideInDown jamsil" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
+                                    <a href="" class="btn btn-primary rounded-pill py-sm-3 px-sm-5 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
+                                    <a href="" class="btn btn-secondary rounded-pill py-sm-3 px-sm-5 ms-3 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
                                 </div>
                             </div>
                         </div>
