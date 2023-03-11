@@ -125,6 +125,7 @@ def get_weather_data(): # weatehr 데이터 가공해서 list로 내보내는 �
     curTime = convertfcstTime()
     sky = 0
     alertRain = 0
+    humidity = '-'
 
     for i in data:
         if i['category']=='TMN': #최저기온

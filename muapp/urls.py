@@ -21,6 +21,7 @@ from muapp import views
 urlpatterns = [
     # path('404', views.404, name='404'),
     path('', views.index, name='index'),
+    path('index', views.index, name='index'),
     path('about/',views.about, name='about'),
     path('blog/',views.blog, name='blog'),
     path('feature/',views.feature, name='feature'),
