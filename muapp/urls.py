@@ -25,4 +25,5 @@ urlpatterns = [
     path('blog/',views.blog, name='blog'),
     path('feature/',views.feature, name='feature'),
     path('product/',views.product, name='product'),
+    path('login/',views.login, name='login'),
 ]

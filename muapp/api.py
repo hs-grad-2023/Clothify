@@ -91,7 +91,7 @@ def get_weather_api_data(): #날씨 데이터 가져올 수 있는 API
 
     return data['response']['body']['items']['item'] #3/10 갑자기 에러남 먼데
 
-def ConvertfcstTime():
+def convertfcstTime():
     curTime = datetime.datetime.now()
     if curTime.hour < 3:
         curTime = '0300'
@@ -100,11 +100,31 @@ def ConvertfcstTime():
     
     return curTime
 
+def convertfcstvaue(skycode,value):
+    if skycode == 'SKY':
+        if value == '1':
+            skyvalue = '맑음'
+        elif value == '3':
+            skyvalue = '구름많음'
+        elif value == '4':
+            skyvalue = '흐림'
+    elif skycode == 'PTY':
+        if value == '1':
+            skyvalue = '비'
+        elif value == '2':
+            skyvalue = '비/눈'
+        elif value == '3':
+            skyvalue = '눈'
+        elif value == '4':
+            skyvalue ='소나기'
+
+    return skyvalue
 
 def get_weather_data(): # weatehr 데이터 가공해서 list로 내보내는 코드
     data = get_weather_api_data()
-    curTime = ConvertfcstTime()
-    skyCondition = 0
+    curTime = convertfcstTime()
+    sky = 0
+    alertRain = 0
 
     for i in data:
         if i['category']=='TMN': #최저기온
@@ -120,10 +140,10 @@ def get_weather_data(): # weatehr 데이터 가공해서 list로 내보내는 �
             if i['category']=='REH': #습도
                 humidity = i['fcstValue']
             if i['category']=='PTY' and i['fcstValue']!= '0': #강수형태-비가 올때
-                sky = i['fcstvaue']
+                sky = convertfcstvaue('PTY',i['fcstValue'])
             if sky == 0: #강수 형태 - 비가 안 올때
                 if i['category']=='SKY': #하늘상태
-                    sky = i['fcstValue']
+                    sky = convertfcstvaue('SKY',i['fcstValue'])
 
     weatherCondition = {
         'minTmp' : minTmp,
@@ -166,8 +186,7 @@ def get_time():
     res_date = datetime.datetime.now().strftime("%m/%d %H:%M")
     return res_date
 
-
 ##########################################################
 # get_weather_api_data()
-print(ConvertfcstTime())
+# print(get_weather_data())
 # print()
