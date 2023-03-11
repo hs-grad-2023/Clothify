@@ -165,3 +165,5 @@ def get_loc_data():# 현재 위치를 바탕으로 db에서 주소 이름 찾는
         #     case 4: return 'cloudy'
         #     }
         # } 
+
+    #test
