@@ -213,52 +213,10 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        <div>
-                            <input type="file" id="btnAtt" multiple="multiple"/>
-                            <div id="att_zone" data-placeholder="">
-                                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" ></div>
-                            </div>
+                        <p class="text-center">저장된 옷들이 없어요ㅠㅠ 등록하러 가볼까요?!</p>
+                        <div class="col-12 text-center">
+                            <a class="btn btn-primary rounded-pill py-3 px-5" href="{% url 'blog' %}">옷 등록하기</a>
                         </div>
-                        <form method="POST">
-                            <p class="text-dark">계절감</p>
-                            <label><input type="checkbox" name="nb[]" value="봄" class="chk"> 봄</label>
-                            <label><input type="checkbox" name="nb[]" value="여름름" class="chk"> 여름</label>
-                            <label><input type="checkbox" name="nb[]" value="가을" class="chk"> 가을</label>
-                            <label><input type="checkbox" name="nb[]" value="겨울" class="chk"> 겨울</label>
-                            <p></p>
-
-                            <p class="text-dark">종류 - 아우터</p>
-                            <label><input type="checkbox" name="nb[]" value="가디건" class="chk"> 가디건</label>
-                            <label><input type="checkbox" name="nb[]" value="후드집업" class="chk"> 후드집업</label>
-                            <label><input type="checkbox" name="nb[]" value="무스탕" class="chk"> 무스탕</label>
-                            <label><input type="checkbox" name="nb[]" value="코트" class="chk"> 코트</label>
-                            <label><input type="checkbox" name="nb[]" value="숏패딩" class="chk"> 숏패딩</label>
-                            <label><input type="checkbox" name="nb[]" value="롱패딩" class="chk"> 롱패딩</label>
-                            <p></p>
-
-                            <p class="text-dark">종류 - 상의</p>
-                            <label><input type="checkbox" name="nb[]" value="반팔" class="chk"> 반팔</label>
-                            <label><input type="checkbox" name="nb[]" value="긴팔" class="chk"> 긴팔</label>
-                            <label><input type="checkbox" name="nb[]" value="이너" class="chk"> 이너</label>
-                            <label><input type="checkbox" name="nb[]" value="목폴라" class="chk"> 목폴라</label>
-                            <label><input type="checkbox" name="nb[]" value="니트" class="chk"> 니트</label>
-                            <label><input type="checkbox" name="nb[]" value="원피스" class="chk"> 원피스</label>
-                            <p></p>
-
-                            <p class="text-dark">종류 - 하의</p>
-                            <label><input type="checkbox" name="nb[]" value="반바지" class="chk"> 반바지</label>
-                            <label><input type="checkbox" name="nb[]" value="긴바지" class="chk"> 긴바지</label>
-                            <label><input type="checkbox" name="nb[]" value="미니스커트" class="chk"> 미니스커트</label>
-                            <label><input type="checkbox" name="nb[]" value="미디스커트" class="chk"> 미디스커트</label>
-                            <label><input type="checkbox" name="nb[]" value="롱스커트" class="chk"> 롱스커트</label>
-                            <p></p>
-
-                            <p><input type="submit" id="chk_submit" value="Submit"></p>
-                          </form>
-                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
-                        </div>
-
                         
                     </div>
                 </div>
@@ -608,7 +566,7 @@
                             </div>
                         </div>
                         <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
+                            <a class="btn btn-primary rounded-pill py-3 px-5" href="blog">내 옷 등록하기</a>
                         </div>
                     </div>
                 </div>

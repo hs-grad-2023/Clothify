@@ -8,6 +8,125 @@
 {% block closet %}
     <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Closet</a>
 {% endblock closet %}
+{% block jsv %}
+<script>
+    ( /* att_zone : 이미지들이 들어갈 위치 id, btn : file tag id */
+      imageView = function imageView(att_zone, btn){
+    
+        var attZone = document.getElementById(att_zone);
+        var btnAtt = document.getElementById(btn)
+        var sel_files = [];
+        
+        // 이미지와 체크 박스를 감싸고 있는 div 속성
+        var div_style = 'display:block;position:relative;'
+                      + 'margin:5px;border:1px solid #fff;z-index:1';
+        // 미리보기 이미지 속성
+        var img_style = 'width:30%;height:auto;z-index:none;visibilty:visible;animation-delay:0.1s;animation-name:fadeInup;vertical-align: middle;'
+        // 이미지안에 표시되는 체크박스의 속성
+        var chk_style = 'width:30px;height:30px;position:absolute;font-size:24px;'
+                      + 'bottom:0px;z-index:999;background-color:white;color:#f00';
+      
+        btnAtt.onchange = function(e){
+          var files = e.target.files;
+          var fileArr = Array.prototype.slice.call(files)
+          for(f of fileArr){
+            imageLoader(f);
+          }
+        }  
+        
+      
+        // 탐색기에서 드래그앤 드롭 사용
+        attZone.addEventListener('dragenter', function(e){
+          e.preventDefault();
+          e.stopPropagation();
+        }, false)
+        
+        attZone.addEventListener('dragover', function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          
+        }, false)
+      
+        attZone.addEventListener('drop', function(e){
+          var files = {};
+          e.preventDefault();
+          e.stopPropagation();
+          var dt = e.dataTransfer;
+          files = dt.files;
+          for(f of files){
+            imageLoader(f);
+          }
+          
+        }, false)
+        
+    
+        
+        /*첨부된 이미리들을 배열에 넣고 미리보기 */
+        imageLoader = function(file){
+          sel_files.push(file);
+          var reader = new FileReader();
+          reader.onload = function(ee){
+            let img = document.createElement('img')
+            img.setAttribute('style', img_style)
+            img.src = ee.target.result;
+            attZone.appendChild(makeDiv(img, file));
+          }
+          
+          reader.readAsDataURL(file);
+        }
+        
+        /*첨부된 파일이 있는 경우 checkbox와 함께 attZone에 추가할 div를 만들어 반환 */
+        makeDiv = function(img, file){
+          var div = document.createElement('div')
+          div.setAttribute('style', div_style)
+          
+          var btn = document.createElement('input')
+          btn.setAttribute('type', 'button')
+          btn.setAttribute('value', 'x')
+          btn.setAttribute('delFile', file.name);
+          btn.setAttribute('style', chk_style);
+          btn.onclick = function(ev){
+            var ele = ev.srcElement;
+            var delFile = ele.getAttribute('delFile');
+            for(var i=0 ;i<sel_files.length; i++){
+              if(delFile== sel_files[i].name){
+                sel_files.splice(i, 1);      
+              }
+            }
+            
+            dt = new DataTransfer();
+            for(f in sel_files) {
+              var file = sel_files[f];
+              dt.items.add(file);
+            }
+            btnAtt.files = dt.files;
+            var p = ele.parentNode;
+            attZone.removeChild(p)
+          }
+          div.appendChild(img)
+          div.appendChild(btn)
+          return div
+        }
+      }
+    )('att_zone', 'btnAtt')
+    
+</script>
+<script>
+    $(document).ready(function() {
+        $("#chk_submit").on('click', function(){
+            var chk_arr = [];
+
+            $("input[name=nb[]]:checked").each(function(){
+                chk_arr.push($(this).val());
+            
+            });
+
+            alert(chk_arr);
+        });
+
+    })(jQuery);
+</script>
+{% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
     <div class="container-fluid page-header wow fadeIn" data-wow-delay="0.1s">
@@ -33,99 +152,58 @@
                 <p>Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
             </div>
             <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <img class="img-fluid" src="img/blog-1.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
+                <div>
+                    <!--
+                    <input type="file" id="btnAtt" multiple="multiple"/>
+                    <div id="att_zone" data-placeholder="">
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" ></div>
                     </div>
+                    -->
+                    <form action="{% url 'muapp': 'file_upload' %} " method="post" >
+                    
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <img class="img-fluid" src="img/blog-2.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <img class="img-fluid" src="img/blog-3.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <img class="img-fluid" src="img/blog-2.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <img class="img-fluid" src="img/blog-3.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <img class="img-fluid" src="img/blog-1.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <img class="img-fluid" src="img/blog-3.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <img class="img-fluid" src="img/blog-1.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <img class="img-fluid" src="img/blog-2.jpg" alt="">
-                    <div class="bg-light p-4">
-                        <a class="d-block h5 lh-base mb-4" href="">How to cultivate organic fruits and vegetables in own firm</a>
-                        <div class="text-muted border-top pt-4">
-                            <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                            <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>01 Jan, 2045</small>
-                        </div>
-                    </div>
-                </div>
+                <form method="POST">
+                    <p class="text-dark">계절</p>
+                    <label><input type="checkbox" name="nb[]" value="봄" class="chk"> 봄</label>
+                    <label><input type="checkbox" name="nb[]" value="여름" class="chk"> 여름</label>
+                    <label><input type="checkbox" name="nb[]" value="가을" class="chk"> 가을</label>
+                    <label><input type="checkbox" name="nb[]" value="겨울" class="chk"> 겨울</label>
+                    <p></p>
+
+                    <p class="text-dark">종류 - 아우터</p>
+                    <label><input type="checkbox" name="nb[]" value="가디건" class="chk"> 가디건</label>
+                    <label><input type="checkbox" name="nb[]" value="후드집업" class="chk"> 후드집업</label>
+                    <label><input type="checkbox" name="nb[]" value="무스탕" class="chk"> 무스탕</label>
+                    <label><input type="checkbox" name="nb[]" value="코트" class="chk"> 코트</label>
+                    <label><input type="checkbox" name="nb[]" value="숏패딩" class="chk"> 숏패딩</label>
+                    <label><input type="checkbox" name="nb[]" value="롱패딩" class="chk"> 롱패딩</label>
+                    <p></p>
+
+                    <p class="text-dark">종류 - 상의</p>
+                    <label><input type="checkbox" name="nb[]" value="반팔" class="chk"> 반팔</label>
+                    <label><input type="checkbox" name="nb[]" value="긴팔" class="chk"> 긴팔</label>
+                    <label><input type="checkbox" name="nb[]" value="이너" class="chk"> 이너</label>
+                    <label><input type="checkbox" name="nb[]" value="목폴라" class="chk"> 목폴라</label>
+                    <label><input type="checkbox" name="nb[]" value="니트" class="chk"> 니트</label>
+                    <label><input type="checkbox" name="nb[]" value="원피스" class="chk"> 원피스</label>
+                    <p></p>
+
+                    <p class="text-dark">종류 - 하의</p>
+                    <label><input type="checkbox" name="nb[]" value="반바지" class="chk"> 반바지</label>
+                    <label><input type="checkbox" name="nb[]" value="긴바지" class="chk"> 긴바지</label>
+                    <label><input type="checkbox" name="nb[]" value="미니스커트" class="chk"> 미니스커트</label>
+                    <label><input type="checkbox" name="nb[]" value="미디스커트" class="chk"> 미디스커트</label>
+                    <label><input type="checkbox" name="nb[]" value="롱스커트" class="chk"> 롱스커트</label>
+                    <p></p>
+
+                    <p><input type="submit" id="chk_submit" value="Submit" class="center"></p>
+                  </form>
+
+                <!--
                 <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
                     <a class="btn btn-primary rounded-pill py-3 px-5" href="">Load More</a>
                 </div>
+                -->
             </div>
         </div>
     </div>

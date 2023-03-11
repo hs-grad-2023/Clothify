@@ -57,11 +57,11 @@
                     {% endblock %}
                     <div class="nav-item dropdown">
                         {% block closet %}
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Closet</a>
+                        <a href="{% url 'product' %}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">My Closet</a>
                         {% endblock closet %}
                         <div class="dropdown-menu m-0">
-                            <a href="{% url 'blog' %}" class="dropdown-item">My clothes</a>
-                            <a href="/" class="dropdown-item">Try on</a>
+                            <a href="{% url 'product' %}" class="dropdown-item">Try on</a>
+                            <a href="/" class="dropdown-item">코디북</a>
                             <!-- cf. 사용 안할 것 같은 것들 임시로 지워둠 -->
                             <!-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                             <a href="404.html" class="dropdown-item">404 Page</a> -->
