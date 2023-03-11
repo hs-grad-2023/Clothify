@@ -25,6 +25,10 @@ def product(request):
 def about(request):
     return render(request,"about.html")
 
+def login(request):
+    return render(request,"login.html")
+
+
 def dfsXyConv(code, v1, v2): 
     PI, tan, log, cos, pow, floor, sin, sqrt, atan, abs, atan2 = math.pi, math.tan, math.log, math.cos, math.pow, math.floor, math.sin, math.sqrt, math.atan, math.abs, math.atan2
 
