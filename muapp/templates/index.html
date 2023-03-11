@@ -20,7 +20,7 @@
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-8-auto">
-                                    <h1 class="display-1 mb-5 animated slideInDown jamsil" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
+                                    <h1 class="display-1 mb-5 animated slideInDown jamsil fonts" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
                                     <a href="" class="btn btn-primary rounded-pill py-sm-3 px-sm-5 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
                                     <a href="" class="btn btn-secondary rounded-pill py-sm-3 px-sm-5 ms-3 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
                                 </div>
@@ -43,23 +43,26 @@
             <div class="card" style="color: #4B515D; border-radius: 35px;">
             <div class="card-body p-4">
                 <div class="d-flex">
-                    <h6 class="flex-grow-1" id="LocationNow">{{location}}</h6> 
-                    <h6 id="TodayDate">{{date}}</h6>
+                    <h6 class="flex-grow-1 jamsil" id="LocationNow">{{location}}</h6> 
+                    <h6 class="hahmelt" id="TodayDate">{{date}}</h6>
                 </div>
-                <div class="d-flex flex-column text-center mt-5 mb-4">
-                    <h6 id="Temperature" class="display-4 mb-0 font-weight-bold" style="color: #1C2331;">{{curTmp}}º</h6>
+                <div class="d-flex flex-column text-center mt-5 mb-0">
+                    <h6 id="Temperature" class="display-4 mb-0 font-weight-bold" style="color: #1C2331;">{{curTmp}}ºC</h6>
                     {% if alertRain != 0 %} <!-- 비 오면 "오늘은 비/눈 소식이 있습니다."라고 뜨고 아니면 아예 안 뜸. -->
-                    <span id="AlertRain" class="small" style="color: #868B94">{{alertRain}}</span>
+                    <span id="AlertRain" class="small hahmelt" style="color: #868B94">{{alertRain}}</span>
                     {% endif %}
+                    <br>
+                    <h6 class="hahmelt" style="color: #1C2331">오늘의 코디</h6>    
                 </div>
                 <div class="align-items-center">
                     <div class="d-flex">
-                        <h6 id="humidity" class="row align-items-end justify-content-around" style="color: #1C2331"><i class="fa-solid fa-droplet"></i>습도 : {{humidity}}%</h6>
-                        <h6 class="flex-grow-1" id="weatherIcon"><i class="{{icon}} row justify-content-end" style="color: #868B94; font-size: 6rem;"></i></h6>
+                        <h6 id="humidity" class="row align-items-end justify-content-around hahmelt" style="margin-left: 0px; color: #1C2331">습도 : {{humidity}}%</h6>                  
+                        <i class="row flex-grow-1 fa fa-light fa-shirt text-center justify-content-center" style="color: #868B94; font-size: 5rem;"></i><!-- if로 아이콘들 바꿔주기-->
+                        <h6 class="flex-grow-2" id="weatherIcon"><i class="{{icon}} row justify-content-end" style="color: #868B94; font-size: 6rem;"></i></h6>
                     </div>
-                    <div class="d-flex ">
-                        <h6 id="TemperatureMaxMin" class="small flex-grow-1" style="color: #1C2331;">최고 {{minTmp}}º / 최저 {{maxTmp}}º</h6>
-                        <h6 id="WeatherStatus" class="small" style="color: #1C2331;">{{sky}}</h6>
+                    <div class="d-flex">
+                        <h6 id="TemperatureMaxMin" class="small flex-grow-1 hahmelt" style="color: #1C2331;">최고 {{minTmp}}º / 최저 {{maxTmp}}º</h6>
+                        <h6 id="WeatherStatus" class="small hahmelt" style="color: #1C2331;">{{sky}}</h6>
                     </div>
                 </div>
 

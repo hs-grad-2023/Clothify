@@ -172,7 +172,7 @@ def get_loc_data():# 현재 위치를 바탕으로 db에서 주소 이름 찾는
     rs = dfsXyConv('toXY', lat, lng)
     X,Y = rs['x'],rs['y']
     
-    conn = sqlite3.connect('D:\grad-job\django\db.sqlite3') # SQLite 데이터베이스 연결  
+    conn = sqlite3.connect('./db.sqlite3') # SQLite 데이터베이스 연결  
     cursor = conn.cursor() # 커서 생성
     query = f"SELECT address1, address2, address3 FROM weather_api WHERE gridX = {X} and gridY = {Y}" # SQL 쿼리 작성
     cursor.execute(query) # 쿼리 실행

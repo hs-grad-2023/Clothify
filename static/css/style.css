@@ -12,9 +12,35 @@
     font-weight: 700;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'Hahmlet-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .jamsil{
     font-family: 'TheJamsil5Bold';
     font-weight: 700;
+}
+
+.hahmelt{
+    font-family: 'Hahmlet-Regular';
+    font-weight: 700;
+}
+.hahmelt9{
+    font-family: 'Hahmlet-Regular';
+    font-weight: 900;
+}
+
+.fonts{
+    font-size: 3.9vw;
+}
+@media (min-width: 1px) and (max-width: 600px){
+    .fonts{
+        font-size: 8vw;
+    }
 }
 
 .back-to-top {
@@ -172,7 +198,7 @@
     /* text-align: start; */
     z-index: 1;
 }
-@media (min-width: 1081px) {
+@media (min-width: 1551px) {
     .carousel-caption {
         
         bottom: 450px;
@@ -180,6 +206,15 @@
     }
 
 }
+@media (min-width: 1300px) and (max-width: 1550px){
+    .carousel-caption {
+        
+        bottom: 200px;
+        
+    }
+
+}
+
 
 .carousel-control-prev,
 .carousel-control-next {
@@ -357,7 +392,6 @@
     color: #FFFFFF;
     background: var(--primary);
 }
-
 
 /*** Footer ***/
 .footer {
