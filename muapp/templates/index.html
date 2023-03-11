@@ -50,13 +50,17 @@
                     <span id="AlertRain" class="small" style="color: #868B94">{{alertRain}}</span>
                     {% endif %}
                 </div>
-                <div class="d-flex">
-                    <h6 id="humidity" class="small" style="color: #1C2331">습도 : {{humidity}}%</h6>
+                <div class="align-items-center">
+                    <div class="d-flex">
+                        <h6 id="humidity" class="row align-items-end justify-content-around" style="color: #1C2331"><i class="fa-solid fa-droplet"></i>습도 : {{humidity}}%</h6>
+                        <h6 class="flex-grow-1" id="weatherIcon"><i class="{{icon}} row justify-content-end" style="color: #868B94; font-size: 6rem;"></i></h6>
+                    </div>
+                    <div class="d-flex ">
+                        <h6 id="TemperatureMaxMin" class="small flex-grow-1" style="color: #1C2331;">최고 {{minTmp}}º / 최저 {{maxTmp}}º</h6>
+                        <h6 id="WeatherStatus" class="small" style="color: #1C2331;">{{sky}}</h6>
+                    </div>
                 </div>
-                <div class="d-flex">
-                    <h6 id="TemperatureMaxMin" class="small flex-grow-1" style="color: #1C2331;">최고 {{minTmp}}º / 최저 {{maxTmp}}º</h6>
-                    <h6 id="WeatherStatus" class="small" style="color: #1C2331">{{sky}}</h6>
-                </div>
+
 
             </div>
             </div>

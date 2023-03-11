@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .api import get_loc_data, get_time, get_weather_data
+from .api import get_loc_data, get_time, get_weather_data, get_icon
 import sqlite3
 import requests
 import datetime
@@ -15,6 +15,7 @@ def index(request):
     location = get_loc_data()
     date = get_time()
     weather = get_weather_data()
+    icon = get_icon()
     results= {
         'location' : location,
         'date' : date,
@@ -24,6 +25,7 @@ def index(request):
         'curTmp' : weather['curTmp'] ,
         'humidity' : weather['humidity'] ,
         'sky' : weather['sky'] ,
+        'icon' : icon,
         }
     return render(request,"index.html",results)
 

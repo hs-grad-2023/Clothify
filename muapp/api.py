@@ -105,7 +105,7 @@ def convertfcstvaue(skycode,value):
         if value == '1':
             skyvalue = '맑음'
         elif value == '3':
-            skyvalue = '구름많음'
+            skyvalue = '구름 많음'
         elif value == '4':
             skyvalue = '흐림'
     elif skycode == 'PTY':
@@ -156,7 +156,6 @@ def get_weather_data(): # weatehr 데이터 가공해서 list로 내보내는 �
     
     return weatherCondition
 
-
 def get_loc_api_data(): #현재 위치 가져오는 구글API, IP를 기준으로 가져옴.
     loc_serviceKey = 'AIzaSyC7VJJjA3IZGewIvQ5uSzUxpqQwfqoxjxI'
     url = f"https://www.googleapis.com/geolocation/v1/geolocate?key={loc_serviceKey}"
@@ -185,6 +184,27 @@ def get_loc_data():# 현재 위치를 바탕으로 db에서 주소 이름 찾는
 def get_time():
     res_date = datetime.datetime.now().strftime("%m/%d %H:%M")
     return res_date
+
+
+def get_icon():
+    weather = get_weather_data()
+    if weather['sky'] == '맑음':
+        icon = "bi bi-brightness-high"
+    elif weather['sky'] == '구름 많음':
+        icon = "bi bi-cloudy-fill"
+    elif weather['sky'] == '흐림':
+        icon = "bi bi-cloud-sun-fill"
+    elif weather['sky'] == '비':
+        icon = "bi bi-cloud-rain"
+    elif weather['sky'] == '비/눈':
+        icon = "bi bi-cloud-sleet-fill"
+    elif weather['sky'] == '눈':
+        icon = "bi bi-cloud-snow-fill"
+    elif weather['sky'] == '소나기':
+        icon = "bi bi-cloud-rain-heavy-fill"
+    
+    return icon
+
 
 ##########################################################
 # get_weather_api_data()
