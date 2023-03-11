@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-
+    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link">Try on</a>
 {% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+
 {% block jsv %}
 <script>
     ( /* att_zone : 이미지들이 들어갈 위치 id, btn : file tag id */
