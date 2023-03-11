@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .api import get_loc_data, get_time, get_weather_data, get_icon
 import sqlite3
 import requests
 import datetime
@@ -11,7 +12,22 @@ import math, json, sqlite3
 #     return render(request,"404.html")
 
 def index(request):
-    return render(request,"index.html")
+    location = get_loc_data()
+    date = get_time()
+    weather = get_weather_data()
+    icon = get_icon()
+    results= {
+        'location' : location,
+        'date' : date,
+        'minTmp' : weather['minTmp'],
+        'maxTmp' : weather['maxTmp'] ,
+        'alertRain' : weather['alertRain'] ,
+        'curTmp' : weather['curTmp'] ,
+        'humidity' : weather['humidity'] ,
+        'sky' : weather['sky'] ,
+        'icon' : icon,
+        }
+    return render(request,"index.html",results)
 
 def blog(request):
     return render(request,"blog.html")
@@ -29,18 +45,11 @@ def login(request):
     return render(request,"login.html")
 
 
-def dfsXyConv(code, v1, v2): 
-    PI, tan, log, cos, pow, floor, sin, sqrt, atan, abs, atan2 = math.pi, math.tan, math.log, math.cos, math.pow, math.floor, math.sin, math.sqrt, math.atan, math.abs, math.atan2
+def login(request):
+    return render(request,"login.html")
 
-    RE = 6371.00877  # 지구 반경(km)
-    GRID = 5.0  # 격자 간격(km)
-    SLAT1 = 30.0  # 투영 위도1(degree)
-    SLAT2 = 60.0  # 투영 위도2(degree)
-    OLON = 126.0  # 기준점 경도(degree)
-    OLAT = 38.0  # 기준점 위도(degree)
-    XO = 43  # 기준점 X좌표(GRID)
-    YO = 136  # 기준점 Y좌표(GRID)
 
+<<<<<<< HEAD
     DEGRAD = PI / 180.0
     RADDEG = 180.0 / PI
 
