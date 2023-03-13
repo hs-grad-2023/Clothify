@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="{% url 'index' %}" class="nav-item nav-link active">Home</a>
-    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
-    <a href="{% url 'index' %}" class="nav-item nav-link">Try on</a>
-{% endblock %}
-{% block closet %}
-    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Clothes</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link active jamsil">Home</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">About Us</a>
+    {% endblock %}
+    {% block closet %}
+    <a href="#" class="nav-link dropdown-toggle jamsil" data-bs-toggle="dropdown">Clothes</a>
 {% endblock closet %}
 {% block content %}
     <!-- 배너 -->
@@ -21,8 +21,8 @@
                             <div class="row justify-content-start">
                                 <div class="col-8-auto">
                                     <h1 class="display-1 mb-5 animated slideInDown jamsil fonts" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
-                                    <a href="" class="btn btn-primary rounded-pill py-sm-3 px-sm-5 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
-                                    <a href="" class="btn btn-secondary rounded-pill py-sm-3 px-sm-5 ms-3 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
+                                    <a href="" class="btn btn-primary btn-lg rounded-pill py-sm-3 px-sm-5 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
+                                    <a href="" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
                                 </div>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
     <!-- Carousel End -->
 
     <!-- 날씨 및 위치 표시 부분 Start -->
-    <div class="container py-5 h-100">
+    <div class="container py-5 h-100 wow flipInX" data-wow-delay="0.1s">
     
         <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-md-8 col-lg-6 col-xl-4">
@@ -84,32 +84,32 @@
     <div class="container-fluid bg-light bg-icon my-5 py-6">
         <div class="container">
             <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <h1 class="display-5 mb-3">Our Features</h1>
-                <p>Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+                <h1 class="display-5 mb-3 jamsil" style="color: #0b83f7; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">C<span style="color: #6fa8dc;">loth</span><span style="color: #8fce00;">ify</span>의 기능!</h1>
+                <p class="jamsil">누구나 편하게 옷을 관리할 수 있는 Clothify</p>
             </div>
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="bg-white text-center h-100 p-4 p-xl-5">
                         <img class="img-fluid mb-4" src="{% static 'img/icon-1.jpg' %}" alt="">
-                        <h4 class="mb-3">Natural Process</h4>
-                        <p class="mb-4">Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed vero dolor duo.</p>
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
+                        <h4 class="mb-3 jamsil">가상 피팅</h4>
+                        <p class="mb-4 jamsil">옷을 실제로 입지 않고도 가상에서<br>먼저 확인해 볼 수 있습니다!</p>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="">더보기</a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="bg-white text-center h-100 p-4 p-xl-5">
                         <img class="img-fluid mb-4" src="{% static 'img/icon-2.jpg' %}" alt="">
-                        <h4 class="mb-3">Organic Products</h4>
-                        <p class="mb-4">Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed vero dolor duo.</p>
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
+                        <h4 class="mb-3 jamsil">옷장 관리</h4>
+                        <p class="mb-4 jamsil">내 전용 옷장을 만들어서 손쉽게 자신의 옷들을<br>관리할 수 있습니다!</p>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="">더보기</a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="bg-white text-center h-100 p-4 p-xl-5">
                         <img class="img-fluid mb-4" src="{% static 'img/icon-3.jpg' %}" alt="">
-                        <h4 class="mb-3">Biologically Safe</h4>
-                        <p class="mb-4">Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed vero dolor duo.</p>
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
+                        <h4 class="mb-3 jamsil">코디 추천</h4>
+                        <p class="mb-4 jamsil">오늘 날씨에 뭘 입어야할지 모를때<br>코디를 추천해줍니다!</p>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="">더보기</a>
                     </div>
                 </div>
             </div>
@@ -124,20 +124,20 @@
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
                     <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                        <h1 class="display-5 mb-3">Our Products</h1>
-                        <p>Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+                        <h1 class="display-5 mb-3 jamsil">옷장 관리</h1>
+                        <p class="jamsil">나의 옷장을 마음대로 꾸며보세요!</p>
                     </div>
                 </div>
                 <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">Vegetable</a>
+                            <a class="btn btn-outline-primary border-2 active jamsil" data-bs-toggle="pill" href="#tab-1">전체</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">Fruits </a>
+                            <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-2">상의</a>
                         </li>
                         <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-3">Fresh</a>
+                            <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-3">하의</a>
                         </li>
                     </ul>
                 </div>
@@ -152,17 +152,17 @@
                                     <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
+                                    <a class="d-block h5 mb-2 jamsil"href="">옷1</a>
+                                    {% comment %} <span class="text-primary me-1">$19.00</span>
+                                    <span class="text-body text-decoration-line-through">$29.00</span> {% endcomment %}
                                 </div>
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
+                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
                                     </small>
-                                    <small class="w-50 text-center py-2">
+                                    {% comment %} <small class="w-50 text-center py-2">
                                         <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
+                                    </small> {% endcomment %}
                                 </div>
                             </div>
                         </div>
@@ -173,17 +173,17 @@
                                     <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
+                                    <a class="d-block h5 mb-2 jamsil" href="">옷2</a>
+                                    {% comment %} <span class="text-primary me-1">$19.00</span>
+                                    <span class="text-body text-decoration-line-through">$29.00</span> {% endcomment %}
                                 </div>
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
+                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
                                     </small>
-                                    <small class="w-50 text-center py-2">
+                                    {% comment %} <small class="w-50 text-center py-2">
                                         <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
+                                    </small> {% endcomment %}
                                 </div>
                             </div>
                         </div>
@@ -314,7 +314,7 @@
                             </div>
                         </div>
                         <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
+                            <a class="btn btn-primary rounded-pill py-3 px-5 jamsil"href="">더보기</a>
                         </div>
                     </div>
                 </div>
@@ -679,11 +679,11 @@
         <div class="container">
             <div class="row g-5 align-items-center">
                 <div class="col-md-7 wow fadeIn" data-wow-delay="0.1s">
-                    <h1 class="display-5 text-white mb-3">Visit Our Firm</h1>
-                    <p class="text-white mb-0">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos.</p>
+                    <h1 class="display-5 mb-3 jamsil" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">가상 피팅</h1>
+                    <p class="text-white mb-0 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">나에게 맞는 퍼스널 컬러나 옷을 가상으로 입어보세요!</p>
                 </div>
                 <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
-                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5" href="">Visit Now</a>
+                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5 jamsil" href="">하러가기</a>
                 </div>
             </div>
         </div>
@@ -692,11 +692,11 @@
 
 
     <!-- Testimonial Start -->
-    <div class="container-fluid bg-light bg-icon py-6 mb-5">
+    <div class="container-fluid bg-light bg-icon py-6 mb-0">
         <div class="container">
             <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <h1 class="display-5 mb-3">Customer Review</h1>
-                <p>Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+                <h1 class="display-5 mb-3 jamsil">사용자 리뷰</h1>
+                <p class="jamsil">리뷰를 입력해주세요!</p>
             </div>
             <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
                 <div class="testimonial-item position-relative bg-white p-5 mt-4">
@@ -750,7 +750,7 @@
 
 
     <!-- Blog Start -->
-    <div class="container-xxl py-5">
+    {% comment %} <div class="container-xxl py-5">
         <div class="container">
             <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                 <h1 class="display-5 mb-3">Latest Blog</h1>
@@ -789,7 +789,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
     <!-- Blog End -->
 {% endblock %}
 
