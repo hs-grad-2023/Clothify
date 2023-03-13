@@ -17,6 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 from muapp import views
+# index는 대문, blog는 게시판
+# from main.views import index, blog, posting
+
+# 이미지를 업로드하자
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     # path('404', views.404, name='404'),
@@ -27,4 +34,7 @@ urlpatterns = [
     path('feature/',views.feature, name='feature'),
     path('product/',views.product, name='product'),
     path('login/',views.login, name='login'),
+    path('upload_closet/',views.upload_closet, name='upload_closet'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

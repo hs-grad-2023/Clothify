@@ -30,6 +30,7 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/upload.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -65,9 +66,7 @@
                         <div class="dropdown-menu m-0">
                             <a href="{% url 'product' %}" class="dropdown-item jamsil">My closet</a>
                             <a href="{% url 'blog' %}" class="dropdown-item jamsil">Codi book</a>
-                            <!-- dropdown 메뉴바 -->
-                            <!-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                            <a href="404.html" class="dropdown-item">404 Page</a> -->
+                            <a href="{% url 'upload_closet' %}" class="dropdown-item">(Test)Upload</a>
                         </div>
                     </div>
                     

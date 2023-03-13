@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .api import get_loc_data, get_time, get_weather_data, get_icon
+from .models import clothes
 import sqlite3
 import requests
 import datetime
@@ -44,10 +45,37 @@ def about(request):
 def login(request):
     return render(request,"login.html")
 
+# def 데이터받아오는페이지(request):
+#     clotheslist = clothes.objects.all()
 
-# ORM 으로 DB 객체 읽어오는
-# def closet(request):
-#    clothes = models.Designer.objects.all()        #clothes 변수 안에 clothes 모델(클래스)의 모든 객체 정보를 담겠다
-#    return render(request, 'product.html', {'clothes' : clothes}) 
+#     info = {
+#         'clotheslist' : clotheslist
+#         }
 
+#     return render(request,"uploadcloset.html",info )
 
+def upload_closet(request):
+    if request.method == 'POST':
+        if request.POST['imgfiles']:
+            new_clothes=clothes.objects.create(
+                season=request.POST['season'],
+                type1=request.POST['type1'],
+                type2=request.POST['type2'],
+                tag=request.POST['tag'],
+                name=request.POST['name'],
+                imgfiles=request.POST['imgfiles'],
+                details=request.POST['details'],
+                upload_date=request.POST['upload_date'],
+            )
+        return redirect('/index/') #상품목록으로 돌아가야함
+    return render(request, 'upload_closet.html')
+
+#게시글이 생성되면 index로 생성되지 않으면 글쓰기 게시판으로 돌아간다는데
+# https://wikidocs.net/91438
+
+# def remove_clothes(request, pk):
+#     clothes = clothes.objects.get(pk=pk) #models.py 의 clothes
+#     if request.method == 'POST':
+#         post.delete()
+#         return redirect('/index/') #상품목록으로 돌아가야함
+#     return render(request, 'main/remove_post.html', {'clothes': clothes})
