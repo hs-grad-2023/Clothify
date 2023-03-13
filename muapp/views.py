@@ -45,3 +45,9 @@ def login(request):
     return render(request,"login.html")
 
 
+# ORM 으로 DB 객체 읽어오는
+# def closet(request):
+#    clothes = models.Designer.objects.all()        #clothes 변수 안에 clothes 모델(클래스)의 모든 객체 정보를 담겠다
+#    return render(request, 'product.html', {'clothes' : clothes}) 
+
+
