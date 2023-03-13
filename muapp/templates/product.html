@@ -218,8 +218,15 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        
-                        </table>
+                        {% for clothes in clothes.objects.all %}
+                        <figure>
+                            <div style="with:18rem;">
+                                <img src="{{clothes.objects.imgfile}}" class="" alt="...">
+
+                            </div>
+                        </figure>
+                        {% endfor %}
+                    
                         <table class="table">
                             <tr>
                                 <th>이름</th>
@@ -229,15 +236,13 @@
                                 <th>업로드 된 시간</th>
                             </tr>
 
-                            {% for clothes in clothes.langth  %}
+                            {% for c in clothes   %}
                                 <tr>
-                                    <td>{{ clothes.name }}</td>
-                                    <td>{{ clothes.type1 }}</td>
-                                    <td>{{ clothes.type2 }}</td>
-                                    <td>{{ clothes.tag }}</td>
-                                    <td>{{ clothes.tag }}</td>
-                                    <td>{{ clothes.컬럼파일위치 }}</td>
-                                    <td>{{ clothes.purchase_date }}</td>
+                                    <td>{{ c.name }}</td>
+                                    <td>{{ c.type1 }}</td>
+                                    <td>{{ c.type2 }}</td>
+                                    <td>{{ c.tag }}</td>
+                                    <td>{{ c.purchase_date }}</td>
                                 </tr>
                             {% endfor %}
                         </table>
