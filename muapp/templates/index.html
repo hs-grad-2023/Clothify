@@ -35,12 +35,14 @@
     <!-- Carousel End -->
 
     <!-- 날씨 및 위치 표시 부분 Start -->
-    <div class="container py-5 h-100 wow flipInX" data-wow-delay="0.1s">
-    
+    <div class="container py-5 h-100">
+        <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <h1 class="display-5 mb-3 jamsil">오늘의 날씨</h1>
+        </div>
         <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-md-8 col-lg-6 col-xl-4">
     
-            <div class="card" style="color: #4B515D; border-radius: 35px;">
+            <div class="card wow flipInX" data-wow-delay="0.1s" style="color: #4B515D; border-radius: 35px;">
             <div class="card-body p-4">
                 <div class="d-flex">
                     <h6 class="flex-grow-1 jamsil" id="LocationNow">{{location}}</h6> 
