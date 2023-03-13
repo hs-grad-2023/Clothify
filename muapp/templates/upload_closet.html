@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link">Try on</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+
+{% block jsv %}
+
+{% endblock jsv %}
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container">
+            <h1 class="display-3 mb-3 animated slideInDown">My closet</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a class="text-body" href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-body" href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-dark active" aria-current="page">My closet</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Product Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-0 gx-5 align-items-end">
+                <div class="col-lg-6">
+                    <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                        <h1 class="display-5 mb-3">My closet upload</h1>
+                        <p>👚 옷을 등록해서 나만의 옷장을 만들어요.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div>
+                            <div id="att_zone" data-placeholder="">
+                                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s" ></div>
+                            </div>
+                        </div>
+                        <div>
+                            <form action="" method="POST" name="clothes_info">
+                                {% csrf_token %}
+                                <div class="mb-3 row">
+                                    <label for="season" class="col-sm-2 col-form-label text-end">계절 </label>
+                                    <select name="season" size="1" class="form-select col">
+                                        <option value="none" disabled selected>=== 계절 ===</option>
+                                        <option value="s/f">봄/가을</option>
+                                        <option value="summer">여름</option>
+                                        <option value="winter">겨울</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="type1" class="col-sm-2 col-form-label text-end">분류1 </label>
+                                    <select name="type1" size="1" class="form-select col">
+                                        <option value="none" disabled selected>=== 분류1 ===</option>
+                                        <option value="top">상의</option>
+                                        <option value="bottom">하의</option>
+                                        <option value="dress">드레스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+                                    </select>
+                                </div>
+    
+                                <div class="mb-3 row">
+                                    <label for="type2" class="col-sm-2 col-form-label text-end">분류2 </label>
+                                    <select name="type1" size="1" class="form-select col">
+                                        <option value="none" disabled selected>=== 분류2 ===</option>
+                                        <option value="top">상의</option>
+                                        <option value="bottom">하의</option>
+                                        <option value="dress">드레스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3 row">
+                                    <label for="name" class="col-sm-2 col-form-label text-end">옷 이름 </label>
+                                    <input type="text" name="name" class="form-control col">
+                                </div>
+                                
+                                <div class="mb-3 row">
+                                    <label for="tag" class="col-sm-2 col-form-label text-end">태그 </label>
+                                    <input type="text" name="tag" class="form-control col">
+                                </div>
+                                
+                                <div class="mb-3 row">
+                                    <label for="name" class="col-sm-2 col-form-label text-end">상세정보 </label>
+                                    <textarea name="details" class="form-control col" rows="5"></textarea>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <label for="name" class="col-sm-2 col-form-label text-end">이미지 첨부 </label>
+                                    <input type="file" id="btnAtt" class="form-control" multiple="multiple"/>
+                                </div>
+                                                       
+                                
+                                <p><input type="submit" id="chk_submit" value="Submit"></p>
+
+                              </form>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Product End -->
+{% endblock  %}
