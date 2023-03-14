@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div>
-                            <form action="" method="POST" name="clothes_info">
+                            <form action="" method="POST" name="clothes_info" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="mb-3 row">
                                     <label for="season" class="col-sm-2 col-form-label text-end">계절 </label>
@@ -75,7 +75,7 @@
     
                                 <div class="mb-3 row">
                                     <label for="type2" class="col-sm-2 col-form-label text-end">분류2 </label>
-                                    <select name="type1" size="1" class="form-select col">
+                                    <select name="type2" size="1" class="form-select col">
                                         <option value="none" disabled selected>=== 분류2 ===</option>
                                         <option value="top">상의</option>
                                         <option value="bottom">하의</option>
@@ -97,17 +97,17 @@
                                 </div>
                                 
                                 <div class="mb-3 row">
-                                    <label for="name" class="col-sm-2 col-form-label text-end">상세정보 </label>
+                                    <label for="details" class="col-sm-2 col-form-label text-end">상세정보 </label>
                                     <textarea name="details" class="form-control col" rows="5"></textarea>
                                 </div>
 
                                 <div class="input-group mb-3">
-                                    <label for="name" class="col-sm-2 col-form-label text-end">이미지 첨부 </label>
-                                    <input type="file" id="btnAtt" class="form-control" multiple="multiple"/>
+                                    <label for="imgfile" class="col-sm-2 col-form-label text-end">이미지 첨부 </label>
+                                    <input type="file" id="btnAtt" class="form-control" multiple="multiple" name="imgfile"/>
                                 </div>
                                                        
                                 
-                                <p><input type="submit" id="chk_submit" value="Submit"></p>
+                                <p><input type="submit" id="chk_submit" value="Submit" multiple="multiple"></p>
 
                               </form>
                         </div>

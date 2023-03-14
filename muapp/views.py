@@ -6,6 +6,7 @@ import sqlite3
 import requests
 import datetime
 import math, json, sqlite3
+from django.contrib import messages
 
 # Create your views here.
 
@@ -56,19 +57,30 @@ def login(request):
 
 def upload_closet(request):
     if request.method == 'POST':
-        if request.POST['imgfiles']:
+        if request.FILES.get('imgfile'):
             new_clothes=clothes.objects.create(
-                season=request.POST['season'],
-                type1=request.POST['type1'],
-                type2=request.POST['type2'],
-                tag=request.POST['tag'],
-                name=request.POST['name'],
-                imgfiles=request.POST['imgfiles'],
-                details=request.POST['details'],
-                upload_date=request.POST['upload_date'],
+                season=request.POST.get('season'),
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tag'),
+                name=request.POST.get('name'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
             )
-        return redirect('/index/') #상품목록으로 돌아가야함
+        else:
+            new_clothes=clothes.objects.create(
+                season=request.POST.get('season'),
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tag'),
+                name=request.POST.get('name'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+            )
+        messages.success(request,'성공적으로 등록되었습니다! ')
+        return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html')
+
 
 #게시글이 생성되면 index로 생성되지 않으면 글쓰기 게시판으로 돌아간다는데
 # https://wikidocs.net/91438

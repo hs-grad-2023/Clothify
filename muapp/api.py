@@ -89,7 +89,7 @@ def get_weather_api_data(): #날씨 데이터 가져올 수 있는 API
     response = requests.get(url)
     data = response.json()
 
-    return data['response']['body']['items']['item'] #3/10 갑자기 에러남 먼데
+    return data['response']['body']['items']['item'] 
 
 def convertfcstTime():
     curTime = datetime.datetime.now()
