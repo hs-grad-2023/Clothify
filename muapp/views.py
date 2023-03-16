@@ -67,25 +67,22 @@ def upload_closet(request):
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
             new_clothes=clothes.objects.create(
-                season=request.POST.get('season'),
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
-                tag=request.POST.get('tag'),
+                tag=request.POST.get('tags'),
                 name=request.POST.get('name'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
             )
         else:
             new_clothes=clothes.objects.create(
-                season=request.POST.get('season'),
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
-                tag=request.POST.get('tag'),
+                tag=request.POST.get('tags'),
                 name=request.POST.get('name'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
             )
-        messages.success(request,'성공적으로 등록되었습니다! ')
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html')
 
