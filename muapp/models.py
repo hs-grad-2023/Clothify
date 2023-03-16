@@ -11,7 +11,6 @@ class clothes(models.Model):
     name = models.CharField(max_length=50)
     imgfile = models.ImageField(null=True,  blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png') # 이미지 컬럼 추가(사진을 여러개)
     details = models.CharField(max_length=200, default="", null=True,  blank=True, )
-    season = models.CharField(max_length=50)
     upload_date = models.DateField(auto_now_add=True)
     id = models.AutoField(primary_key=True)
     # price = models.IntegerField(default=0)

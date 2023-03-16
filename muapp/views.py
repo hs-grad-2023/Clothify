@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .api import get_loc_data, get_time, get_weather_data, get_icon
+from .getDB import get_db
 from .models import clothes
 import sqlite3
 import requests
@@ -37,8 +38,12 @@ def blog(request):
 def feature(request):
     return render(request,"feature.html")
 
-def product(request):
-    return render(request,"product.html")
+def view_closet(request):
+    
+    results={
+
+    }
+    return render(request,"view_closet.html",results)
 
 def about(request):
     return render(request,"about.html")
@@ -46,14 +51,17 @@ def about(request):
 def login(request):
     return render(request,"login.html")
 
-# def 데이터받아오는페이지(request):
-#     clotheslist = clothes.objects.all()
+def about_closet(request):
+    clotheslist = clothes.objects.all()
+    print(clotheslist)
 
-#     info = {
-#         'clotheslist' : clotheslist
-#         }
+    info = {
+        'clotheslist' : clotheslist
+        }
 
-#     return render(request,"uploadcloset.html",info )
+    return render(request,"view_closet.html",info )
+
+
 
 def upload_closet(request):
     if request.method == 'POST':

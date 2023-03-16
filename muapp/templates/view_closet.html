@@ -158,18 +158,6 @@
                 <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">계절별</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-1" class="dropdown-item">봄</a>
-                                    <a href="#tab-1" class="dropdown-item">여름</a>
-                                    <a href="#tab-1" class="dropdown-item">가을</a>
-                                    <a href="#tab-1" class="dropdown-item">겨울</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
                             <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">아우터</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
@@ -218,15 +206,10 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        {% for clothes in clothes.objects.all %}
-                        <figure>
-                            <div style="with:18rem;">
-                                <img src="{{clothes.objects.imgfile}}" class="" alt="...">
+                        {{up}}
 
-                            </div>
-                        </figure>
-                        {% endfor %}
-                    
+
+                    <!--
                         <table class="table">
                             <tr>
                                 <th>이름</th>
@@ -236,7 +219,7 @@
                                 <th>업로드 된 시간</th>
                             </tr>
 
-                            {% for c in clothes   %}
+                            {% for c in clotheslist.all   %}
                                 <tr>
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.type1 }}</td>
@@ -246,8 +229,11 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                        -->
                     </div>
+                    
                 </div>
+                
                 <div id="tab-2" class="tab-pane fade show p-0">
                     <div class="row g-4">
                         <div class="col-xl-3 col-lg-4 col-md-6">
