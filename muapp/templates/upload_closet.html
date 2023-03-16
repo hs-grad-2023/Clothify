@@ -12,7 +12,7 @@
        data-bs-toggle="dropdown">Clothes</a>
     <link href="{% static 'css/upload.css' %}" rel="stylesheet"/>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script src="{% static 'js/upload_closet.js' %}"></script>
+    <script defer src="{% static 'js/upload_closet.js' %}"></script>
 {% endblock closet %}
 {% block jsv %}
 {% endblock jsv %}
@@ -63,35 +63,28 @@
                                   name="clothes_info"
                                   id="clothes_info"
                                   enctype="multipart/form-data"
-                                  onkeydown="return event.key != 'Enter';">
+                                  onkeydown="return event.key != 'Enter';"
+                                  onsubmit="return validationData"
+                                  >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
-                                    <label for="season" class="col-sm-2 col-form-label text-end">계절</label>
-                                    <select name="season" id="season" size="1" class="form-select col">
-                                        <option value="none" disabled selected>=== 계절 ===</option>
-                                        <option value="s/f">봄/가을</option>
-                                        <option value="summer">여름</option>
-                                        <option value="winter">겨울</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label for="type1" class="col-sm-2 col-form-label text-end">분류1</label>
+                                    <label for="type1" class="col-sm-2 col-form-label text-end">분류 1</label>
                                     <select name="type1" id="type1" size="1" class="form-select col" onchange="itemChange()">
-                                        <option value="none" disabled selected>=== 분류1 ===</option>
-                                        <option value="top">상의</option>
-                                        <option value="pants">바지</option>
-                                        <option value="skirt">치마</option>
-                                        <option value="dress">원피스</option>
-                                        <option value="outer">아우터</option>
-                                        <option value="bag">가방</option>
-                                        <option value="accessary">악세서리</option>
-                                        <option value="shoes">신발</option>
+                                        <option value="none" disabled selected>=== 분류 1 ===</option>
+                                        <option>상의</option>
+                                        <option>바지</option>
+                                        <option>치마</option>
+                                        <option>원피스</option>
+                                        <option>아우터</option>
+                                        <option>가방</option>
+                                        <option>악세서리</option>
+                                        <option>신발</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="type2" class="col-sm-2 col-form-label text-end">분류2</label>
+                                    <label for="type2" class="col-sm-2 col-form-label text-end">분류 2</label>
                                     <select name="type2" id="type2" size="1" class="form-select col">
-                                        <option value="none" disabled selected>=== 분류2 ===</option>
+                                        <option value="none" disabled selected>=== 분류 2 ===</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 row">

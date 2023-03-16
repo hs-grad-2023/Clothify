@@ -59,7 +59,6 @@ def upload_closet(request):
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
             new_clothes=clothes.objects.create(
-                season=request.POST.get('season'),
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
                 tag=request.POST.get('tags'),
@@ -69,7 +68,6 @@ def upload_closet(request):
             )
         else:
             new_clothes=clothes.objects.create(
-                season=request.POST.get('season'),
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
                 tag=request.POST.get('tags'),

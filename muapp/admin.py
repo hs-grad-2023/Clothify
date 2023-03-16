@@ -8,7 +8,7 @@ from .models import clothes
 class clothesAdmin(admin.ModelAdmin):
     list_display = ('id','type1', 'type2', 'name', 'imgfile','upload_date')
     list_filter = ('type1', 'type2')
-    fields = [('type1', 'type2'),'name','tag','imgfile','details','season']
+    fields = [('type1', 'type2'),'name','tag','imgfile','details']
     readonly_fields=('id','upload_date')
 
 # Register the admin class with the associated model

@@ -38,41 +38,43 @@ function addImage() {
 }
 
 // ===== form 유효성 테스트 =====
-
-// const submitform = document.querySelector("#clothes_info"); // form을 sumitform 변수에 저장
+var validationData_value = false;
+const submitform = document.querySelector("#clothes_info"); // form을 sumitform 변수에 저장
  
-// submitform.addEventListener("submit",validationData) 
-// // form이 submit되면 submitPhoto함수를 실행하겠다고 선언
- 
-// function validationData(event){
-//     alert("모야ㅐ");
-//     event.preventDefault(); //여기서 자동 submit을 막아줍니다.
-//     const clothes_info = {
-//     season : submitform.querySelector('#season'),
-//     type1 : submitform.querySelector('#type1'),
-//     type2 : submitform.querySelector('#type2'),
-//     tag : submitform.querySelector('#tags'),
-//     name : submitform.querySelector('#name'),
-//     imgfile : submitform.querySelector('#imgfile'),
-//     details : submitform.querySelector('#details'),
-//     };
+submitform.addEventListener("submit",validationData) 
+// form이 submit되면 submitPhoto함수를 실행하겠다고 선언
 
-//     if(clothes_info[0].value == "" ){ // input form이 비어있으면
-//         alert("분류1을 선택하지 않았습니다."); //이 부분에 알림창 띄우는 코드를 작성해 줄 예정입니다
-//     }else if(clothes_info[1].value == "" ){ // input form이 비어있으면
-//         alert("분류2을 선택하지 않았습니다."); //이 부분에 알림창 띄우는 코드를 작성해 줄 예정입니다
-//     }else if(imgInput.value != ""){ // 사진이 있으면?
-//         submitform.submit(); //정상적으로 submit으로 넘어가겠습니다!
-//     }
 
-// }
+function validationData(event){
+    event.preventDefault(); //여기서 자동 submit을 막아줍니다.
+
+    if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
+        alert("분류1을 선택하지 않았습니다."); 
+        validationData_value= false;
+    }else if($('#type2').val() == "" || $('#type2').val() == "none" || $('#type2').val() == null){ // input form이 비어있으면
+        alert("분류2을 선택하지 않았습니다."); 
+        validationData_value= false;
+    }else if($('#name').val() == "" || $('#name').val() == "none" || $('#name').val() == null){ // input form이 비어있으면
+        alert("이름을 입력하지 않았습니다."); 
+        validationData_value= false;
+    }else if($('#imgfile').val() == "" || $('#imgfile').val() == "none" || $('#imgfile').val() == null){ // input form이 비어있으면
+        alert("이미지가 없습니다."); 
+        validationData_value= false;
+    }else if($('#imgfile').val() != ""){ // 사진이 있으면?
+        submitform.submit(); //정상적으로 submit으로 넘어가겠습니다!
+        validationData_value= true;
+    }   
+}
 
 // ===== button function =====
 
+
 $(document).ready(function() {
     $('.btn-submit').click(function() {
-      $('.btnText').html('Done');
-      $('.btn-submit').addClass('btn-active');
+        if(validationData_value){
+            $('.btnText').html('Done');
+            $('.btn-submit').addClass('btn-active');
+        }
     });
   });
 
@@ -113,31 +115,30 @@ function itemChange(){
     var shoes = ["=== 분류2 ===","구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"];
 
     var selectItem = $("#type1").val();
-    alert(selectItem);
     var changeItem;
       
-    if(selectItem == "top"){
+    if(selectItem == "상의"){
       changeItem = top;
     }
-    else if(selectItem == "pants"){
+    else if(selectItem == "바지"){
       changeItem = pants;
     }
-    else if(selectItem == "skirt"){
+    else if(selectItem == "치마"){
       changeItem =  skirt;
     }
-    else if(selectItem == "dress"){
+    else if(selectItem == "원피스"){
         changeItem = dress;
     }
-    else if(selectItem == "outer"){
+    else if(selectItem == "아우터"){
         changeItem = outer;
     }
-    else if(selectItem == "bag"){
+    else if(selectItem == "가방"){
         changeItem = bag;
     }
-    else if(selectItem == "accessary"){
+    else if(selectItem == "악세서리"){
         changeItem = accessary;
     }
-    else if(selectItem == "shoes"){
+    else if(selectItem == "신발"){
         changeItem = shoes;
     }
      
