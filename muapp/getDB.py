@@ -22,12 +22,12 @@ def get_clothes_list():
     for i in range(len(data)):
         clothes_list.append({
             'img' : data[i][7],
-            'type' : data[i][1]  + " - " + data[i][2],
-            'name' : data[i][6],
-            'upload_date' : data[i][7],
+            'type' : data[i][1]  + " / " + data[i][2],
+            'name' : data[i][5],
+            'upload_date' : data[i][6],
         })
 
         
     return clothes_list
 
-print(get_db())
+print(get_clothes_list())

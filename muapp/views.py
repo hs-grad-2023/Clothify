@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .getDB import get_db
+from .getDB import get_clothes_list
 from .models import clothes
 import sqlite3
 import requests
@@ -38,29 +38,21 @@ def blog(request):
 def feature(request):
     return render(request,"feature.html")
 
-def view_closet(request):
-    
-    results={
 
+def view_closet(request):
+    # db = get_clothes_list()
+    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    o = {
+        'c' : c
     }
-    return render(request,"view_closet.html",results)
+    
+    return render(request,"view_closet.html", o)
 
 def about(request):
     return render(request,"about.html")
 
 def login(request):
     return render(request,"login.html")
-
-def about_closet(request):
-    clotheslist = clothes.objects.all()
-    print(clotheslist)
-
-    info = {
-        'clotheslist' : clotheslist
-        }
-
-    return render(request,"view_closet.html",info )
-
 
 
 def upload_closet(request):
@@ -96,3 +88,6 @@ def upload_closet(request):
 #         post.delete()
 #         return redirect('/index/') #상품목록으로 돌아가야함
 #     return render(request, 'main/remove_post.html', {'clothes': clothes})
+
+def detail_closet(request):
+    return render(request,"detail_closet.html")

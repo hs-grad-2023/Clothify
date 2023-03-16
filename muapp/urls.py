@@ -35,6 +35,7 @@ urlpatterns = [
     path('view_closet/',views.view_closet, name='view_closet'),
     path('login/',views.login, name='login'),
     path('upload_closet/',views.upload_closet, name='upload_closet'),
+    path('detail_closet/',views.detail_closet, name='detail_closet'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

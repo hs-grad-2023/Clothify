@@ -208,10 +208,6 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     
                     <div class="row g-4">
-                        {% for clothes in c %}
-                        <a href="{% url 'detail_closet' %}"><img src="{{ clothes.imgfile}}" style="max-width:100%;height:auto;"></a>
-                        {% endfor%}
-
 
                         <table class="table">
                             <tr>
@@ -234,6 +230,7 @@
                         </table>
                 
                     </div>
+                    
                     
                 </div>
                 
