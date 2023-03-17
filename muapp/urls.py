@@ -34,11 +34,13 @@ urlpatterns = [
     path('about/',views.about, name='about'),
     path('blog/<str:username>/',views.blog, name='blog'),
     path('feature/',views.feature, name='feature'),
-    path('product/<str:username>/', views.product, name='product'),
+    # path('product/<str:username>/', views.product, name='product'),
     path('login/', views.logins, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('upload_closet/<str:username>/',views.upload_closet, name='upload_closet'),
+    path('view_closet/',views.view_closet, name='view_closet'),
+    path('detail_closet/<str:username>/',views.detail_closet, name='detail_closet'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

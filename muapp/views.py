@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
 from .api import get_loc_data, get_time, get_weather_data, get_icon
+from .getDB import get_clothes_list
 from .models import clothes
 import sqlite3
 import requests
@@ -36,9 +37,9 @@ def index(request):
     return render(request,"index.html",results)
 
 @login_required(login_url='login')
-def blog(request, username):
+def detail_closet(request, username):
     user = User.objects.get(username=username)
-    return render(request,"blog.html",{"user":user})
+    return render(request,"detail_closet.html",{"user":user})
 
 def feature(request):
     return render(request,"feature.html")
@@ -47,6 +48,15 @@ def feature(request):
 def product(request, username):
     user = User.objects.get(username=username)
     return render(request,"product.html",{"user":user})
+
+def view_closet(request):
+    # db = get_clothes_list()
+    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    o = {
+        'c' : c
+    }
+    
+    return render(request,"view_closet.html", o)
 
 def about(request):
     return render(request,"about.html")
@@ -82,14 +92,6 @@ def logins(request):
     return render(request, 'login2.html', {'form': form}) 
 
 
-# def 데이터받아오는페이지(request):
-#     clotheslist = clothes.objects.all()
-
-#     info = {
-#         'clotheslist' : clotheslist
-#         }
-
-#     return render(request,"uploadcloset.html",info )
 
 @login_required(login_url='login')
 def upload_closet(request, username):
@@ -97,27 +99,29 @@ def upload_closet(request, username):
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
             new_clothes=clothes.objects.create(
-                season=request.POST.get('season'),
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
-                tag=request.POST.get('tag'),
+                tag=request.POST.get('tags'),
                 name=request.POST.get('name'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
             )
         else:
             new_clothes=clothes.objects.create(
-                season=request.POST.get('season'),
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
-                tag=request.POST.get('tag'),
+                tag=request.POST.get('tags'),
                 name=request.POST.get('name'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
             )
-        messages.success(request,'성공적으로 등록되었습니다! ')
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
+
+@login_required(login_url='login')
+def blog(request, username):
+    user = User.objects.get(username=username)
+    return render(request,"blog.html",{"user":user})
 
 
 #게시글이 생성되면 index로 생성되지 않으면 글쓰기 게시판으로 돌아간다는데

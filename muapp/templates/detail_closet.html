@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
-    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
-    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link">Try on</a>
 {% endblock %}
 {% block closet %}
-    <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
+    <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Clothes</a>
 {% endblock closet %}
 
 {% block jsv %}
@@ -158,18 +158,6 @@
                 <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">계절별</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-1" class="dropdown-item">봄</a>
-                                    <a href="#tab-1" class="dropdown-item">여름</a>
-                                    <a href="#tab-1" class="dropdown-item">가을</a>
-                                    <a href="#tab-1" class="dropdown-item">겨울</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
                             <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">아우터</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
@@ -216,17 +204,11 @@
             </div>
 
             <div class="tab-content">
+                
                 <div id="tab-1" class="tab-pane fade show p-0 active">
-                    <div class="row g-4">
-                        {% for clothes in clothes.objects.all %}
-                        <figure>
-                            <div style="with:18rem;">
-                                <img src="{{clothes.objects.imgfile}}" class="" alt="...">
-
-                            </div>
-                        </figure>
-                        {% endfor %}
                     
+                    <div class="row g-4">
+
                         <table class="table">
                             <tr>
                                 <th>이름</th>
@@ -236,18 +218,22 @@
                                 <th>업로드 된 시간</th>
                             </tr>
 
-                            {% for c in clothes   %}
-                                <tr>
-                                    <td>{{ c.name }}</td>
-                                    <td>{{ c.type1 }}</td>
-                                    <td>{{ c.type2 }}</td>
-                                    <td>{{ c.tag }}</td>
-                                    <td>{{ c.purchase_date }}</td>
-                                </tr>
-                            {% endfor %}
+                            {% for clothes in c %}
+                            <tr>
+                                <td>{{ clothes.name }}</td>
+                                <td>{{ clothes.type1 }}</td>
+                                <td>{{ clothes.type2 }}</td>
+                                <td>{{ clothes.tag }}</td>
+                                <td>{{ clothes.upload_date }}</td>
+                            </tr>
+                            {% endfor%}
                         </table>
+                
                     </div>
+                    
+                    
                 </div>
+                
                 <div id="tab-2" class="tab-pane fade show p-0">
                     <div class="row g-4">
                         <div class="col-xl-3 col-lg-4 col-md-6">
