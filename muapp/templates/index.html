@@ -96,7 +96,7 @@
                         <h4 class="mb-3 jamsil">가상 피팅</h4>
                         <p class="mb-4 jamsil">옷을 실제로 입지 않고도 가상에서<br>먼저 확인해 볼 수 있습니다!</p>
                         {% if user.is_authenticated %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'product' user.username %}">더보기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' user.username %}">더보기</a>
                         {% else %}
                         <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'login' %}">로그인 하기</a>
                         {% endif %}
@@ -108,7 +108,7 @@
                         <h4 class="mb-3 jamsil">옷장 관리</h4>
                         <p class="mb-4 jamsil">내 전용 옷장을 만들어서 손쉽게 자신의 옷들을<br>관리할 수 있습니다!</p>
                         {% if user.is_authenticated %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'product' user.username %}">더보기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' user.username %}">더보기</a>
                         {% else %}
                         <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'login' %}">로그인 하기</a>
                         {% endif %}
@@ -120,7 +120,7 @@
                         <h4 class="mb-3 jamsil">코디 추천</h4>
                         <p class="mb-4 jamsil">오늘 날씨에 뭘 입어야할지 모를때<br>코디를 추천해줍니다!</p>
                         {% if user.is_authenticated %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'product' user.username %}">더보기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' user.username %}">더보기</a>
                         {% else %}
                         <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'login' %}">로그인 하기</a>
                         {% endif %}
