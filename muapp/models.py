@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 
 # Create your models here.
 class clothes(models.Model):
@@ -12,7 +13,7 @@ class clothes(models.Model):
     imgfile = models.ImageField(null=True,  blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png') # 이미지 컬럼 추가(사진을 여러개)
     details = models.CharField(max_length=200, default="", null=True,  blank=True, )
     season = models.CharField(max_length=50)
-    upload_date = models.DateField(auto_now_add=True)
+    upload_date = models.DateTimeField(default=timezone.now)
     id = models.AutoField(primary_key=True)
     # price = models.IntegerField(default=0)
     # purchase_date = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)

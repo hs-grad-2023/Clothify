@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+{% block content %}
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-0 gx-5 align-items-end">
+            <div class="col-lg-6" style="padding-top: 100px;">
+                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                    <h1 class="display-5 mb-3 jamsil">회원가입</h1>
+                    <p class="jamsil">회원가입을 해보세요!</p>
+                    <div class="container my-3" style="padding-left: 0px;">
+                        <form method="post" action="{% url 'signup' %}">
+                            {% csrf_token %}
+                            {% include "form_errors.html" %}
+                            <div class="mb-3 jamsil">
+                                <label for="username">아이디</label>
+                                <input type="text" class="form-control" name="username" id="username"
+                                       value="{{ form.username.value|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="email">이메일</label>
+                                <input type="text" class="form-control" name="email" id="email"
+                                       value="{{ form.email.value|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="password1">비밀번호</label>
+                                <input type="password" class="form-control" name="password1" id="password1"
+                                       value="{{ form.password1.value|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="password2">비밀번호 확인</label>
+                                <input type="password" class="form-control" name="password2" id="password2"
+                                    value="{{ form.password2.value|default_if_none:'' }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary jamsil">생성하기</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
