@@ -39,6 +39,9 @@
     <!-- Product Start -->
     <div class="container-xxl py-5">
         <div class="container">
+            <div class="col text-start text-lg-end">
+                <a class="btn btn-lg btn-outline-primary border-2 " href="{% url 'view_closet' %}">목록</a>
+            </div>
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
                     <div class="section-header text-start mb-5 wow fadeInUp"
@@ -68,7 +71,7 @@
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
-                                    <label for="type1" class="col-sm-2 col-form-label text-end">분류 1</label>
+                                    <label for="type1" class="col-sm-2 col-form-label text-end fw-bold">분류 1</label>
                                     <select name="type1" id="type1" size="1" class="form-select col" onchange="itemChange()">
                                         <option value="none" disabled selected>=== 분류 1 ===</option>
                                         <option>상의</option>
@@ -82,17 +85,17 @@
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="type2" class="col-sm-2 col-form-label text-end">분류 2</label>
+                                    <label for="type2" class="col-sm-2 col-form-label text-end fw-bold">분류 2</label>
                                     <select name="type2" id="type2" size="1" class="form-select col">
                                         <option value="none" disabled selected>=== 분류 2 ===</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="name" class="col-sm-2 col-form-label text-end">옷 이름</label>
-                                    <input type="text" name="name" id="name"class="form-control col" />
+                                    <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
+                                    <input type="text" name="name" id="name"class="form-control col" placeholder="(필수 입력)"/>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="tag" class="col-sm-2 col-form-label text-end">태그</label>
+                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">태그</label>
                                     <input type="text" name="tag" id="tag" class="form-control col" 
                                     onkeyup="if(window.event.keyCode==13){addtag()}" placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
                                     <button type="button" id="btn-addtag" class="btn-addtag col-sm-2" onclick="addtag()">추가</button>
@@ -103,7 +106,7 @@
                                     <input type="text" name="tags" id="tags" class="form-control col" readonly/>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="details" class="col-sm-2 col-form-label text-end">상세정보</label>
+                                    <label for="details" class="col-sm-2 col-form-label text-end fw-bold">상세정보</label>
                                     <textarea name="details" id="details" class="form-control col" rows="5"></textarea>
                                 </div>
                                 <div class="mb-3 row">
