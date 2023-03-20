@@ -39,21 +39,24 @@ def index(request):
 @login_required(login_url='login')
 def detail_closet(request, username):
     user = User.objects.get(username=username)
+    # db = get_clothes_list()
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    
     o = {
         'c' : c,
+        "user":user,
     }
-    return render(request,"detail_closet.html",{"user":user,
-                                                "cloths":o})
+    return render(request,"detail_closet.html",o)
 
 def feature(request):
     return render(request,"feature.html")
 
-@login_required(login_url='login')
-def product(request, username):
-    user = User.objects.get(username=username)
-    return render(request,"product.html",{"user":user})
+# @login_required(login_url='login')
+# def product(request, username):
+#     user = User.objects.get(username=username)
+#     return render(request,"product.html",{"user":user})
 
+@login_required(login_url='login')
 def view_closet(request):
     # db = get_clothes_list()
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
@@ -126,13 +129,10 @@ def upload_closet(request, username):
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
 
-# @login_required(login_url='login')
-def upload_file(request, username):
-    user = User.objects.get(username=username)
+def upload_file(request):
     if request.method == 'POST' and request.FILES:
         file = request.FILES.get('imgfile')
         print(file.name)
-
     return JsonResponse('done',safe=False)
 
 @login_required(login_url='login')
@@ -140,9 +140,6 @@ def blog(request, username):
     user = User.objects.get(username=username)
     return render(request,"blog.html",{"user":user})
 
-
-#게시글이 생성되면 index로 생성되지 않으면 글쓰기 게시판으로 돌아간다는데
-# https://wikidocs.net/91438
 
 # def remove_clothes(request, pk):
 #     clothes = clothes.objects.get(pk=pk) #models.py 의 clothes

@@ -179,9 +179,13 @@
     </script> {% endcomment %}
     
     <!-- Navbar End -->
+
+    <!-- Main Start -->
     {% block content %}
 
     {% endblock content %}
+    <!-- Main End -->
+    
     <!-- Footer Start -->
     <div class="container-fluid bg-dark footer mt-0 pt-3 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -257,9 +261,9 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'assets/js/login-register.js' %}" type="text/javascript"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    {% block jsv %}
-
-    {% endblock jsv%}
+    
 </body>
+{% block jsv %}
 
+{% endblock jsv%}
 </html>
