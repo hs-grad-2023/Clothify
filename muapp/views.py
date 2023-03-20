@@ -44,7 +44,7 @@ def detail_closet(request, username):
     
     o = {
         'c' : c,
-        "user":user
+        "user":user,
     }
     return render(request,"detail_closet.html",o)
 
@@ -60,6 +60,7 @@ def feature(request):
 def view_closet(request, username):
     user = User.objects.get(username=username)
     # db = get_clothes_list()
+    user = User.objects.get(username=username)
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
     o = {
@@ -84,6 +85,8 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             login(request, user)  # 로그인
+            print(User.objects.get(username=username))
+            
             return redirect('/')
     else:
         form = UserForm()

@@ -40,7 +40,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('upload_closet/<str:username>/',views.upload_closet, name='upload_closet'),
     path('upload_files',views.upload_file,name='upload_file'),
-    path('view_closet/<str:username>',views.view_closet, name='view_closet'),
+    path('view_closet/<str:username>/',views.view_closet, name='view_closet'),
     path('detail_closet/<str:username>/',views.detail_closet, name='detail_closet'),
 ]
 
