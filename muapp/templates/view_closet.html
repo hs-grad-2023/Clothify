@@ -206,13 +206,13 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     
                     <div class="row g-4">
+                        {% if user.is_authenticated %}
                         {% for clothes in c %}
-                        <a href="{% url 'detail_closet' user.username %}">
-                            
-                            <img src="{{ clothes.imgfile }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
-                            
+                        <a href="{% url 'detail_closet' user.username %}">    
+                            <img src="{{ clothes.imgfile }}" id="{{ forloop.counter }}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
                         </a>
                         {% endfor%}
+                        {% endif %}
                         
                         
 
