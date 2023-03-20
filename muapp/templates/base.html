@@ -20,6 +20,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://kit.fontawesome.com/acf5847467.css" crossorigin="anonymous">
+    
 
     <!-- Libraries Stylesheet -->
     <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
@@ -27,9 +28,12 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/login-register.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/upload.css' %}" rel="stylesheet"/>
 
     <!-- Template Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/upload.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -53,53 +57,134 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
-                    
                     {% block nav %}
-                        
+                       
                     {% endblock %}
+                    {% if user.is_authenticated %}
                     <div class="nav-item dropdown">
-                        {% block closet %}
-                        
-                        {% endblock closet %}
-                        
-                        <div class="dropdown-menu m-0">
-                            <a href="{% url 'product' %}" class="dropdown-item jamsil">My closet</a>
-                            <a href="{% url 'blog' %}" class="dropdown-item jamsil">Codi book</a>
-                            <!-- dropdown 메뉴바 -->
-                            <!-- <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                            <a href="404.html" class="dropdown-item">404 Page</a> -->
+                        <a href="#" class="nav-link dropdown-toggle jamsil" data-bs-toggle="dropdown">Clothes</a>             
+                        <div class="dropdown-menu m-0" style="top: 60px;">
+                            <a href="{% url 'detail_closet' user.username %}" class="dropdown-item jamsil">My closet</a>
+                            <a href="{% url 'blog' user.username %}" class="dropdown-item jamsil">Codi book</a>
+                            <a href="{% url 'upload_closet' user.username %}" class="dropdown-item jamsil">(Test)Upload</a>
                         </div>
                     </div>
+                    <a href="{% url 'logout' %}" class="nav-item nav-link jamsil vis">로그아웃</a>    
+                    {% else %}
+                    <a href="{% url 'login' %}" class="nav-item nav-link jamsil vis">로그인</a> 
+                    {% endif %}
                     
 
                 </div>
                 <div class="d-none d-lg-flex ms-2">
-                    <a class="btn-sm-square bg-white rounded-circle ms-3" href="">
-                        <small class="fa fa-search text-body"></small>
+                    {% if user.is_authenticated %}
+                    <span class="nav-link jamsil" style="padding-left: 0px;">{{ user.username|title }}<span style="color: black;">님 반갑습니다!</span></span><button type="button" class="nav-link btn btn-outline-primary btn-sm jamsil" style="color: black;" onclick="location.href='{% url 'logout' %}'">로그아웃</button>
+                    {% else %}
+                    <a class="btn-sm-square bg-white rounded-circle ms-3" href="{% url 'login' %}">
+                        <small class="fas fa-user-large text-body"></small>
                     </a>
-                    <a class="btn-sm-square bg-white rounded-circle ms-3" href="login">
-                        <small class="fa fa-user text-body"></small>
+                    <a class="btn-sm-square bg-white rounded-circle ms-3" href="{% url 'signup' %}">
+                    {% comment %} <a class="btn-sm-square bg-white rounded-circle ms-3" data-bs-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();"> {% endcomment %}
+                        <small class="fas fa-user-plus text-body"></small>
                     </a>
+                    {% endif %}
                     {% comment %} <a href="{% url 'blog' %}" class="btn-sm-square bg-white rounded-circle ms-3">
                         <small class="fa fa-anchor text-body"></small>
                     </a>
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="">
-                        <small class="fa fa-shopping-bag text-body"></small> {% endcomment %}
-                    </a>
+                        <small class="fa fa-shopping-bag text-body"></small> 
+                    </a>{% endcomment %}
                 </div>
             </div>
         </nav>
     </div>
+    {% comment %} 모달창 {% endcomment %}
+    {% comment %} <div class="modal fade login" id="loginModal">
+        <div class="modal-dialog login animated">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">로그인</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="modalClose()">&times;</button>
+              </div>
+              <div class="modal-body">
+                  <div class="box">
+                       <div class="content">
+                          <div class="social">
+                              <a class="circle github" href="#">
+                                  <i class="fa fa-github fa-fw"></i>
+                              </a>
+                              <a id="google_login" class="circle google" href="#">
+                                  <i class="fa fa-google-plus fa-fw"></i>
+                              </a>
+                              <a id="facebook_login" class="circle facebook" href="#">
+                                  <i class="fa fa-facebook fa-fw"></i>
+                              </a>
+                          </div>
+                          <div class="division">
+                              <div class="line l"></div>
+                                <span>or</span>
+                              <div class="line r"></div>
+                          </div>
+                          <div class="error"></div>
+                          <div class="form loginBox">
+                              <form method="" action="" accept-charset="UTF-8">
+                                <input id="email" class="form-control" type="text" placeholder="Email" name="email">
+                                <input id="password" class="form-control" type="password" placeholder="Password" name="password">
+                                <input class="btn btn-default btn-login" type="button" value="로그인" onclick="loginAjax()">
+                              </form>
+                          </div>
+                       </div>
+                  </div>
+                  <div class="box">
+                      <div class="content registerBox" style="display:none;">
+                       <div class="form">
+                          <form method="POST" html="{:multipart=>true}" data-remote="true" action="{% url 'signup' %}" accept-charset="UTF-8">
+                            {% csrf_token %}
+                            <input id="email" class="form-control" type="text" placeholder="Email" name="email" value="{{ form.username.value|default_if_none:'' }}">
+                            <input id="password" class="form-control" type="password" placeholder="Password" name="password" value="{{ form.password1.value|default_if_none:'' }}">
+                            <input id="password_confirmation" class="form-control" type="password" placeholder="Repeat Password" name="password_confirmation" value="{{ form.password2.value|default_if_none:'' }}">
+                            <input class="btn btn-default btn-register" type="button" value="회원가입" name="commit">
+                          </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <div class="forgot login-footer">
+                      <span>Looking to
+                           <a href="javascript: showRegisterForm();">create an account</a>
+                      ?</span>
+                  </div>
+                  <div class="forgot register-footer" style="display:none">
+                       <span>Already have an account?</span>
+                       <a href="javascript: showLoginForm();">Login</a>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            openLoginModal();
+        });
+
+        function modalClose() {
+            $('#loginModal').modal('hide'); 
+            $('#loginModal').hide();
+            $('.jquery-modal').click();
+        }
+    </script> {% endcomment %}
+    
     <!-- Navbar End -->
     {% block content %}
 
     {% endblock %}
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark footer mt-0 pt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container-fluid bg-dark footer mt-0 pt-3 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h1 class="fw-bold mb-1 jamsil" style="color: #0b83f7; text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">C<span class="fs-1" style="color: #6fa8dc;">lo<span class="fs-3">th</span></span><span class="fs-4" style="color: #8fce00;">ify</span></h1>
+                    <h1 class="fw-bold mb-1 jamsil" style="color: #0b83f7; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">C<span class="fs-1" style="color: #6fa8dc;">lo<span class="fs-3">th</span></span><span class="fs-4" style="color: #8fce00;">ify</span></h1>
                     <p class="jamsil">옷을 손쉽게 관리한다는 뜻으로, "Cloth"와 "Simplify"의 합성어입니다.</p>
                     {% comment %} <div class="d-flex pt-2">
                         <a class="btn btn-square btn-outline-light rounded-circle me-1" href=""><i class="fab fa-twitter"></i></a>
@@ -116,9 +201,13 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4 jamsil">바로가기</h4>
-                    <a class="btn btn-link hahmelt" href="">가상 피팅</a>
-                    <a class="btn btn-link hahmelt" href="">옷장 관리</a>
-                    <a class="btn btn-link hahmelt" href="">코디 추천</a>
+                    <a class="btn btn-link jamsil" href="">가상 피팅</a>
+                    {% if user.is_authenticated %}
+                    <a class="btn btn-link jamsil" href="{% url 'detail_closet' user.username %}">옷장 관리</a>
+                    {% else %}
+                    <a class="btn btn-link jamsil" href="{% url 'login' %}">옷장 관리</a>
+                    {% endif %}
+                    <a class="btn btn-link jamsil" href="">코디 추천</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4 jamsil">알림받기</h4>
@@ -163,6 +252,9 @@
     
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'assets/js/login-register.js' %}" type="text/javascript"></script>
+    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script defer src="{% static 'js/upload_closet.js' %}"></script>
     {% block jsv %}
 
     {% endblock %}

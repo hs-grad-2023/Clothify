@@ -14,17 +14,33 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from django.contrib.auth import views as auth_views
 
 from muapp import views
+# index는 대문, blog는 게시판
+# from main.views import index, blog, posting
+
+# 이미지를 업로드하자
+from django.conf.urls.static import static
+from django.conf import settings
+
+
 
 urlpatterns = [
     # path('404', views.404, name='404'),
     path('', views.index, name='index'),
     path('index', views.index, name='index'),
     path('about/',views.about, name='about'),
-    path('blog/',views.blog, name='blog'),
+    path('blog/<str:username>/',views.blog, name='blog'),
     path('feature/',views.feature, name='feature'),
-    path('product/',views.product, name='product'),
-    path('login/',views.login, name='login'),
+    # path('product/<str:username>/', views.product, name='product'),
+    path('login/', views.logins, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('signup/', views.signup, name='signup'),
+    path('upload_closet/<str:username>/',views.upload_closet, name='upload_closet'),
+    path('view_closet/',views.view_closet, name='view_closet'),
+    path('detail_closet/<str:username>/',views.detail_closet, name='detail_closet'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
