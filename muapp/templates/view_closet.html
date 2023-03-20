@@ -211,10 +211,10 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     
                     <div class="row g-4">
-                        {% for clothes in c %}
-                        <a href="{% url 'detail_closet' %}">
+                        {% for clothes in o %}
+                        <a href="{% url 'detail_closet' user.username %}">
                             
-                            <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
+                            <img src="{{ clothes.imgfile }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
                             
                         </a>
                         {% endfor%}
@@ -230,7 +230,7 @@
                                 <th>업로드 된 시간</th>
                             </tr>
 
-                            {% for clothes in c %}
+                            {% for clothes in o %}
                             <tr>
                                 <td>{{ clothes.name }}</td>
                                 <td>{{ clothes.type1 }}</td>
