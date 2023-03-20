@@ -69,7 +69,7 @@
                         <div class="dropdown-menu m-0" style="top: 60px;">
                             <a href="{% url 'detail_closet' user.username %}" class="dropdown-item jamsil">My closet</a>
                             <a href="{% url 'blog' user.username %}" class="dropdown-item jamsil">Codi book</a>
-                            <a href="{% url 'upload_closet' user.username %}" class="dropdown-item jamsil">(Test)Upload</a>
+                            <a href="{% url 'uploadCloset' user.username %}" class="dropdown-item jamsil">(Test)Upload</a>
                         </div>
                     </div>
                     <a href="{% url 'logout' %}" class="nav-item nav-link jamsil vis">로그아웃</a>    
@@ -185,7 +185,7 @@
 
     {% endblock content %}
     <!-- Main End -->
-    
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark footer mt-0 pt-3 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">

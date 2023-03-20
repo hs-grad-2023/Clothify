@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div>
-                            <form action=""
+                            <form action='{% url 'uploadFile' %}'
                                   method="POST"
                                   name="clothes_info"
                                   id="clothes_info"
@@ -159,8 +159,19 @@
             produlyDisplayPoweredByUppy:false,
             //autoOpenFileEditor: true,
         })
+        .use(Uppy.Core,{
+
+            meta: {
+                type1: type1,
+                type2: type2,
+                tag: tag,
+                name: name,
+                imgfile: imgfile,
+                details: details
+            }
+        })
+
         .use(Uppy.Form, { 
-                        id : 'imgFile',
                         target: '#clothes_info',
                         getMetaFromForm: true,
                         addResultToForm: true,
@@ -179,7 +190,7 @@
             headers: {'X-CSRFToken':"{{csrf_token}}"},
             formData: true,
             fileData: true,
-            fieldName:'imgfile',
+            fieldName:'.clothes_info',
         })
 
         .use(Uppy.ImageEditor, { target: Uppy.Dashboard })    

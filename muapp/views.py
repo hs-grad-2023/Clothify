@@ -57,8 +57,9 @@ def feature(request):
 #     return render(request,"product.html",{"user":user})
 
 @login_required(login_url='login')
-def view_closet(request):
+def view_closet(request,username):
     # db = get_clothes_list()
+    user = User.objects.get(username=username)
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     o = {
         'c' : c
@@ -103,7 +104,7 @@ def logins(request):
 
 
 @login_required(login_url='login')
-def upload_closet(request, username):
+def uploadCloset(request, username):
     user = User.objects.get(username=username)
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
@@ -127,7 +128,7 @@ def upload_closet(request, username):
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
 
-def upload_file(request):
+def uploadFile(request):
     if request.method == 'POST' and request.FILES:
         file = request.FILES.get('imgfile')
         print(file.name)

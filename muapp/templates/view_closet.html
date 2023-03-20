@@ -212,9 +212,9 @@
                     
                     <div class="row g-4">
                         {% for clothes in c %}
-                        <a href="{% url 'detail_closet' %}">
+                        <a href="{% url 'detail_closet' user.username %}">
                             
-                            <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
+                            <img src="{{ clothes.imgfile }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
                             
                         </a>
                         {% endfor%}
@@ -442,7 +442,7 @@
                     </div>
                 </div>
                 <div class="btn-container" name="btn-container">
-                    <button class="btn-submit" type="button" onclick = "location.href = '{% url 'upload_closet' user.username %}' " onkeyup="if(window.event.keyCode==13){}">
+                    <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.username %}' " onkeyup="if(window.event.keyCode==13){}">
                         <p id="btnText">Upload</p>
                     </button>
                 </div>
