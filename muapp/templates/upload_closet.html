@@ -98,11 +98,7 @@
                                     <label for="details" class="col-sm-2 col-form-label text-end fw-bold">상세정보</label>
                                     <textarea name="details" id="details" class="form-control col" rows="5" placeholder="생략 가능"></textarea>
                                 </div>
-                                <!-- Uppy Dashboard -->
-                                <div class="mb-3 row">
-                                    <label class="col-sm-2"></label>
-                                    <div class="file-upload-content"></div>
-                                </div>
+
 
                                 <!-- button design -->
                                 <div class="btn-container" name="btn-container">
@@ -116,6 +112,11 @@
                                     </button>
                                 </div>
                             </form>
+                            <!-- Uppy Dashboard -->
+                            <div class="mb-3 row">
+                                <label class="col-sm-2"></label>
+                                <div class="file-upload-content"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -131,7 +132,7 @@
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
 <script type="module">
     // import {Uppy, Dashboard, DropTarget, Compressor, XHRUpload, ImageEditor} from "https://releases.transloadit.com/uppy/v3.6.1/uppy.min.mjs"
-
+    console.log
     const COMPANION_URL = "http://companion.uppy.io"
     const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
     
@@ -151,14 +152,14 @@
             produlyDisplayPoweredByUppy:false,
             //autoOpenFileEditor: true,
         })
-        {% comment %} .use(Uppy.Form, { 
+        .use(Uppy.Form, { 
                         id : 'imgFile',
-                        target: '#clothes_info',
+                        target: '.clothes_info',
                         getMetaFromForm: true,
                         addResultToForm: true,
                         resultName: 'imgFile',
                         triggerUploadOnSubmit: false,
-                        submitOnSuccess: false}) {% endcomment %}
+                        submitOnSuccess: false})
         
         // Allow dropping files on any element or the whole document
         .use(Uppy.DropTarget, { target: document.body })
@@ -197,6 +198,6 @@
             console.log('successful files:', result.successful)
             console.log('failed files:', result.failed)
         })
-        </script>
+</script>
 
 {% endblock jsv%}

@@ -28,6 +28,7 @@ class UserForm(UserCreationForm):
     username = forms.CharField(label="아이디", error_messages={'required': '아이디를 입력해주세요.'})
     password1 = forms.CharField(label="비밀번호", error_messages={'required': '비밀번호를 입력해주세요.'})
     password2 = forms.CharField(label="비밀번호 확인", error_messages={'required': '비밀번호 확인을 입력해주세요.'})
+    
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

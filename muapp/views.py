@@ -39,7 +39,12 @@ def index(request):
 @login_required(login_url='login')
 def detail_closet(request, username):
     user = User.objects.get(username=username)
-    return render(request,"detail_closet.html",{"user":user})
+    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    o = {
+        'c' : c,
+    }
+    return render(request,"detail_closet.html",{"user":user,
+                                                "cloths":o})
 
 def feature(request):
     return render(request,"feature.html")
@@ -73,6 +78,8 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             login(request, user)  # 로그인
+            print(User.objects.get(username=username))
+            
             return redirect('/')
     else:
         form = UserForm()
@@ -144,12 +151,3 @@ def blog(request, username):
 #         return redirect('/index/') #상품목록으로 돌아가야함
 #     return render(request, 'main/remove_post.html', {'clothes': clothes})
 
-
-def detail_closet(request):
-    # db = get_clothes_list()
-    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
-    
-    o = {
-        'c' : c,
-    }
-    return render(request,"detail_closet.html", o)
