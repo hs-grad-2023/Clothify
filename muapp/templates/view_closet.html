@@ -211,35 +211,19 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     
                     <div class="row g-4">
-                        {% for clothes in c %}
-                        <a href="{% url 'detail_closet' %}">
-                            
-                            <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
-                            
-                        </a>
-                        {% endfor%}
                         
-                        
-
-                        <table class="table">
-                            <tr>
-                                <th>이름</th>
-                                <th>종류(상의, 하의..)</th>
-                                <th>구체적인 종류(반팔, 반바지, 스커트..)</th>
-                                <th>태그</th>
-                                <th>업로드 된 시간</th>
-                            </tr>
-
-                            {% for clothes in c %}
-                            <tr>
-                                <td>{{ clothes.name }}</td>
-                                <td>{{ clothes.type1 }}</td>
-                                <td>{{ clothes.type2 }}</td>
-                                <td>{{ clothes.tag }}</td>
-                                <td>{{ clothes.upload_date }}</td>
-                            </tr>
-                            {% endfor%}
-                        </table>
+                        <form action="{% url 'detail_closet' user.username %}" method="POST" >
+                            
+                            <div>
+                                {% for clothes in c %}
+                                    {% if clothes.imgfile %}
+                                    <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="30%" height="auto" alt="{{ clothes.imgfile }}">  
+                                    {% endif %}
+                                {% endfor%}
+                            </div>
+                                
+                            
+                        </form>
                 
                     </div>
                     

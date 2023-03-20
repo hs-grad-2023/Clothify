@@ -57,11 +57,14 @@ def feature(request):
 #     return render(request,"product.html",{"user":user})
 
 @login_required(login_url='login')
-def view_closet(request):
+def view_closet(request, username):
+    user = User.objects.get(username=username)
     # db = get_clothes_list()
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    
     o = {
-        'c' : c
+        'c' : c,
+        "user":user
     }
     
     return render(request,"view_closet.html", o)
