@@ -127,6 +127,9 @@
 
     })(jQuery);
 </script>
+<script>
+     
+</script>
 {% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
@@ -209,9 +212,14 @@
                     
                     <div class="row g-4">
                         {% for clothes in c %}
-                        <a href="{% url 'detail_closet' %}"><img src="{{ clothes.imgfile}}" style="max-width:100%;height:auto;"></a>
+                        <a href="{% url 'detail_closet' %}">
+                            
+                            <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="100%" height="auto" alt="{{ clothes.imgfile }}">  
+                            
+                        </a>
                         {% endfor%}
-
+                        
+                        
 
                         <table class="table">
                             <tr>
