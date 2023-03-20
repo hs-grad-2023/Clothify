@@ -13,7 +13,6 @@ def get_db():#
 
     return data
 
-print(get_db())
 
 def get_clothes_list():
     data = get_db()
@@ -29,5 +28,3 @@ def get_clothes_list():
 
         
     return clothes_list
-
-print(get_clothes_list())

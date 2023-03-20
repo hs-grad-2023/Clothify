@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .api import get_loc_data, get_time, get_weather_data, get_icon
 from .getDB import get_clothes_list
 from .models import clothes
@@ -57,6 +57,7 @@ def view_closet(request):
     }
     
     return render(request,"view_closet.html", o)
+
 
 def about(request):
     return render(request,"about.html")
@@ -118,6 +119,15 @@ def upload_closet(request, username):
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
 
+# @login_required(login_url='login')
+def upload_file(request, username):
+    user = User.objects.get(username=username)
+    if request.method == 'POST' and request.FILES:
+        file = request.FILES.get('imgfile')
+        print(file.name)
+
+    return JsonResponse('done',safe=False)
+
 @login_required(login_url='login')
 def blog(request, username):
     user = User.objects.get(username=username)
@@ -133,3 +143,13 @@ def blog(request, username):
 #         post.delete()
 #         return redirect('/index/') #상품목록으로 돌아가야함
 #     return render(request, 'main/remove_post.html', {'clothes': clothes})
+
+
+def detail_closet(request):
+    # db = get_clothes_list()
+    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    
+    o = {
+        'c' : c,
+    }
+    return render(request,"detail_closet.html", o)
