@@ -133,9 +133,6 @@ def blog(request, username):
     return render(request,"blog.html",{"user":user})
 
 
-#게시글이 생성되면 index로 생성되지 않으면 글쓰기 게시판으로 돌아간다는데
-# https://wikidocs.net/91438
-
 # def remove_clothes(request, pk):
 #     clothes = clothes.objects.get(pk=pk) #models.py 의 clothes
 #     if request.method == 'POST':
