@@ -1,21 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
-<link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+{% block style %}
+    <link href="{% static 'css/upload.css' %}" rel="stylesheet">
+    <link href="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.css" rel="stylesheet">
+{% endblock style %}
 {% block nav %}
-    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
-    <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
-    <a href="{% url 'index' %}" class="nav-item nav-link">Try on</a>
-{% endblock nav %}
-{% block closet %}
-    <a href="#"
-       class="nav-link dropdown-toggle active"
-       data-bs-toggle="dropdown">Clothes</a>
-    <link href="{% static 'css/upload.css' %}" rel="stylesheet"/>
-    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script defer src="{% static 'js/upload_closet.js' %}"></script>
-{% endblock closet %}
-{% block jsv %}
-{% endblock jsv %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+
 {% block content %}
     <!-- Page Header Start -->
     <div class="container-fluid page-header mb-5 wow fadeIn"
@@ -39,6 +33,9 @@
     <!-- Product Start -->
     <div class="container-xxl py-5">
         <div class="container">
+            <div class="col text-start text-lg-end">
+                <a class="btn btn-lg btn-outline-primary border-2 " href="{% url 'view_closet' %}">목록</a>
+            </div>
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
                     <div class="section-header text-start mb-5 wow fadeInUp"
@@ -68,7 +65,7 @@
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
-                                    <label for="type1" class="col-sm-2 col-form-label text-end">분류 1</label>
+                                    <label for="type1" class="col-sm-2 col-form-label text-end fw-bold">분류 1</label>
                                     <select name="type1" id="type1" size="1" class="form-select col" onchange="itemChange()">
                                         <option value="none" disabled selected>=== 분류 1 ===</option>
                                         <option>상의</option>
@@ -82,17 +79,18 @@
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="type2" class="col-sm-2 col-form-label text-end">분류 2</label>
+                                    <label for="type2" class="col-sm-2 col-form-label text-end fw-bold">분류 2</label>
                                     <select name="type2" id="type2" size="1" class="form-select col">
                                         <option value="none" disabled selected>=== 분류 2 ===</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="name" class="col-sm-2 col-form-label text-end">옷 이름</label>
-                                    <input type="text" name="name" id="name"class="form-control col" />
+                                    <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
+                                    <input type="text" name="name" id="name"class="form-control col" placeholder="(필수 입력)"/>
                                 </div>
+                                <!-- tag -->
                                 <div class="mb-3 row">
-                                    <label for="tag" class="col-sm-2 col-form-label text-end">태그</label>
+                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">태그</label>
                                     <input type="text" name="tag" id="tag" class="form-control col" 
                                     onkeyup="if(window.event.keyCode==13){addtag()}" placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
                                     <button type="button" id="btn-addtag" class="btn-addtag col-sm-2" onclick="addtag()">추가</button>
@@ -103,31 +101,13 @@
                                     <input type="text" name="tags" id="tags" class="form-control col" readonly/>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="details" class="col-sm-2 col-form-label text-end">상세정보</label>
-                                    <textarea name="details" id="details" class="form-control col" rows="5"></textarea>
+                                    <label for="details" class="col-sm-2 col-form-label text-end fw-bold">상세정보</label>
+                                    <textarea name="details" id="details" class="form-control col" rows="5" placeholder="생략 가능"></textarea>
                                 </div>
+                                <!-- Uppy Dashboard -->
                                 <div class="mb-3 row">
                                     <label class="col-sm-2"></label>
-                                    <div class="file-upload col">
-                                        <button class="file-upload-btn" type="button"
-                                                onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
-                                        <div class="image-upload-wrap">
-                                            <input class="file-upload-input" type='file'
-                                                   onchange="readURL(this);"
-                                                   name="imgfile" id="imgfile" multiple="multiple"/>
-                                            <div class="drag-text">
-                                                <h3>Drag and drop a file or select add Image</h3>
-                                            </div>
-                                        </div>
-                                        <div class="file-upload-content">
-                                            <img class="file-upload-image" src="#" alt="your image" />
-                                            <div class="image-title-wrap">
-                                                <button type="button" onclick="removeUpload()" class="remove-image">
-                                                    Remove <span class="image-title">Uploaded Image</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div class="file-upload-content"></div>
                                 </div>
 
                                 <!-- button design -->
@@ -143,7 +123,6 @@
                                 </div>
                             </form>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -152,3 +131,78 @@
 
 <!-- Product End -->
 {% endblock content %}
+
+{% block jsv %}
+<script defer src="{% static 'js/upload_closet.js' %}"></script>
+<script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
+<script type="module">
+    // import {Uppy, Dashboard, DropTarget, Compressor, XHRUpload, ImageEditor} from "https://releases.transloadit.com/uppy/v3.6.1/uppy.min.mjs"
+
+    const COMPANION_URL = "http://companion.uppy.io"
+    const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
+    
+    var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger })
+    // const uppy = new Uppy({ logger: debugLogger })
+        // The main UI that shows files, progress and holds all plugins
+        .use(Uppy.Dashboard, {
+            id: 'Dashboard',
+            target: '.file-upload-content',
+            inline: true,
+            height: 470,
+            metaFields: [
+                { id: 'name', name: 'Name', placeholder: 'file name' },
+                { id: 'caption', name: 'Caption', placeholder: 'add description' },
+            ],
+            note: 'Images only, Up to 10 files',
+            produlyDisplayPoweredByUppy:false,
+            //autoOpenFileEditor: true,
+        })
+        {% comment %} .use(Uppy.Form, { 
+                        id : 'imgFile',
+                        target: '#clothes_info',
+                        getMetaFromForm: true,
+                        addResultToForm: true,
+                        resultName: 'imgFile',
+                        triggerUploadOnSubmit: false,
+                        submitOnSuccess: false}) {% endcomment %}
+        
+        // Allow dropping files on any element or the whole document
+        .use(Uppy.DropTarget, { target: document.body })
+        // Optimize images
+        .use(Uppy.Compressor)
+        // Upload
+        //.use(Uppy.Tus, { endpoint: 'https://tusd.tusdemo.net/files/' })
+        {% comment %} .use(Uppy.XHRUpload,{
+            endpoint: '{% url 'upload_file' %}',
+            headers: {'X-CSRFToken':"{{csrf_token}}"},
+            formData: true,
+            fileData: true,
+            fieldName:'imgfile',
+        }) {% endcomment %}
+
+        .use(Uppy.ImageEditor, { target: Uppy.Dashboard })    
+
+
+
+        // All remote services like Instagram and Google Drive in one package
+        {% comment %} 
+        .use(Uppy.RemoteSources, {
+            // You can manually specify `sources` here, by default all available are included. 
+            // See docs: https://uppy.io/docs/remote-sources/#sources.
+            companionUrl: COMPANION_URL,
+            companionAllowedHosts: COMPANION_ALLOWED_HOSTS,
+            sources: ['Instagram', 'GoogleDrive', 'Facebook', 'OneDrive', 'Url'],
+        })
+        .use(Uppy.Webcam, { target: Uppy.Dashboard })
+        .use(Uppy.Audio, { target: Uppy.Dashboard, showRecordingLength: true })
+        .use(Uppy.ScreenCapture, { target: Uppy.Dashboard }) 
+        {% endcomment %}   
+        
+        
+        uppy.on('complete', result => {
+            console.log('successful files:', result.successful)
+            console.log('failed files:', result.failed)
+        })
+        </script>
+
+{% endblock jsv%}

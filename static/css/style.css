@@ -20,6 +20,70 @@
     font-style: normal;
 }
 
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+}
+
+button.close {
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.btn-login {
+    border-radius: 6px;
+}
+
+.btn-register {
+    border-radius: 6px;
+}
+
+.btn-outline-primary{
+    border-radius: 6px;
+}
+
+.modal {
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) { 
+    .modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 100%;
+    }
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.modal-content{
+    border-radius: 6px;
+    bottom: 130px;
+    
+    
+}
+
+.modal-header .close {
+    margin-top: -20px;
+}
+
+.modal-title {
+    margin: 0;
+    line-height: 1.428571429;
+}
+
 .jamsil{
     font-family: 'TheJamsil5Bold';
     font-weight: 700;
@@ -151,6 +215,9 @@
 .navbar .navbar-nav .nav-link.active {
     color: var(--dark);
 }
+.vis {
+    display: block;
+}
 
 @media (max-width: 991.98px) {
     .navbar .navbar-nav {
@@ -181,6 +248,10 @@
         visibility: visible;
         transition: .5s;
         opacity: 1;
+    }
+
+    .vis {
+        display: none;
     }
     
 }
@@ -242,12 +313,15 @@
         height: 100%;
         object-fit: cover;
     }
+    .modal-content{
+        bottom: 0px;
+    }
 }
 
 .page-header {
     padding-top: 12rem;
     padding-bottom: 6rem;
-    background: url(../img/carousel-1.jpg) top right no-repeat;
+    background: url(../img/carousel-5-1.jpg) top right no-repeat;
     background-size: cover;
 }
 
@@ -436,4 +510,34 @@
 
 .footer .copyright a:hover {
     color: var(--primary);
+}
+
+
+/* button */
+.btn-container{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.btn-submit{
+    width: 270px;
+    height: 80px;
+    border: none;
+    outline: none;
+    background: #2f2f2f;
+    color: #fff;
+    font-size: 22px;
+    border-radius: 40px;
+    text-align: center;
+    align-items: center;
+    box-shadow: 0 6px 20px -5px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
 }

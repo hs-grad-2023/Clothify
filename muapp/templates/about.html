@@ -1,20 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
-    <a href="{% url 'about' %}" class="nav-item nav-link active">About Us</a>
-    <a href="{% url 'index' %}" class="nav-item nav-link">Try on</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link active jamsil">소개</a>
 {% endblock %}
-{% block closet %}
-    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Clothes</a>
-{% endblock closet %}
+
 {% block content %}
 
 
     <!-- Page Header Start -->
     <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container">
-            <h1 class="display-3 mb-3 animated slideInDown">About Us</h1>
+            <h1 class="display-3 mb-3 animated slideInDown jamsil">소개</h1>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a class="text-body" href="#">Home</a></li>
@@ -37,7 +35,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <h1 class="display-5 mb-4">Best Organic Fruits And Vegetables</h1>
+                    <h1 class="display-5 mb-4 jamsil">Clothify에 대하여</h1>
                     <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
                     <p><i class="fa fa-check text-primary me-3"></i>Tempor erat elitr rebum at clita</p>
                     <p><i class="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>

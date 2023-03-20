@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.html import mark_safe
 
 # Create your models here.
@@ -12,11 +13,9 @@ class clothes(models.Model):
     type2 = models.CharField(max_length=50)
     tag = models.CharField(max_length=50, null=True,  blank=True)
     name = models.CharField(max_length=50)
-    imgfile = models.ImageField(null=True,  blank=True, upload_to="imgfiles/%m/%d",
-                                default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
-    details = models.CharField(
-        max_length=200, default="", null=True,  blank=True, )
-    upload_date = models.DateField(auto_now_add=True)
+    imgfile = models.ImageField(null=True,  blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
+    details = models.CharField(max_length=200, default="", null=True,  blank=True, )
+    upload_date = models.DateTimeField(default=timezone.now)
     id = models.AutoField(primary_key=True)
 
     class Meta:
