@@ -42,6 +42,8 @@ urlpatterns = [
     path('upload_files',views.uploadFile,name='uploadFile'),
     path('view_closet/<str:username>/',views.view_closet, name='view_closet'),
     path('detail_closet/<str:username>/',views.detail_closet, name='detail_closet'),
+    path('uppyTest/',views.uppyTest,name='uppyTest'),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

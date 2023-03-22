@@ -29,7 +29,7 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="col text-start text-lg-end">
-                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' %}">목록</a>
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.username %}">목록</a>
             </div>
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
@@ -49,10 +49,10 @@
                             </div>
                         </div>
                         <div>
-                            <form action='{% url 'uploadFile' %}'
+                            <form action=""
                                   method="POST"
-                                  name="clothes_info"
-                                  id="clothes_info"
+                                  name="clothesInfo"
+                                  id="clothesInfo"
                                   enctype="multipart/form-data"
                                   onkeydown="return event.key != 'Enter';"
                                   onsubmit="return validationData"
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="mb-3 row">
                                     <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
-                                    <input type="text" name="name" id="name"class="form-control col" placeholder="(필수 입력)"/>
+                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)"/>
                                 </div>
                                 <!-- tag -->
                                 <div class="mb-3 row">
@@ -98,15 +98,11 @@
                                     <label for="details" class="col-sm-2 col-form-label text-end fw-bold">상세정보</label>
                                     <textarea name="details" id="details" class="form-control col" rows="5" placeholder="생략 가능"></textarea>
                                 </div>
-<<<<<<< HEAD
-
-=======
                                 <!-- Uppy Dashboard -->
                                 <div class="mb-3 row">
                                     <label class="col-sm-2"></label>
                                     <div class="fileUploadContent col"></div>
                                 </div>
->>>>>>> 159ae3a56267af73ca31bdfecbe928fea2515cf8
 
                                 <!-- button design -->
                                 <div class="btn-container" name="btn-container">
@@ -120,11 +116,6 @@
                                     </button>
                                 </div>
                             </form>
-                            <!-- Uppy Dashboard -->
-                            <div class="mb-3 row">
-                                <label class="col-sm-2"></label>
-                                <div class="file-upload-content"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -140,12 +131,18 @@
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
 <script type="module">
     // import {Uppy, Dashboard, DropTarget, Compressor, XHRUpload, ImageEditor} from "https://releases.transloadit.com/uppy/v3.6.1/uppy.min.mjs"
-    console.log("test")
-
     const COMPANION_URL = "http://companion.uppy.io"
     const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
     
-    var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger })
+    var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger ,
+                                meta: {
+                                    type1: type1,
+                                    type2: type2,
+                                    tag: tag,
+                                    name: clothesName,
+                                    details: details
+                                },
+    })
     // const uppy = new Uppy({ logger: debugLogger })
         // The main UI that shows files, progress and holds all plugins
         .use(Uppy.Dashboard, {
@@ -154,31 +151,19 @@
             inline: true,
             height: 800,
             width: 1000,
-            metaFields: [
+            metaFields: [ //이미지 수정용 metaFields
                 { id: 'name', name: 'Name', placeholder: 'file name' },
                 { id: 'caption', name: 'Caption', placeholder: 'add description' },
             ],
             note: 'Images only, Up to 10 files',
             produlyDisplayPoweredByUppy:false,
-            //autoOpenFileEditor: true,
-        })
-        .use(Uppy.Core,{
-
-            meta: {
-                type1: type1,
-                type2: type2,
-                tag: tag,
-                name: name,
-                imgfile: imgfile,
-                details: details
-            }
+            autoOpenFileEditor: false,
         })
 
         .use(Uppy.Form, { 
-                        target: '.clothes_info',
+                        target: '#clothesInfo',
                         getMetaFromForm: true,
                         addResultToForm: true,
-                        resultName: 'imgFile',
                         triggerUploadOnSubmit: false,
                         submitOnSuccess: false})
         
@@ -189,11 +174,12 @@
         // Upload
         //.use(Uppy.Tus, { endpoint: 'https://tusd.tusdemo.net/files/' })
         .use(Uppy.XHRUpload,{
-            endpoint: '{% url 'upload_file' %}',
+            endpoint: '{% url 'uploadCloset' user.username %}',
             headers: {'X-CSRFToken':"{{csrf_token}}"},
             formData: true,
             fileData: true,
-            fieldName:'.clothes_info',
+            fieldName:'imgfile',
+            allowedMetaFields:true,
         })
 
         .use(Uppy.ImageEditor, { target: Uppy.Dashboard })    
@@ -201,7 +187,7 @@
 
 
         // All remote services like Instagram and Google Drive in one package
-        
+        /*
         .use(Uppy.RemoteSources, {
             // You can manually specify `sources` here, by default all available are included. 
             // See docs: https://uppy.io/docs/remote-sources/#sources.
@@ -211,7 +197,7 @@
         })
         .use(Uppy.Webcam, { target: Uppy.Dashboard })
         .use(Uppy.ScreenCapture, { target: Uppy.Dashboard }) 
-         
+         */
         
         
         uppy.on('complete', result => {

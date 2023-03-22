@@ -114,7 +114,7 @@ def uploadCloset(request, username):
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
                 tag=request.POST.get('tags'),
-                name=request.POST.get('name'),
+                name=request.POST.get('clothesName'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
             )
@@ -123,7 +123,7 @@ def uploadCloset(request, username):
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
                 tag=request.POST.get('tags'),
-                name=request.POST.get('name'),
+                name=request.POST.get('clothesName'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
             )
@@ -132,9 +132,18 @@ def uploadCloset(request, username):
 
 def uploadFile(request):
     if request.method == 'POST' and request.FILES:
-        file = request.FILES.get('imgfile')
-        print(file.name)
-    return JsonResponse('done',safe=False)
+        new_clothes=clothes.objects.create(
+                type1='test',
+                type2='test',
+                tag=request.POST.get('tag'),
+                name=request.POST.get('clothesName'),
+                imgfileTest=request.FILES.get('imgfile'),
+                details='',
+            )
+        print(request.FILES.get('imgfile'))
+        return redirect('index') #상품목록으로 돌아가야함
+    #return JsonResponse('done',safe=False)
+    return render(request, 'upload_closet.html')
 
 @login_required(login_url='login')
 def blog(request, username):
@@ -149,3 +158,5 @@ def blog(request, username):
 #         return redirect('/index/') #상품목록으로 돌아가야함
 #     return render(request, 'main/remove_post.html', {'clothes': clothes})
 
+def uppyTest(request):
+    return render(request,"Uppy_test.html",)

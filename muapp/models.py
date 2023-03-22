@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -14,7 +15,7 @@ class clothes(models.Model):
     type2 = models.CharField(max_length=50)
     tag = models.CharField(max_length=50, null=True,  blank=True)
     name = models.CharField(max_length=50)
-    imgfile = models.ImageField(null=True,  blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
+    imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
     details = models.CharField(max_length=200, default="", null=True,  blank=True, )
     upload_date = models.DateTimeField(default=timezone.now)
     id = models.AutoField(primary_key=True)
@@ -30,14 +31,3 @@ class clothes(models.Model):
             return reverse('model-detail-view', args=[str(self.id)])
     
 
-# class type1(models.Model):
-#     name = models.CharField(max_length=200, help_text='상의, 하의.. ')
-     
-#     def __str__(self): #식별자
-#         return self.name
-    
-# class type2(models.Model):
-#     name = models.CharField(max_length=200, help_text='상의, 하의.. ')
-     
-#     def __str__(self): #식별자
-#         return self.name
