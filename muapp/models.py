@@ -10,7 +10,6 @@ from django.utils.html import mark_safe
 
 class clothes(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    username = models.CharField(User.USERNAME_FIELD, max_length=15,default="unknown")
     type1 = models.CharField(max_length=10)  
     type2 = models.CharField(max_length=50)
     tag = models.CharField(max_length=50, null=True,  blank=True)

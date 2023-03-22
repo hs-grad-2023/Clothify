@@ -67,7 +67,7 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle jamsil" data-bs-toggle="dropdown">Clothes</a>             
                         <div class="dropdown-menu m-0" style="top: 60px;">
-                            <a href="{% url 'detail_closet' user.username %}" class="dropdown-item jamsil">My closet</a>
+                            <a href="{% url 'view_closet' user.username %}" class="dropdown-item jamsil">My closet</a>
                             <a href="{% url 'blog' user.username %}" class="dropdown-item jamsil">Codi book</a>
                             <a href="{% url 'uploadCloset' user.username %}" class="dropdown-item jamsil">(Test)Upload</a>
                         </div>
