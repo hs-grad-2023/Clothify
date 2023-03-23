@@ -67,20 +67,8 @@ window.onload=function(){
     }
 
 
-    // $(document).ready(function() {
-    //     $('.btn-submit').click(function() {
-    //         if(validationData_value){
-    //             $('.btnText').html('Done')
-    //             $('.btn-submit').addClass('btn-active');
-    //         }
-    //     });
-    //   });
-
     
     // ===== tag =====
-
- 
-
     function addtag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시키는 코드
         var value = $('#tag').val();
         var valuelist = $('#tags').val();
@@ -132,7 +120,7 @@ window.onload=function(){
         this.parentNode.remove();
     }
 
-
+    document.getElementById("type1").addEventListener("change", itemChange);
     // ===== type2 option =====
     function itemChange(){
 
