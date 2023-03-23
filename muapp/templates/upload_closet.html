@@ -3,6 +3,8 @@
 {% block style %}
     <link href="{% static 'css/upload.css' %}" rel="stylesheet">
     <link href="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.css" rel="stylesheet">
+
+
 {% endblock style %}
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
@@ -86,11 +88,17 @@
                                 <div class="mb-3 row">
                                     <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">태그</label>
                                     <input type="text" name="tag" id="tag" class="form-control col" 
-                                    onkeyup="if(window.event.keyCode==13){addtag()}" placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
-                                    <button type="button" id="btn-addtag" class="btn-addtag col-sm-2" onclick="addtag()">추가</button>
+                                           placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
+                                    <button type="button" id="btn_addtag" class="btn_addtag col-sm-2" style="border:none" >추가</button>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-2 col-form-label text-end"></label>
+                                    <div class="col tag_area">
+
+                                    </div>
                                 </div>
                                 <!--tag 추가해서 띄우는 label-->
-                                <div class="mb-3 row">
+                                <div class="mb-3 row" style="display:none">
                                     <label class="col-sm-2 col-form-label text-end"></label>
                                     <input type="text" name="tags" id="tags" class="form-control col" readonly/>
                                 </div>
@@ -106,7 +114,7 @@
 
                                 <!-- button design -->
                                 <div class="btn-container" name="btn-container">
-                                    <button id="btn-submit" class="btn-submit" type="sumbit" onkeyup="if(window.event.keyCode==13){}">
+                                    <button id="btn-submit" class="btn-submit" type="sumbit">
                                         <p id="btnText">Submit</p>
                                         <div class="check-box">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -123,16 +131,19 @@
         </div>
     </div>
 
-<!-- Product End -->
 {% endblock content %}
+<!-- Product End -->
 
 {% block jsv %}
 <script defer src="{% static 'js/upload_closet.js' %}"></script>
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
+<script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
 <script type="module">
     // import {Uppy, Dashboard, DropTarget, Compressor, XHRUpload, ImageEditor} from "https://releases.transloadit.com/uppy/v3.6.1/uppy.min.mjs"
-    const COMPANION_URL = "http://companion.uppy.io"
-    const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
+    //const COMPANION_URL = "http://companion.uppy.io"
+    // const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
+    // const COMPANION_URL = '{% url 'uploadCloset' user.username %}'
+    //const COMPANION_ALLOWED_HOSTS = ['http://127.0.0.1:8000/']
     
     var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger ,
                                 meta: {
@@ -142,8 +153,8 @@
                                     name: clothesName,
                                     details: details
                                 },
+                                locale : Uppy.locales.ko_KR,
     })
-    // const uppy = new Uppy({ logger: debugLogger })
         // The main UI that shows files, progress and holds all plugins
         .use(Uppy.Dashboard, {
             id: 'Dashboard',
@@ -158,6 +169,7 @@
             note: 'Images only, Up to 10 files',
             produlyDisplayPoweredByUppy:false,
             autoOpenFileEditor: false,
+            
         })
 
         .use(Uppy.Form, { 
@@ -172,9 +184,8 @@
         // Optimize images
         .use(Uppy.Compressor)
         // Upload
-        //.use(Uppy.Tus, { endpoint: 'https://tusd.tusdemo.net/files/' })
         .use(Uppy.XHRUpload,{
-            endpoint: '{% url 'uploadCloset' user.username %}',
+            endpoint: "{% url 'uploadCloset' user.username %}",
             headers: {'X-CSRFToken':"{{csrf_token}}"},
             formData: true,
             fileData: true,
@@ -196,8 +207,8 @@
             sources: ['Instagram', 'GoogleDrive', 'Facebook', 'OneDrive', 'Url'],
         })
         .use(Uppy.Webcam, { target: Uppy.Dashboard })
-        .use(Uppy.ScreenCapture, { target: Uppy.Dashboard }) 
-         */
+        */
+
         
         
         uppy.on('complete', result => {

@@ -19,22 +19,37 @@ from django.contrib.auth.decorators import login_required
 #     return render(request,"404.html")
 
 def index(request):
-    location = get_loc_data()
-    date = get_time()
-    weather = get_weather_data()
-    icon = get_icon()
-    results= {
-        'location' : location,
-        'date' : date,
-        'minTmp' : weather['minTmp'],
-        'maxTmp' : weather['maxTmp'] ,
-        'alertRain' : weather['alertRain'] ,
-        'curTmp' : weather['curTmp'] ,
-        'humidity' : weather['humidity'] ,
-        'sky' : weather['sky'] ,
-        'icon' : icon,
-        }
-    return render(request,"index.html",results)
+    try:
+        location = get_loc_data()
+        date = get_time()
+        weather = get_weather_data()
+        icon = get_icon()
+        results= {
+            'location' : location,
+            'date' : date,
+            'minTmp' : weather['minTmp'],
+            'maxTmp' : weather['maxTmp'] ,
+            'alertRain' : weather['alertRain'] ,
+            'curTmp' : weather['curTmp'] ,
+            'humidity' : weather['humidity'] ,
+            'sky' : weather['sky'] ,
+            'icon' : icon,
+            }
+        return render(request,"index.html",results)
+    except:
+        results= {
+            'location' : location,
+            'date' : date,
+            'minTmp' : weather['minTmp'],
+            'maxTmp' : weather['maxTmp'] ,
+            'alertRain' : weather['alertRain'] ,
+            'curTmp' : weather['curTmp'] ,
+            'humidity' : weather['humidity'] ,
+            'sky' : weather['sky'] ,
+            'icon' : icon,
+            'errcode' : 1
+            }
+        return render(request,"index.html",results)
 
 @login_required(login_url='login')
 def detail_closet(request, username):
@@ -133,20 +148,20 @@ def uploadCloset(request, username):
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
 
-def uploadFile(request):
-    if request.method == 'POST' and request.FILES:
-        new_clothes=clothes.objects.create(
-                type1='test',
-                type2='test',
-                tag=request.POST.get('tag'),
-                name=request.POST.get('clothesName'),
-                imgfileTest=request.FILES.get('imgfile'),
-                details='',
-            )
-        print(request.FILES.get('imgfile'))
-        return redirect('index') #상품목록으로 돌아가야함
-    #return JsonResponse('done',safe=False)
-    return render(request, 'upload_closet.html')
+# def uploadFile(request):
+#     if request.method == 'POST' and request.FILES:
+#         new_clothes=clothes.objects.create(
+#                 type1='test',
+#                 type2='test',
+#                 tag=request.POST.get('tag'),
+#                 name=request.POST.get('clothesName'),
+#                 imgfileTest=request.FILES.get('imgfile'),
+#                 details='',
+#             )
+#         print(request.FILES.get('imgfile'))
+#         return redirect('index') #상품목록으로 돌아가야함
+#     #return JsonResponse('done',safe=False)
+#     return render(request, 'upload_closet.html')
 
 @login_required(login_url='login')
 def blog(request, username):

@@ -211,7 +211,7 @@
                             <div>
                                 {% for clothes in c %}
                                     {% if clothes.imgfile %}
-                                    <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="30%" height="auto" alt="{{ clothes.imgfile }}">  
+                                    <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="30%" height="auto" margin="10%" padding="10%" alt="{{ clothes.imgfile }}">  
                                     {% endif %}
                                 {% endfor%}
                             </div>
