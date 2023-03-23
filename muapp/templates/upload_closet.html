@@ -28,8 +28,8 @@
     <!-- Product Start -->
     <div class="container-xxl py-5">
         <div class="container">
-            <div class="col text-start text-lg-end">
-                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.username %}">목록</a>
+            <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
             </div>
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
@@ -107,7 +107,7 @@
                                 <!-- button design -->
                                 <div class="btn-container" name="btn-container">
                                     <button id="btn-submit" class="btn-submit" type="sumbit" onkeyup="if(window.event.keyCode==13){}">
-                                        <p id="btnText">Submit</p>
+                                        <p class="jamsil" id="btnText">저장</p>
                                         <div class="check-box">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                                                 <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />

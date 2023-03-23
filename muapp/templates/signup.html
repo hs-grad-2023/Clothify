@@ -40,6 +40,24 @@
                                 <input type="password" class="form-control" name="password2" id="password2"
                                     value="{{ form.password2.value|default_if_none:'' }}">
                             </div>
+                            <div class="mb-3 jamsil">
+                                <label for="sex">성별</label>
+                                <select class="form-select" name="sex" id="sex">
+                                    <option value="">성별을 선택해주세요.</option>
+                                    <option value="남">남자</option>
+                                    <option value="여">여자</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="height">키(:cm)</label>
+                                <input type="text" class="form-control" name="height" id="height" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                    value="{{ form.height.value|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="weight">몸무게(:kg)</label>
+                                <input type="text" class="form-control" name="weight" id="weight" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                    value="{{ form.weight.value|default_if_none:'' }}">
+                            </div>
                             <button type="submit" class="btn btn-primary jamsil">생성하기</button>
                         </form>
                     </div>
