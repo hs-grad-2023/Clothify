@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import clothes
+from django.contrib.auth.admin import UserAdmin
+from .models import clothes, User
 
 # Register your models here.
 
@@ -13,5 +14,6 @@ class clothesAdmin(admin.ModelAdmin):
 
 # Register the admin class with the associated model
 admin.site.register(clothes, clothesAdmin)
+admin.site.register(User, UserAdmin)
 
 #모든 관리자 사이트 사용자화(customisation) 선택들(choices)의 완벽한 레퍼런스(reference)를 The Django Admin site(장고 문서)에서 찾을 수 있습니다.

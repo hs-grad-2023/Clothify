@@ -12,6 +12,9 @@ from django.contrib.auth import authenticate, login
 from .forms import UserForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.utils.crypto import get_random_string
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Create your views here.
 
@@ -53,7 +56,7 @@ def index(request):
 
 @login_required(login_url='login')
 def detail_closet(request, username):
-    user = User.objects.get(username=username)
+    user = User.objects.get(first_name=username)
     # db = get_clothes_list()
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
@@ -73,9 +76,8 @@ def feature(request):
 
 @login_required(login_url='login')
 def view_closet(request, username):
-    user = User.objects.get(username=username)
     # db = get_clothes_list()
-    user = User.objects.get(username=username)
+    user = User.objects.get(first_name=username)
     c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
     o = {
@@ -95,12 +97,13 @@ def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.first_name = get_random_string(length=16)
+            user.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             login(request, user)  # 로그인
-            print(User.objects.get(username=username))
             
             return redirect('/')
     else:
@@ -122,10 +125,9 @@ def logins(request):
     return render(request, 'login2.html', {'form': form}) 
 
 
-
 @login_required(login_url='login')
 def uploadCloset(request, username):
-    user = User.objects.get(username=username)
+    user = User.objects.get(first_name=username)
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
             new_clothes=clothes.objects.create(
@@ -165,7 +167,7 @@ def uploadCloset(request, username):
 
 @login_required(login_url='login')
 def blog(request, username):
-    user = User.objects.get(username=username)
+    user = User.objects.get(first_name=username)
     return render(request,"blog.html",{"user":user})
 
 

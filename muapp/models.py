@@ -1,6 +1,6 @@
 import datetime
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import mark_safe
@@ -29,4 +29,8 @@ class clothes(models.Model):
             """Returns the url to access a particular instance of MyModelName."""
             return reverse('model-detail-view', args=[str(self.id)])
     
+class User(AbstractUser):
+     height = models.IntegerField('키', null = True, blank = True)
+     weight = models.IntegerField('몸무게', null = True, blank = True)
+     sex = models.CharField('성별', max_length=1, blank=True, null=True)
 
