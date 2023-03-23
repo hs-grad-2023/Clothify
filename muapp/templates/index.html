@@ -100,7 +100,7 @@
                         {% if user.is_authenticated %}
                         <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' user.first_name %}">더보기</a>
                         {% else %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'login' %}">로그인 하기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' " " %}">로그인 하기</a>
                         {% endif %}
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                         {% if user.is_authenticated %}
                         <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' user.first_name %}">더보기</a>
                         {% else %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'login' %}">로그인 하기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' " " %}">로그인 하기</a>
                         {% endif %}
                     </div>
                 </div>
@@ -122,9 +122,9 @@
                         <h4 class="mb-3 jamsil">코디 추천</h4>
                         <p class="mb-4 jamsil">오늘 날씨에 뭘 입어야할지 모를때<br>코디를 추천해줍니다!</p>
                         {% if user.is_authenticated %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'detail_closet' user.first_name %}">더보기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'blog' user.first_name %}">더보기</a>
                         {% else %}
-                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'login' %}">로그인 하기</a>
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'blog' " " %}">로그인 하기</a>
                         {% endif %}
                     </div>
                 </div>
@@ -695,7 +695,7 @@
             {% else %}
             <div class="bg-light text-center wow fadeInUp" style="padding-bottom: 120px;" data-wow-delay="0.1s">
                 <div class="col-12 text-center wow fadeInUp" style="padding-top: 110px;" data-wow-delay="0.1s">
-                    <a class="btn btn-primary rounded-pill py-3 px-5 jamsil" href="{% url 'login' %}">로그인 하기</a>
+                    <a class="btn btn-primary rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' " " %}">로그인 하기</a>
                 </div>
             </div>
             {% endif %}

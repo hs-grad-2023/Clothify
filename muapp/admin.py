@@ -7,10 +7,29 @@ from .models import clothes, User
 
 #admin.site.register(clothes) #관리자가 옷(clothes)에 접근 가능
 class clothesAdmin(admin.ModelAdmin):
-    list_display = ('id','type1', 'type2', 'name', 'imgfile','upload_date')
+    list_display = ('id','type1', 'type2', 'name', 'imgfile', 'upload_date')
     list_filter = ('type1', 'type2')
-    fields = [('type1', 'type2'),'name','tags','imgfile','details']
+    fields = [('type1', 'type2'),'name','tag','imgfile','details']
     readonly_fields=('id','upload_date')
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'first_name', 'password', 'email', 'height', 'weight', 'sex', 'joined_at', 'last_login_at', 'is_superuser')
+    list_display_links = ('id', 'email', 'username')
+    exclude = ('password',)
+
+    def joined_at(self, obj):
+        return obj.date_joined.strftime("%Y-%m-%d")
+
+    def last_login_at(self, obj):
+        if not obj.last_login:
+            return ''
+        return obj.last_login.strftime("%Y-%m-%d %H:%M")
+    
+    joined_at.admin_order_field = '-date_joined'      
+    joined_at.short_description = '가입일'
+
+    last_login_at.admin_order_field = 'last_login_at'
+    last_login_at.short_description = '최근 로그인'
 
 # Register the admin class with the associated model
 admin.site.register(clothes, clothesAdmin)

@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 # Create your views here.
@@ -115,10 +116,14 @@ def logins(request):
         return redirect('/')
     if request.method =='POST':
         form = LoginForm(request, request.POST)
-
         if form.is_valid():
             #검증 완료시 로그인
             login(request, form.get_user())
+            user = form.get_user().first_name
+            if 'next' in request.POST:
+                next_string = request.POST.get('next')
+                result = next_string.split('/')[1]
+                return redirect(f'/{result}/{user}')
             return redirect('/')
     else:
         form = LoginForm()

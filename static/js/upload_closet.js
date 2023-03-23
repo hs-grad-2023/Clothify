@@ -132,7 +132,7 @@ window.onload=function(){
         this.parentNode.remove();
     }
 
-
+    document.getElementById("type1").addEventListener("change", itemChange);
     // ===== type2 option =====
     function itemChange(){
 

@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import mark_safe
+from django.core.mail import send_mail
 
 # Create your models here.
 
@@ -33,4 +34,7 @@ class User(AbstractUser):
      height = models.IntegerField('키', null = True, blank = True)
      weight = models.IntegerField('몸무게', null = True, blank = True)
      sex = models.CharField('성별', max_length=1, blank=True, null=True)
+     
+     def email_user(self, subject, message, from_email=None, **kwargs): # 이메일 발송 메소드
+          send_mail(subject, message, from_email, [self.email], **kwargs)
 
