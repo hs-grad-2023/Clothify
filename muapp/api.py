@@ -91,6 +91,7 @@ def get_weather_api_data(): #날씨 데이터 가져올 수 있는 API
 
     return data['response']['body']['items']['item'] 
 
+
 def convertfcstTime():
     curTime = datetime.datetime.now()
     if curTime.hour < 3:
@@ -157,15 +158,16 @@ def get_weather_data(): # weatehr 데이터 가공해서 list로 내보내는 �
     
     return weatherCondition
 
+
 def get_loc_api_data(): #현재 위치 가져오는 구글API, IP를 기준으로 가져옴.
     loc_serviceKey = 'AIzaSyC7VJJjA3IZGewIvQ5uSzUxpqQwfqoxjxI'
     url = f"https://www.googleapis.com/geolocation/v1/geolocate?key={loc_serviceKey}"
     options = {'considerIp': True,}
     response = requests.post(url,options)
     data = response.json()
+    
     return data['location']
-# print('날씨:', get_loc_api_data()['lat'])
-
+    
 def get_loc_data():# 현재 위치를 바탕으로 db에서 주소 이름 찾는 코드
     lat = get_loc_api_data()['lat']
     lng = get_loc_api_data()['lng']
@@ -203,6 +205,8 @@ def get_icon():
         icon = "bi bi-cloud-snow-fill"
     elif weather['sky'] == '소나기':
         icon = "bi bi-cloud-rain-heavy-fill"
+    else: #오류처리
+        icon = '0'
     
     return icon
 
