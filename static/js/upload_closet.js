@@ -2,9 +2,9 @@ window.onload=function(){
 
     // ===== file reader =====
 
-    var formInfo = document.getElementsByName("FormInfo").keys(); // form을 sumitform 변수에 저장
+    var formInfo = document.getElementsByName("FormInfo").item; // form을 sumitform 변수에 저장
 
-    
+    console.log(formInfo);
 
     // ===== form 유효성 테스트 =====
     var validationData_value = false;
@@ -142,9 +142,7 @@ window.onload=function(){
     }
 
     document.getElementById("type1").addEventListener("change", itemChange);
-
     // ===== type2 option =====
-    
     function itemChange(){
 
         var top = ["=== 분류 2 ===","니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"];
