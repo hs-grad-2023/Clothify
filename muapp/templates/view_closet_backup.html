@@ -172,34 +172,58 @@
             </div>
 
             <div class="tab-content">
+                
                 <div id="tab-1" class="tab-pane fade show p-0 active">
+                    
                     <div class="row g-4">
-                        {% for c in clothesobject %}
-                            {% if c.uploadUser_id == user.id%}
-                            {% if c.imgfile %}
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="product-item">
-                                        <div class="position-relative bg-light overflow-hidden">
-                                            <img class="img-fluid w-100" src="{{c.imgfile.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="{{ c.imgfile }}">
-                                        </div>
-                                        <div class="text-center p-4">
-                                            <a class="d-block p mb-2" href="">{{c.name}}</a>
-                                        </div>
-                                        <hr width="80%" align="center">
-                                        <div class="text-end p-4">
-                                            <a class="d-block p mb-2 text-black-50" href="" style="">{{c.type1}}-{{c.type2}}</a>
-                                        </div>
-                                    </div>      
-                                </div>
-                            {% endif%}
-                            {% endif%}
-                        {% endfor %}
+                        <form action="{% url 'detail_closet' user.username %}" method="POST" >
+                            
+                            <div>
+                                {% for clothes in c %}
+                                    {% if clothes.imgfile %}
+                                    <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="30%" height="auto" margin="10%" padding="10%" alt="{{ clothes.imgfile }}">  
+                                    <p>clothes.type1 : {{clothes.type1}} clothes.type2 : {{clothes.type2}}</p>
+                                    {% endif %}
+                                {% endfor%}
+                            </div>
+                                
+                            
+                        </form>
+                
                     </div>
+                    
                 </div>
                 
                 <div id="tab-2" class="tab-pane fade show p-0">
                     <div class="row g-4">
-                        <!-- <item 1개 시작>-->
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                {% for clothes in c %}
+                                    {% if clothes.imgfile%}
+                                <div class="position-relative bg-light overflow-hidden">
+                                
+                                    <img class="img-fluid w-100" src="{{ clothes.imgfile.url }}" alt="{{ clothes.imgfile }}">
+                                    
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2 text-primary" href="{% url 'detail_closet' user.username}">{{ clothes.name }}</a>   <!--옷장 이름 클릭하면 detail_closet으로 이동-->
+                                </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name}">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="product-item">
                                 <div class="position-relative bg-light overflow-hidden">
@@ -212,13 +236,67 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <item 1개 끝>-->
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                    
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 text-center">
                             <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
                         </div>
                     </div>
                 </div>
-                <!-- Tab 3 -->
                 <div id="tab-3" class="tab-pane fade show p-0">
                     <div class="row g-4">
                         <div class="col-xl-3 col-lg-4 col-md-6">
@@ -229,6 +307,86 @@
                                 </div>
                                 <div class="text-center p-4">
                                     <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                    
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                    
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="product-item">
+                                <div class="position-relative bg-light overflow-hidden">
+                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                                </div>
+                                <div class="text-center p-4">
+                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    
                                 </div>
                             </div>
                         </div>

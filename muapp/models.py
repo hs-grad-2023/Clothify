@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -10,6 +11,8 @@ from django.core.mail import send_mail
 
 
 class clothes(models.Model):
+    uploadUser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    uploadUserName = models.CharField(max_length=30,default="unknown")
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
     type1 = models.CharField(max_length=10)  
     type2 = models.CharField(max_length=50)
