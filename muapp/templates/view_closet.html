@@ -227,13 +227,18 @@
                     <div class="row g-4">
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="product-item">
+                                {% for clothes in c %}
+                                    {% if clothes.imgfile%}
                                 <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
+                                
+                                    <img class="img-fluid w-100" src="{{ clothes.imgfile.url }}" alt="{{ clothes.imgfile }}">
+                                    
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
+                                    <a class="d-block p mb-2 text-primary" href="{% url 'detail_closet' user.username}">{{ clothes.name }}</a>   <!--옷장 이름 클릭하면 detail_closet으로 이동-->
                                 </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-4 col-md-6">
@@ -243,7 +248,7 @@
                                     <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
+                                    <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name}">Fresh Tomato</a>
                                     
                                 </div>
                             </div>
@@ -420,7 +425,7 @@
                     </div>
                 </div>
                 <div class="btn-container" name="btn-container">
-                    <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.username %}' " onkeyup="if(window.event.keyCode==13){}">
+                    <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
                         <p id="btnText">Upload</p>
                     </button>
                 </div>

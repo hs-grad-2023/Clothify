@@ -115,7 +115,7 @@
                                 <!-- button design -->
                                 <div class="btn-container" name="btn-container">
                                     <button id="btn-submit" class="btn-submit" type="sumbit" onkeyup="if(window.event.keyCode==13){}">
-                                        <p class="jamsil" id="btnText">저장</p>
+                                        <p class="jamsil" id="btnText" style="padding-top: 15px;">저장</p>
                                         <div class="check-box">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                                                 <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
@@ -130,7 +130,7 @@
             </div>
         </div>
     </div>
-
+    
 {% endblock content %}
 <!-- Product End -->
 
@@ -185,7 +185,7 @@
         .use(Uppy.Compressor)
         // Upload
         .use(Uppy.XHRUpload,{
-            endpoint: "{% url 'uploadCloset' user.username %}",
+            endpoint: "{% url 'uploadCloset' user.first_name %}",
             headers: {'X-CSRFToken':"{{csrf_token}}"},
             formData: true,
             fileData: true,
