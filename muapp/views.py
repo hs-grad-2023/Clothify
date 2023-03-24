@@ -156,31 +156,6 @@ def uploadCloset(request, username):
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
 
-@login_required(login_url='login')
-def uploadCloset(request, username):
-    user = User.objects.get(first_name=username)
-    if request.method == 'POST':
-        if request.FILES.get('imgfile'):
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-            )
-        else:
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-            )
-        return redirect('index') #상품목록으로 돌아가야함
-    return render(request, 'upload_closet.html',{"user":user})
-
 
 
 @login_required(login_url='login')
