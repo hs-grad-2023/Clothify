@@ -178,8 +178,8 @@
                         target: '#clothesInfo',
                         getMetaFromForm: true,
                         addResultToForm: true,
-                        //triggerUploadOnSubmit: true, //Uppy가 업로드/인코딩을 완료한 후 양식을 제출할지 여부를 구성합니다(부울, 기본값: false).
-                        //submitOnSuccess: true, //모든 파일이 업로드된 후 양식을 실제로 제출해야 하는 경우
+                        triggerUploadOnSubmit: true, //Uppy가 업로드/인코딩을 완료한 후 양식을 제출할지 여부를 구성합니다(부울, 기본값: false).
+                        submitOnSuccess: true, //모든 파일이 업로드된 후 양식을 실제로 제출해야 하는 경우
                         resultName: 'FormInfo', //<input type="hidden">의 요소의 이름 (string, default: uppyResult).
                       })
         
@@ -198,6 +198,7 @@
         })
 
         .use(Uppy.ImageEditor, { target: Uppy.Dashboard })    
+        .use(Uppy.Webcam, { target: Uppy.Dashboard })
 
 
 
@@ -210,11 +211,11 @@
             companionAllowedHosts: COMPANION_ALLOWED_HOSTS,
             sources: ['Instagram', 'GoogleDrive', 'Facebook', 'OneDrive', 'Url'],
         })
-        .use(Uppy.Webcam, { target: Uppy.Dashboard })
         */
 
         
-        uppy.upload().then((result) => {
+        uppy.upload().then((result) => { //Start uploading added files.
+            console.log(formInfo);
             console.info('Successful uploads:', result.successful);
         
             if (result.failed.length > 0) {
@@ -225,10 +226,11 @@
             }
         });
         
-        {% comment %} uppy.on('complete', result => {
+        uppy.on('complete', result => { //Fired when all uploads are complete.
             console.log('successful files:', result.successful)
             console.log('failed files:', result.failed)
-        }) {% endcomment %}
+        })
+        
 </script>
 
 {% endblock jsv%}
