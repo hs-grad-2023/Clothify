@@ -1,9 +1,8 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
 from .getDB import get_clothes_list
 from .models import clothes
-import sqlite3
 import requests
 import datetime
 import math, json, sqlite3
@@ -69,7 +68,9 @@ def index(request):
 
 @login_required(login_url='login')
 def detail_closet(request, username):
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     # db = get_clothes_list()
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
@@ -90,7 +91,9 @@ def feature(request):
 @login_required(login_url='login')
 def view_closet(request, username):
     # db = get_clothes_list()
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
     result = {
@@ -145,7 +148,9 @@ def logins(request):
 @login_required(login_url='login')
 def uploadCloset(request, username):
     error = False
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
+    if user != request.user:
+        return HttpResponseForbidden()
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
             new_clothes=clothes.objects.create(
@@ -163,19 +168,23 @@ def uploadCloset(request, username):
             error = True
             print(request.FILES.get('imgfile'))
             # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
-    return render(request, 'upload_closet.html',{"user":user, 'error':error})
+    return render(request, 'upload_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함
 
 
 
 @login_required(login_url='login')
 def blog(request, username):
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     return render(request,"blog.html",{"user":user})
 
 @login_required(login_url='login')
 def virtual_fit(request, username):
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     return render(request,"virtual_fit.html",{"user":user})
 
 
@@ -186,5 +195,3 @@ def virtual_fit(request, username):
 #         return redirect('/index/') #상품목록으로 돌아가야함
 #     return render(request, 'main/remove_post.html', {'clothes': clothes})
 
-def uppyTest(request):
-    return render(request,"Uppy_test.html",)

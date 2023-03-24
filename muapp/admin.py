@@ -13,8 +13,8 @@ class clothesAdmin(admin.ModelAdmin):
     readonly_fields=('id','upload_date')
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'first_name', 'password', 'email', 'height', 'weight', 'sex', 'joined_at', 'last_login_at', 'is_superuser')
-    list_display_links = ('id', 'email', 'username')
+    list_display = ('id', 'name', 'username', 'first_name', 'password', 'email', 'height', 'weight', 'sex', 'joined_at', 'last_login_at', 'is_superuser')
+    list_display_links = ('id', 'name', 'email', 'username')
     exclude = ('password',)
 
     def joined_at(self, obj):

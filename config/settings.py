@@ -92,7 +92,6 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -145,3 +144,6 @@ SESSION_COOKIE_AGE = 600
 SESSION_SAVE_EVERY_REQUEST = True
 
 AUTH_USER_MODEL = 'muapp.User'
+
+NAVER_CLIENT_ID = '3QrVtaDFHQvyl1UWFfHM'
+NAVER_SECRET_KEY = 'oWKGCZXwSo'

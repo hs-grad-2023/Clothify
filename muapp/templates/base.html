@@ -52,7 +52,7 @@
         <!-- cf. follow등 info nav바 삭제함 -->
 
         <nav class="navbar navbar-expand-lg navbar-light py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
-            <a href="{% url 'index' %}" class="navbar-brand ms-4 ms-lg-0">
+            <a href="/" class="navbar-brand ms-4 ms-lg-0">
                 <h1 class="fw-bold m-0 jamsil" style="color: #0b83f7; text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">C<span class="fs-1" style="color: #6fa8dc;">lo<span class="fs-3">th</span></span><span class="fs-4" style="color: #8fce00;">ify</span></h1>
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -187,9 +187,8 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'assets/js/login-register.js' %}" type="text/javascript"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    
-</body>
-{% block jsv %}
+    {% block jsv %}
 
-{% endblock jsv%}
+    {% endblock jsv%}  
+</body>
 </html>
