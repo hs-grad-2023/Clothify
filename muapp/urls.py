@@ -39,10 +39,11 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('upload_closet/<str:username>/',views.uploadCloset, name='uploadCloset'),
-    # path('upload_files',views.uploadFile,name='uploadFile'),
     path('view_closet/<str:username>/',views.view_closet, name='view_closet'),
     path('detail_closet/<str:username>/',views.detail_closet, name='detail_closet'),
+    path('virtual_fit/<str:username>/',views.virtual_fit, name='virtual_fit'),
     path('uppyTest/',views.uppyTest,name='uppyTest'),
+
     
 ]
 
