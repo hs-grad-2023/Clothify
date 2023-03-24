@@ -56,13 +56,12 @@
                                   name="clothesInfo"
                                   id="clothesInfo"
                                   enctype="multipart/form-data"
-                                  onkeydown="return event.key != 'Enter';"
-                                  onsubmit="return validationData"
+
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
                                     <label for="type1" class="col-sm-2 col-form-label text-end fw-bold">분류 1</label>
-                                    <select name="type1" id="type1" size="1" class="form-select col">
+                                    <select name="type1" id="type1" size="1" class="form-select col" required>
                                         <option value="none" disabled selected>=== 분류 1 ===</option>
                                         <option>상의</option>
                                         <option>바지</option>
@@ -76,13 +75,13 @@
                                 </div>
                                 <div class="mb-3 row">
                                     <label for="type2" class="col-sm-2 col-form-label text-end fw-bold">분류 2</label>
-                                    <select name="type2" id="type2" size="1" class="form-select col">
+                                    <select name="type2" id="type2" size="1" class="form-select col" required>
                                         <option value="none" disabled selected>=== 분류 2 ===</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
                                     <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
-                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)"/>
+                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" required/>
                                 </div>
                                 <!-- tag -->
                                 <div class="mb-3 row">
@@ -124,6 +123,9 @@
                                     </button>
                                 </div>
                             </form>
+                            <label id="TEST">
+
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -169,15 +171,17 @@
             note: 'Images only, Up to 10 files',
             produlyDisplayPoweredByUppy:false,
             autoOpenFileEditor: false,
-            
+            //hideUploadButton : true,
         })
 
         .use(Uppy.Form, { 
                         target: '#clothesInfo',
                         getMetaFromForm: true,
                         addResultToForm: true,
-                        triggerUploadOnSubmit: false,
-                        submitOnSuccess: false})
+                        //triggerUploadOnSubmit: true, //Uppy가 업로드/인코딩을 완료한 후 양식을 제출할지 여부를 구성합니다(부울, 기본값: false).
+                        //submitOnSuccess: true, //모든 파일이 업로드된 후 양식을 실제로 제출해야 하는 경우
+                        resultName: 'FormInfo', //<input type="hidden">의 요소의 이름 (string, default: uppyResult).
+                      })
         
         // Allow dropping files on any element or the whole document
         .use(Uppy.DropTarget, { target: document.body })
@@ -210,11 +214,21 @@
         */
 
         
+        uppy.upload().then((result) => {
+            console.info('Successful uploads:', result.successful);
         
-        uppy.on('complete', result => {
+            if (result.failed.length > 0) {
+                console.error('Errors:');
+                result.failed.forEach((file) => {
+                    console.error(file.error);
+                });
+            }
+        });
+        
+        {% comment %} uppy.on('complete', result => {
             console.log('successful files:', result.successful)
             console.log('failed files:', result.failed)
-        })
+        }) {% endcomment %}
 </script>
 
 {% endblock jsv%}

@@ -2,7 +2,6 @@
 {% load static %}
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
-    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
     <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
 {% endblock %}
 {% block closet %}
@@ -26,40 +25,7 @@
         // 이미지안에 표시되는 체크박스의 속성
         var chk_style = 'width:30px;height:30px;position:absolute;font-size:24px;'
                       + 'bottom:0px;z-index:999;background-color:white;color:#f00';
-      
-        btnAtt.onchange = function(e){
-          var files = e.target.files;
-          var fileArr = Array.prototype.slice.call(files)
-          for(f of fileArr){
-            imageLoader(f);
-          }
-        }  
-        
-      
-        // 탐색기에서 드래그앤 드롭 사용
-        attZone.addEventListener('dragenter', function(e){
-          e.preventDefault();
-          e.stopPropagation();
-        }, false)
-        
-        attZone.addEventListener('dragover', function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          
-        }, false)
-      
-        attZone.addEventListener('drop', function(e){
-          var files = {};
-          e.preventDefault();
-          e.stopPropagation();
-          var dt = e.dataTransfer;
-          files = dt.files;
-          for(f of files){
-            imageLoader(f);
-          }
-          
-        }, false)
-        
+           
     
         
         /*첨부된 이미리들을 배열에 넣고 미리보기 */
@@ -113,7 +79,7 @@
     
 </script>
 <script>
-    $(document).ready(function() {
+    {% comment %} $(document).ready(function() {
         $("#chk_submit").on('click', function(){
             var chk_arr = [];
 
@@ -125,7 +91,7 @@
             alert(chk_arr);
         });
 
-    })(jQuery);
+    })(jQuery); {% endcomment %}
 </script>
 <script>
      
@@ -212,6 +178,7 @@
                                 {% for clothes in c %}
                                     {% if clothes.imgfile %}
                                     <img src="{{ clothes.imgfile.url }}" id="{{forloop.counter}}" width="30%" height="auto" margin="10%" padding="10%" alt="{{ clothes.imgfile }}">  
+                                    <p>clothes.type1 : {{clothes.type1}} clothes.type2 : {{clothes.type2}}</p>
                                     {% endif %}
                                 {% endfor%}
                             </div>
