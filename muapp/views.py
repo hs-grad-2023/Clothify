@@ -59,11 +59,13 @@ def index(request):
 def detail_closet(request, username):
     user = User.objects.get(first_name=username)
     # db = get_clothes_list()
-    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    c = clothes.objects.all()                      #clothes의 모든 객체를 c에 담기
+    chk_img = request.GET.get('chk_img')           #get으로 클릭된 이미지의 이름값(clothes.name) 가져오기
     
     o = {
         'c' : c,
-        "user":user,
+        'user' :user,
+        'chk_img' : chk_img,
     }
     return render(request,"detail_closet.html",o)
 
