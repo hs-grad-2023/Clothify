@@ -136,7 +136,8 @@
                     <a class="btn btn-link jamsil" href="{% url 'virtual_fit' user.first_name %}">가상 피팅</a>
                     <a class="btn btn-link jamsil" href="{% url 'view_closet' user.first_name %}">옷장 관리</a>
                     <a class="btn btn-link jamsil" href="{% url 'blog' user.first_name %}">코디 추천</a>
-                    
+                    {% else %}
+                    <a class="btn btn-link jamsil" href="{% url 'blog' " " %}">코디 추천</a>
                     {% endif %}
                     
                 </div>

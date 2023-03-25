@@ -1,3 +1,4 @@
+from random import randint
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
@@ -67,7 +68,7 @@ def index(request):
         return render(request,"index.html",results)
 
 @login_required(login_url='login')
-def detail_closet(request, username, clothesID):
+def detail_closet(request, username,clothesID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
@@ -148,12 +149,15 @@ def logins(request):
 
 @login_required(login_url='login')
 def uploadCloset(request, username):
+    groupID_val = get_random_string(length=5)
     error = False
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
     if user != request.user:
         return HttpResponseForbidden()
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
+            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
+            # groupID_val = get_random_string(length=5)
             new_clothes=clothes.objects.create(
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
@@ -163,6 +167,7 @@ def uploadCloset(request, username):
                 details=request.POST.get('details'),
                 uploadUser=request.user,
                 uploadUserName=request.user.username,
+                groupID = groupID_val,
             )
             return render(request, 'upload_closet.html',{"user":user})
         else:

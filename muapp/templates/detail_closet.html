@@ -10,6 +10,7 @@
 
 {% block jsv %}
 
+
 {% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
@@ -86,40 +87,31 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     
                     <div class="row g-4">
-                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                            {% for c in clothesobject %}  
-                                {% if c.uploadUser_id == user.id%}
-                                {% if c.imgfile %}
 
-                                <div class="carousel-inner">
-                                    {% if c.id != clothesID%}
-                                        <div class="carousel-item">
-                                            <img src="{{ c.imgfile.url }}" class="d-block w-80" alt="{{c.imgfile}}">
-                                        </div>
-                                    {% elif c.id == clothesID%}
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for c in clothesobject %}
+                                    {% if c.uploadUser_id == user.id%}
+                                    {% if c.imgfile %}
                                         <div class="carousel-item active">
-                                            <img src="{{ c.imgfile.url }}" class="d-block w-80" alt="{{c.imgfile}}">
+                                            <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
                                         </div>
-                                    {%endif%}
-                                
-                                </div>
-                                
-                                {%endif%}
-                                {%endif%}
-                            {%endfor%}
-                            
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                                </button>
+                                        <div class="carousel-item">
+                                            <img src="{% static 'img/product-2.jpg' %}" class="d-block w-100" alt="...">
+                                          </div>
+                                    {% endif%}
+                                    {% endif%}
+                                {% endfor %}
                             </div>
-                             
-                          
-
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
 
                         <table class="table" style="float:left;">
                             <tr>
