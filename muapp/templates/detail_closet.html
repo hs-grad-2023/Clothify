@@ -9,133 +9,7 @@
 {% endblock closet %}
 
 {% block jsv %}
-<script>
-    ( /* att_zone : 이미지들이 들어갈 위치 id, btn : file tag id */
-      imageView = function imageView(att_zone, btn){
-    
-        var attZone = document.getElementById(att_zone);
-        var btnAtt = document.getElementById(btn)
-        var sel_files = [];
-        
-        // 이미지와 체크 박스를 감싸고 있는 div 속성
-        var div_style = 'display:block;position:relative;'
-                      + 'margin:5px;border:1px solid #fff;z-index:1';
-        // 미리보기 이미지 속성
-        var img_style = 'width:30%;height:auto;z-index:none;visibilty:visible;animation-delay:0.1s;animation-name:fadeInup;vertical-align: middle;'
-        // 이미지안에 표시되는 체크박스의 속성
-        var chk_style = 'width:30px;height:30px;position:absolute;font-size:24px;'
-                      + 'bottom:0px;z-index:999;background-color:white;color:#f00';
-      
-        btnAtt.onchange = function(e){
-          var files = e.target.files;
-          var fileArr = Array.prototype.slice.call(files)
-          for(f of fileArr){
-            imageLoader(f);
-          }
-        }  
-        
-      
-        // 탐색기에서 드래그앤 드롭 사용
-        attZone.addEventListener('dragenter', function(e){
-          e.preventDefault();
-          e.stopPropagation();
-        }, false)
-        
-        attZone.addEventListener('dragover', function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          
-        }, false)
-      
-        attZone.addEventListener('drop', function(e){
-          var files = {};
-          e.preventDefault();
-          e.stopPropagation();
-          var dt = e.dataTransfer;
-          files = dt.files;
-          for(f of files){
-            imageLoader(f);
-          }
-          
-        }, false)
-        
-    
-        
-        /*첨부된 이미지들을 배열에 넣고 미리보기 */
-        imageLoader = function(file){
-          sel_files.push(file);
-          var reader = new FileReader();
-          reader.onload = function(ee){
-            let img = document.createElement('img')
-            img.setAttribute('style', img_style)
-            img.src = ee.target.result;
-            attZone.appendChild(makeDiv(img, file));
-          }
-          
-          reader.readAsDataURL(file);
-        }
-        
-        /*첨부된 파일이 있는 경우 checkbox와 함께 attZone에 추가할 div를 만들어 반환 */
-        makeDiv = function(img, file){
-          var div = document.createElement('div')
-          div.setAttribute('style', div_style)
-          
-          var btn = document.createElement('input')
-          btn.setAttribute('type', 'button')
-          btn.setAttribute('value', 'x')
-          btn.setAttribute('delFile', file.name);
-          btn.setAttribute('style', chk_style);
-          btn.onclick = function(ev){
-            var ele = ev.srcElement;
-            var delFile = ele.getAttribute('delFile');
-            for(var i=0 ;i<sel_files.length; i++){
-              if(delFile== sel_files[i].name){
-                sel_files.splice(i, 1);      
-              }
-            }
-            
-            dt = new DataTransfer();
-            for(f in sel_files) {
-              var file = sel_files[f];
-              dt.items.add(file);
-            }
-            btnAtt.files = dt.files;
-            var p = ele.parentNode;
-            attZone.removeChild(p)
-          }
-          div.appendChild(img)
-          div.appendChild(btn)
-          return div
-        }
-      }
-    )('att_zone', 'btnAtt')
-    
-</script>
-<script>
-    $(document).ready(function() {
-        $("#chk_submit").on('click', function(){
-            var chk_arr = [];
 
-            $("input[name=nb[]]:checked").each(function(){
-                chk_arr.push($(this).val());
-            
-            });
-
-            alert(chk_arr);
-        });
-
-    })(jQuery);
-</script>
-
-<script>
-
-    $(document).ready(function() {
-        $("a").click(function() {
-            var id = $(this).children("img").attr("id");
-        });
-    });
-
-</script>
 {% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
@@ -215,15 +89,18 @@
 
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
-                              <div class="carousel-item active">
-                                <img src="{% static 'img/product-1.jpg' %}" class="d-block w-100" alt="...">
-                              </div>
-                              <div class="carousel-item">
-                                <img src="{% static 'img/product-2.jpg' %}" class="d-block w-100" alt="...">
-                              </div>
-                              <div class="carousel-item">
-                                <img src="{% static 'img/product-3.jpg' %}" class="d-block w-100" alt="...">
-                              </div>
+                                {% for c in clothesobject %}
+                                    {% if c.uploadUser_id == user.id%}
+                                    {% if c.imgfile %}
+                                        <div class="carousel-item active">
+                                            <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
+                                        </div>
+                                        <div class="carousel-item">
+                                            <img src="{% static 'img/product-2.jpg' %}" class="d-block w-100" alt="...">
+                                          </div>
+                                    {% endif%}
+                                    {% endif%}
+                                {% endfor %}
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -247,14 +124,14 @@
                             </tr>
 
                             <tr>
-                                {% for clothes in c %}
+                                {% for c in clothesobject %}
                                 <tr>
-                                    <td>{{ clothes.name }}</td>
-                                    <td>{{ clothes.type1 }}</td>
-                                    <td>{{ clothes.type2 }}</td>
-                                    <td>{{ clothes.tag }}</td>
-                                    <td>{{ clothes.details }}</td>
-                                    <td>{{ clothes.upload_date }}</td>
+                                    <td>{{ c.name }}</td>
+                                    <td>{{ c.type1 }}</td>
+                                    <td>{{ c.type2 }}</td>
+                                    <td>{{ c.tag }}</td>
+                                    <td>{{ c.details }}</td>
+                                    <td>{{ c.upload_date }}</td>
                                 </tr>
                                 {% endfor%}
                             </tr>

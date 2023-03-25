@@ -101,11 +101,12 @@ window.onload=function(){
             alert("추가할 tag를 입력해주세요.");
         }else{
             if (valuelist==''){
-                $('#tags').val('#' + tagvalue);
+                $('#tags').val('#' + tagvalue); // value 삽입하는 코드
             }
             else{
-                $('#tags').val(valuelist+', #'+tagvalue);
+                $('#tags').val(valuelist+', #'+tagvalue); // value 삽입하는 코드
             }
+            //버튼 삽입
             const btnElement = document.createElement('button');
             btnElement.type = "button";
             btnElement.classList.add("tag_btn");
@@ -115,6 +116,7 @@ window.onload=function(){
             const cnt_tag = document.getElementsByClassName("tag_delete").length -1
             document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deletetag);
             
+            // 디자인
             document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.border = '1px solid gray';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.marginRight = '15px';
@@ -141,8 +143,9 @@ window.onload=function(){
         this.parentNode.remove();
     }
 
-    document.getElementById("type1").addEventListener("change", itemChange);
+    
     // ===== type2 option =====
+    document.getElementById("type1").addEventListener("change", itemChange);
     function itemChange(){
 
         var top = ["=== 분류 2 ===","니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"];
