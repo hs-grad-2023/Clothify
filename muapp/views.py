@@ -194,10 +194,50 @@ def virtual_fit(request, username):
     return render(request,"virtual_fit.html",{"user":user})
 
 
-# def remove_clothes(request, pk):
-#     clothes = clothes.objects.get(pk=pk) #models.py 의 clothes
-#     if request.method == 'POST':
-#         post.delete()
-#         return redirect('/index/') #상품목록으로 돌아가야함
-#     return render(request, 'main/remove_post.html', {'clothes': clothes})
+@login_required(login_url='login')
+def remove_clothes(request, username, clothesID):
+    user = get_object_or_404(User, first_name=username)
+    remove_clothes= clothes.objects.get(id=clothesID) #models.py 의 clothes
+    if request.method == 'POST':
+        clothes.delete()
+        return redirect('/view_closet/') #상품목록으로 돌아가야함
+    result={
+
+        "user":user,
+        "remove_clothes":remove_clothes,
+        
+    }
+    return render(request, 'remove_clothes.html', result)
+
+
+@login_required(login_url='login')
+def updateCloset(request, username):
+    groupID_val = get_random_string(length=5)
+    error = False
+    user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
+    if user != request.user:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        if request.FILES.get('imgfile'):
+            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
+            # groupID_val = get_random_string(length=5)
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+                uploadUser=request.user,
+                uploadUserName=request.user.username,
+                groupID = groupID_val,
+            )
+            return render(request, 'upload_closet.html',{"user":user})
+        else:
+            error = True
+            print(request.FILES.get('imgfile'))
+            # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
+    return render(request, 'update_closet.html', {"user":user, 'error':error})
+        # return redirect('index') #상품목록으로 돌아가야함
+
 
