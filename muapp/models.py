@@ -9,6 +9,10 @@ from django.core.mail import send_mail
 
 # Create your models here.
 
+class imgFiles(models.Model):
+    imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
+    groupID = models.IntegerField()
+    upload_date = models.DateTimeField(default=timezone.now)
 
 class clothes(models.Model):
     uploadUser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -22,9 +26,16 @@ class clothes(models.Model):
     details = models.CharField(max_length=200, default="", null=True,  blank=True, )
     upload_date = models.DateTimeField(default=timezone.now)
     id = models.AutoField(primary_key=True)
+    groupID = models.CharField(max_length=10)
 
     class Meta:
         ordering = ['-upload_date']
+        # constraints = [
+        #      models.UniqueConstraint(
+        #         fields=["id","groupID"],
+        #         name="Unique groupID",
+        #      )
+        # ]
 
     def __str__(self): #식별자
         return self.type1 + " " + self.imgfile.name + " " +self.upload_date.strftime("%Y-%m-%d %H-%M:%S")
