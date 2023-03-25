@@ -174,16 +174,18 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        {% for c in clothesobject %}
+                        {% for c in clothesobject %}  
                             {% if c.uploadUser_id == user.id%}
                             {% if c.imgfile %}
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="product-item">
                                         <div class="position-relative bg-light overflow-hidden">
-                                            <img class="img-fluid w-100" src="{{c.imgfile.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="{{ c.imgfile }}">
+                                            <a href="{% url 'detail_closet' user.first_name c.id %}">
+                                                <img class="img-fluid w-100" src="{{c.imgfile.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="{{ c.imgfile }}">
+                                            </a>
                                         </div>
                                         <div class="text-center p-4">
-                                            <a class="d-block p mb-2" href="">{{c.name}}</a>
+                                            <a class="d-block p mb-2" href='{% url 'detail_closet' user.first_name c.id %}'>{{c.name}}</a>
                                         </div>
                                         <hr width="80%" align="center">
                                         <div class="text-end p-4">

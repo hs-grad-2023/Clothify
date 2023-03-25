@@ -67,7 +67,7 @@ def index(request):
         return render(request,"index.html",results)
 
 @login_required(login_url='login')
-def detail_closet(request, username):
+def detail_closet(request, username, clothesID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
@@ -77,6 +77,7 @@ def detail_closet(request, username):
     result = {
         'clothesobject' : clothesobject,
         "user":user,
+        "clothesID":clothesID,
     }
     return render(request,"detail_closet.html",result)
 
