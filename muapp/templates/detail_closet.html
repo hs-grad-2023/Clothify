@@ -11,6 +11,9 @@
 {% block jsv %}
 
 
+
+
+
 {% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
@@ -90,19 +93,19 @@
                     
                     <div class="row g-4">
 
-                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
                             <div class="carousel-inner">
                                 {% for c in clothesobject %}
                                     {% if c.uploadUser_id == user.id%}
                                     {% if c.imgfile %}
                                         {% if c.id == clothesID %}
-                                        <div class="carousel-item active">
-                                            <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
-                                        </div>
-                                        {% elif c.id < clothesID and c.id > clothesID %}
-                                        <div class="carousel-item">
-                                            <img src="{% static 'img/product-2.jpg' %}" class="d-block w-100" alt="...">
-                                        </div>
+                                            <div class="carousel-item active" >
+                                                <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
+                                            </div>
+                                        {% else %}
+                                            <div class="carousel-item" >
+                                                <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
+                                            </div>
                                         {%endif%}
                                     {% endif%}
                                     {% endif%}
