@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load socialaccount %} 
 {% load static %}
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
@@ -35,7 +36,7 @@
                             {% endif %}
                             <div class="d-flex align-items-center justify-content-start">
                                 <button type="submit" class="btn btn-primary jamsil">로그인</button>
-                                <a href="#" onclick="naverLogin()" style="margin-left: 10px;">
+                                <a href="{% provider_login_url "naver" method="oauth2" %}" style="margin-left: 10px;">
                                     <img src="{% static 'img/btnG_완성형.png' %}"
                                          onmouseover="this.src='{% static 'img/btnW_완성형.png' %}'"
                                          onmouseleave="this.src='{% static 'img/btnG_완성형.png' %}'" height="45">

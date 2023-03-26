@@ -15,6 +15,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.dispatch import receiver
+from allauth.account.signals import user_signed_up
 
 User = get_user_model()
 
@@ -33,6 +35,11 @@ typeCategory = {
         '악세서리': ["모자","레그웨어","머플러","장갑","시계","팔찌","귀걸이","반지","발찌","목걸이","헤어 액세서리"],
         '신발': ["구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"],
 }
+
+@receiver(user_signed_up)
+def add_social_user_name(sender, request, user, **kwargs):
+    user.first_name = get_random_string(length=16)
+    user.save()
 
 def index(request):
     try:
