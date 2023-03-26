@@ -9,10 +9,10 @@ from django.core.mail import send_mail
 
 # Create your models here.
 
-class imgFiles(models.Model):
-    imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
-    groupID = models.IntegerField()
-    upload_date = models.DateTimeField(default=timezone.now)
+#class imgFiles(models.Model):
+    #imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
+    #groupID = models.IntegerField()
+    #upload_date = models.DateTimeField(default=timezone.now)
 
 class clothes(models.Model):
     uploadUser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
