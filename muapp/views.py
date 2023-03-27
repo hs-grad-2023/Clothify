@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -61,7 +62,6 @@ def detail_closet(request, username):
     # db = get_clothes_list()
     c = clothes.objects.all()                      #clothes의 모든 객체를 c에 담기
     chk_img = request.GET.get('chk_img')           #get으로 클릭된 이미지의 이름값(clothes.name) 가져오기
-    
     o = {
         'c' : c,
         'user' :user,
@@ -157,25 +157,42 @@ def uploadCloset(request, username):
         return redirect('index') #상품목록으로 돌아가야함
     return render(request, 'upload_closet.html',{"user":user})
 
-# def uploadFile(request):
-#     if request.method == 'POST' and request.FILES:
-#         new_clothes=clothes.objects.create(
-#                 type1='test',
-#                 type2='test',
-#                 tag=request.POST.get('tag'),
-#                 name=request.POST.get('clothesName'),
-#                 imgfileTest=request.FILES.get('imgfile'),
-#                 details='',
-#             )
-#         print(request.FILES.get('imgfile'))
-#         return redirect('index') #상품목록으로 돌아가야함
-#     #return JsonResponse('done',safe=False)
-#     return render(request, 'upload_closet.html')
+@login_required(login_url='login')
+def uploadCloset(request, username):
+    user = User.objects.get(first_name=username)
+    if request.method == 'POST':
+        if request.FILES.get('imgfile'):
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+            )
+        else:
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+            )
+        return redirect('index') #상품목록으로 돌아가야함
+    return render(request, 'upload_closet.html',{"user":user})
+
+
 
 @login_required(login_url='login')
 def blog(request, username):
     user = User.objects.get(first_name=username)
     return render(request,"blog.html",{"user":user})
+
+@login_required(login_url='login')
+def virtual_fit(request, username):
+    user = User.objects.get(first_name=username)
+    return render(request,"virtual_fit.html",{"user":user})
 
 
 # def remove_clothes(request, pk):

@@ -2,7 +2,6 @@
 {% load static %}
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
-    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
     <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
 {% endblock %}
 {% block closet %}
@@ -100,15 +99,13 @@
                                     <div class="carousel-inner">
                                     
                                         {%for clothes in c %}
+                                         
                                             {% if chk_img == clothes.name %}
                                                     <div class="carousel-item active">
-                                                        
-                                                        <img src="{{clothes.imgfile.url}}" class="d-block w-100" alt="...">
-                                                        
-                                                        
+                                                        <img src="{{clothes.imgfile.url}}" class="d-block w-50" alt="...">
                                                     </div>
                                                     <div class="carousel-item">
-                                                        <img src="{{clothes.imgfile.url}}" class="d-block w-100" alt="...">
+                                                        <img src="{{clothes.imgfile.url}}" class="d-block w-50" alt="...">
                                                     </div>
                                             {%endif%}
                                         {%endfor%}

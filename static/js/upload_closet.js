@@ -2,6 +2,9 @@ window.onload=function(){
 
     // ===== file reader =====
 
+    var formInfo = document.getElementsByName("FormInfo").keys(); // form을 sumitform 변수에 저장
+
+    
 
     // ===== form 유효성 테스트 =====
     var validationData_value = false;
@@ -10,10 +13,26 @@ window.onload=function(){
     submitform.addEventListener("submit",validationData) 
     // form이 submit되면 submitPhoto함수를 실행하겠다고 선언
 
+    function Request(valuename)
+    {
+        var rtnval;
+        var nowAddress = unescape(location.href);
+        var parameters = new Array();
+        parameters = (nowAddress.slice(nowAddress.indexOf("?")+1,nowAddress.length)).split("&");
+        for(var i = 0 ; i < parameters.length ; i++){
+            if(parameters[i].split("=")[0] == valuename){
+                rtnval = parameters[i].split("=")[1];
+                if(rtnval == undefined || rtnval == null){
+                    rtnval = "";
+                }
+                return rtnval;
+            }
+        }
+    }
 
     function validationData(event){
         event.preventDefault(); //여기서 자동 submit을 막아줍니다.
-
+        console.log(Request("imgfile"));
         if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
             alert("분류1을 선택하지 않았습니다."); 
             validationData_value= false;
@@ -24,9 +43,11 @@ window.onload=function(){
             alert("이름을 입력하지 않았습니다."); 
             validationData_value= false;
             /*
-        }else if($('#imgfile').val() == "" || $('#imgfile').val() == "none" || $('#imgfile').val() == null){ // input form이 비어있으면
+        }else if(Request.POST("imgfile") == "" || Request.POST("imgfile") == null){ // input form이 비어있으면
+            
             alert("이미지가 없습니다."); 
             validationData_value= false;
+            var name = Request.POST("imgfile");
         }else if($('#imgfile').val() != ""){ // 사진이 있으면?
             */
         }else{ // 사진이 있으면?
@@ -121,7 +142,9 @@ window.onload=function(){
     }
 
     document.getElementById("type1").addEventListener("change", itemChange);
+
     // ===== type2 option =====
+    
     function itemChange(){
 
         var top = ["=== 분류 2 ===","니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"];
