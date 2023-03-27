@@ -147,7 +147,10 @@ def logins(request):
             if 'next' in request.POST:
                 next_string = request.POST.get('next')
                 result = next_string.split('/')[1]
-                return redirect(f'/{result}/{user}')
+                if result == 'modify':
+                    return redirect(f'/{result}/')
+                else:
+                    return redirect(f'/{result}/{user}')
             return redirect('/')
     else:
         form = LoginForm()
@@ -247,4 +250,26 @@ def updateCloset(request, username):
     return render(request, 'update_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함
 
+@login_required(login_url='login')
+def mypage(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
+    return render(request,"mypage.html",{"user":user})
 
+@login_required(login_url='login')
+def user_modify(request):
+    if request.method == 'POST':
+        user = request.user
+        user.username = request.POST["username"]
+        user.email = request.POST["email"]
+        user.name = request.POST["name"]
+        user.sex = request.POST["sex"]
+        user.height = request.POST["height"]
+        user.weight = request.POST["weight"]
+        user.save()
+        return redirect('/')
+
+    return render(request,"user_modify.html")
+    
+    

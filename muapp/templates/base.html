@@ -73,6 +73,7 @@
                             <a href="{% url 'uploadCloset' user.first_name %}" class="dropdown-item jamsil">(Test)Upload</a>
                         </div>
                     </div>
+                    <a href="{% url 'mypage' user.first_name %}" class="nav-item nav-link jamsil vis">마이페이지</a>  
                     <a href="{% url 'logout' %}" class="nav-item nav-link jamsil vis">로그아웃</a>    
                     {% else %}
                     <a href="{% url 'login' %}" class="nav-item nav-link jamsil vis">로그인</a> 
@@ -82,7 +83,7 @@
                 </div>
                 <div class="d-none d-lg-flex ms-2">
                     {% if user.is_authenticated %}
-                    <span class="nav-link jamsil" style="padding-left: 0px;">{{ user.username|title }}<span style="color: black;">님 반갑습니다!</span></span><button type="button" class="nav-link btn btn-outline-primary btn-sm jamsil" style="color: black;" onclick="location.href='{% url 'logout' %}'">로그아웃</button>
+                    <span class="nav-link jamsil" style="padding-left: 0px;"><a href="{% url 'mypage' user.first_name %}">{{ user.username|title }}</a><span style="color: black;">님 반갑습니다!</span></span><button type="button" class="nav-link btn btn-outline-primary btn-sm jamsil" style="color: black;" onclick="location.href='{% url 'logout' %}'">로그아웃</button>
                     {% else %}
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="{% url 'login' %}">
                         <small class="fas fa-user-large text-body"></small>
@@ -145,7 +146,7 @@
                     <h4 class="text-light mb-4 jamsil">알림받기</h4>
                     <p class="hahmelt">새로운 기능이 업데이트되면 알려줍니다!</p>
                     <div class="position-relative mx-auto" style="max-width: 400px;">
-                        <input class="form-contrfol bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="이메일을 입력하세요.">
+                        <input class="form-contrfol bg-transparent w-100 py-3 ps-4 pe-5 jamsil" type="text" placeholder="이메일을 입력하세요.">
                         <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2 jamsil">구독</button>
                     </div>
                 </div>
