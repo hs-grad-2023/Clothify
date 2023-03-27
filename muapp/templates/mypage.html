@@ -15,10 +15,11 @@
         <div class="row">
             <div class="col-lg-6" style="padding-top: 100px;">
                 <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                    <h1 class="display-5 mb-3 jamsil">로그인</h1>
-                    <p class="jamsil">로그인을 해보세요!</p>
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">마이페이지</h1>
+                    <p class="jamsil">마이페이지</p>
                     <div class="container my-3" style="padding-left: 0px;">
-                        <form method="post" action="{% url 'login' %}">
+                        <a href="{% url 'user_modify'%}" class="btn btn-primary btn-lg rounded-pill py-sm-2 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black; font-size:20px">정보수정</a>
+                        {% comment %} <form method="post" action="{% url 'login' %}">
                             {% csrf_token %}
                             {% include "form_errors.html" %}
                             <div class="mb-3 jamsil">
@@ -42,7 +43,7 @@
                                          onmouseleave="this.src='{% static 'img/btnG_완성형.png' %}'" height="45">
                                 </a>
                             </div>
-                        </form>
+                        </form> {% endcomment %}
                     </div>
                 </div>
             </div>
