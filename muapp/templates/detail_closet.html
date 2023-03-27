@@ -10,14 +10,10 @@
 
 {% block jsv %}
 
-<script>
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-</script>
+
+
+
+
 {% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
@@ -38,6 +34,7 @@
     <!-- Product Start -->
     <div class="container-xxl py-5 jamsil">
         <div class="container">
+            <!--
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
                 </div>
@@ -88,38 +85,41 @@
                     </ul>
                 </div>
             </div>
+            -->
 
             <div class="tab-content">
                 
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     
                     <div class="row g-4">
-                            
-                                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                    
-                                        {%for clothes in c %}
-                                         
-                                            {% if chk_img == clothes.name %}
-                                                    <div class="carousel-item active">
-                                                        <img src="{{clothes.imgfile.url}}" class="d-block w-50" alt="...">
-                                                    </div>
-                                                    <div class="carousel-item">
-                                                        <img src="{{clothes.imgfile.url}}" class="d-block w-50" alt="...">
-                                                    </div>
-                                            {%endif%}
-                                        {%endfor%}
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>
-                        
+
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
+                            <div class="carousel-inner">
+                                {% for c in clothesobject %}
+                                    {% if c.uploadUser_id == user.id%}
+                                    {% if c.imgfile %}
+                                        {% if c.id == clothesID %}
+                                            <div class="carousel-item active" >
+                                                <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
+                                            </div>
+                                        {% else %}
+                                            <div class="carousel-item" >
+                                                <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
+                                            </div>
+                                        {%endif%}
+                                    {% endif%}
+                                    {% endif%}
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
 
                         <table class="table" style="float:left;">
                             <tr>
@@ -129,25 +129,32 @@
                                 <th>태그</th>
                                 <th>상세정보</th>
                                 <th>업로드 된 시간</th>
-                            
                             </tr>
 
-                            <tr>
-                                {%for clothes in c %}
-                                    {% if chk_img == clothes.name%}
-                                        <tr>
-                                            <td>{{ clothes.name }}</td>
-                                            <td>{{ clothes.type1 }}</td>
-                                            <td>{{ clothes.type2 }}</td>
-                                            <td>{{ clothes.tag }}</td>
-                                            <td>{{ clothes.details }}</td>
-                                            <td>{{ clothes.upload_date }}</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
+                            {% for c in clothesobject %}
+                                {% if user.id == c.uploadUser_id %}
+                                <tr>
+                                    <tr>
+                                        <td>{{ c.name }}</td>
+                                        <td>{{ c.type1 }}</td>
+                                        <td>{{ c.type2 }}</td>
+                                        <td>{{ c.tag }}</td>
+                                        <td>{{ c.details }}</td>
+                                        <td>{{ c.upload_date }}</td>
+                                    </tr>
+                                </tr>
+                                {%endif%}
+                            {% endfor%}
                         </table>
-                
+
+                        <div class="btn-container" name="btn-container">
+                            <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
+                                <p id="btnText">Update</p>
+                            </button>
+                            <button class="btn-submit" type="button" onclick = "location.href = '{% url 'remove_clothes' user.first_name clothesID %}' ">
+                                <p id="btnText">Delete</p>
+                            </button>
+                        </div>
                     </div>
                     
                     
@@ -166,91 +173,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="col-12 text-center">
                             <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
                         </div>
                     </div>
                 </div>
+
                 <div id="tab-3" class="tab-pane fade show p-0">
                     <div class="row g-4">
                         <div class="col-xl-3 col-lg-4 col-md-6">
@@ -261,86 +190,6 @@
                                 </div>
                                 <div class="text-center p-4">
                                     <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
                                 </div>
                             </div>
                         </div>

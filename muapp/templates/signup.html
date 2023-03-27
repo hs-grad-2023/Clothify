@@ -41,6 +41,11 @@
                                     value="{{ form.password2.value|default_if_none:'' }}">
                             </div>
                             <div class="mb-3 jamsil">
+                                <label for="name">이름</label>
+                                <input type="text" class="form-control" name="name" id="name" oninput="this.value = this.value.replace(/[^\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/g, '').substring(0, 4);"
+                                    value="{{ form.name.value|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
                                 <label for="sex">성별</label>
                                 <select class="form-select" name="sex" id="sex">
                                     <option value="" disabled selected>성별을 선택해주세요.</option>

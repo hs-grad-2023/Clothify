@@ -1,9 +1,9 @@
+from random import randint
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
 from .getDB import get_clothes_list
 from .models import clothes
-import sqlite3
 import requests
 import datetime
 import math, json, sqlite3
@@ -15,6 +15,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.dispatch import receiver
+from allauth.account.signals import user_signed_up
 
 User = get_user_model()
 
@@ -22,6 +24,22 @@ User = get_user_model()
 
 # def 404(request):
 #     return render(request,"404.html")
+
+typeCategory = {
+        '상의':  ["니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"],
+        '하의': ["데님 팬츠","숏 팬츠","코튼 팬츠", "레깅스","슈트 팬츠/슬랙스","점프 슈트/오버올","트레이닝/조거 팬츠","기타 바지"],
+        '치마': ["미니 스커트", "미디 스커트","롱 스커트"],
+        '원피스': ["미니 원피스", "미디 원피스","맥시 원피스"],
+        '아우터': ["후드 집업","환절기 코트", "블루종/MA-1","겨울 코트", "레더/라이더스 재킷","무스탕/퍼","롱패딩/롱헤비 아우터","슈트/블레이저 재킷","숏패딩/숏헤비 아우터","카디건","아노락 재킷","패딩 베스트","플리스/뽀글이","트레이닝 재킷","기타 아우터"],
+        '가방': ["백팩","메신저/크로스 백","파우치 백","숄더백","에코백","토트백","클로치 백","웨이스트백/힙색"],
+        '악세서리': ["모자","레그웨어","머플러","장갑","시계","팔찌","귀걸이","반지","발찌","목걸이","헤어 액세서리"],
+        '신발': ["구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"],
+}
+
+@receiver(user_signed_up)
+def add_social_user_name(sender, request, user, **kwargs):
+    user.first_name = get_random_string(length=16)
+    user.save()
 
 def index(request):
     try:
@@ -57,17 +75,19 @@ def index(request):
         return render(request,"index.html",results)
 
 @login_required(login_url='login')
-def detail_closet(request, username):
-    user = User.objects.get(first_name=username)
+def detail_closet(request, username,clothesID):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     # db = get_clothes_list()
-    c = clothes.objects.all()                      #clothes의 모든 객체를 c에 담기
-    chk_img = request.GET.get('chk_img')           #get으로 클릭된 이미지의 이름값(clothes.name) 가져오기
-    o = {
-        'c' : c,
-        'user' :user,
-        'chk_img' : chk_img,
+    clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    
+    result = {
+        'clothesobject' : clothesobject,
+        "user":user,
+        "clothesID":clothesID,
     }
-    return render(request,"detail_closet.html",o)
+    return render(request,"detail_closet.html",result)
 
 def feature(request):
     return render(request,"feature.html")
@@ -80,15 +100,17 @@ def feature(request):
 @login_required(login_url='login')
 def view_closet(request, username):
     # db = get_clothes_list()
-    user = User.objects.get(first_name=username)
-    c = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
+    clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
-    o = {
-        'c' : c,
+    result = {
+        'clothesobject' : clothesobject,
         "user":user
     }
     
-    return render(request,"view_closet.html", o)
+    return render(request,"view_closet.html", result)
 
 
 def about(request):
@@ -134,9 +156,15 @@ def logins(request):
 
 @login_required(login_url='login')
 def uploadCloset(request, username):
-    user = User.objects.get(first_name=username)
+    groupID_val = get_random_string(length=5)
+    error = False
+    user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
+    if user != request.user:
+        return HttpResponseForbidden()
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
+            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
+            # groupID_val = get_random_string(length=5)
             new_clothes=clothes.objects.create(
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
@@ -144,63 +172,79 @@ def uploadCloset(request, username):
                 name=request.POST.get('clothesName'),
                 imgfile=request.FILES.get('imgfile'),
                 details=request.POST.get('details'),
+                uploadUser=request.user,
+                uploadUserName=request.user.username,
+                groupID = groupID_val,
             )
+            return render(request, 'upload_closet.html',{"user":user})
         else:
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-            )
-        return redirect('index') #상품목록으로 돌아가야함
-    return render(request, 'upload_closet.html',{"user":user})
-
-@login_required(login_url='login')
-def uploadCloset(request, username):
-    user = User.objects.get(first_name=username)
-    if request.method == 'POST':
-        if request.FILES.get('imgfile'):
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-            )
-        else:
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-            )
-        return redirect('index') #상품목록으로 돌아가야함
-    return render(request, 'upload_closet.html',{"user":user})
+            error = True
+            print(request.FILES.get('imgfile'))
+            # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
+    return render(request, 'upload_closet.html', {"user":user, 'error':error})
+        # return redirect('index') #상품목록으로 돌아가야함
 
 
 
 @login_required(login_url='login')
 def blog(request, username):
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     return render(request,"blog.html",{"user":user})
 
 @login_required(login_url='login')
 def virtual_fit(request, username):
-    user = User.objects.get(first_name=username)
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
     return render(request,"virtual_fit.html",{"user":user})
 
 
-# def remove_clothes(request, pk):
-#     clothes = clothes.objects.get(pk=pk) #models.py 의 clothes
-#     if request.method == 'POST':
-#         post.delete()
-#         return redirect('/index/') #상품목록으로 돌아가야함
-#     return render(request, 'main/remove_post.html', {'clothes': clothes})
+@login_required(login_url='login')
+def remove_clothes(request, username, clothesID):
+    user = get_object_or_404(User, first_name=username)
+    remove_clothes= clothes.objects.get(id=clothesID) #models.py 의 clothes
+    if request.method == 'POST':
+        clothes.delete()
+        return redirect('/view_closet/') #상품목록으로 돌아가야함
+    result={
 
-def uppyTest(request):
-    return render(request,"Uppy_test.html",)
+        "user":user,
+        "remove_clothes":remove_clothes,
+        
+    }
+    return render(request, 'remove_clothes.html', result)
+
+
+@login_required(login_url='login')
+def updateCloset(request, username):
+    groupID_val = get_random_string(length=5)
+    error = False
+    user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
+    if user != request.user:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        if request.FILES.get('imgfile'):
+            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
+            # groupID_val = get_random_string(length=5)
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+                uploadUser=request.user,
+                uploadUserName=request.user.username,
+                groupID = groupID_val,
+            )
+            return render(request, 'upload_closet.html',{"user":user})
+        else:
+            error = True
+            print(request.FILES.get('imgfile'))
+            # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
+    return render(request, 'update_closet.html', {"user":user, 'error':error})
+        # return redirect('index') #상품목록으로 돌아가야함
+
+

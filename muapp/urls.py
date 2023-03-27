@@ -30,21 +30,19 @@ from django.conf import settings
 urlpatterns = [
     # path('404', views.404, name='404'),
     path('', views.index, name='index'),
-    path('index', views.index, name='index'),
     path('about/',views.about, name='about'),
     path('blog/<str:username>/',views.blog, name='blog'),
     path('feature/',views.feature, name='feature'),
-    # path('product/<str:username>/', views.product, name='product'),
     path('login/', views.logins, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('upload_closet/<str:username>/',views.uploadCloset, name='uploadCloset'),
     path('view_closet/<str:username>/',views.view_closet, name='view_closet'),
-    path('detail_closet/<str:username>/',views.detail_closet, name='detail_closet'),
+    path('detail_closet/<str:username>/<int:clothesID>/',views.detail_closet, name='detail_closet'),
     path('virtual_fit/<str:username>/',views.virtual_fit, name='virtual_fit'),
-    path('uppyTest/',views.uppyTest,name='uppyTest'),
-
-    
+    path('update_closet/<str:username>/',views.updateCloset, name='updateCloset'),
+    path('remove_closet/<str:username>/<int:clothesID>/',views.remove_clothes, name='remove_clothes'),
+  
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -29,6 +29,7 @@ class UserForm(UserCreationForm):
     username = forms.CharField(label="아이디", error_messages={'required': '아이디를 입력해주세요.'})
     password1 = forms.CharField(label="비밀번호", error_messages={'required': '비밀번호를 입력해주세요.'})
     password2 = forms.CharField(label="비밀번호 확인", error_messages={'required': '비밀번호 확인을 입력해주세요.'})
+    name = forms.CharField(label="이름", error_messages={'required': '이름을 입력해주세요.'})
     sex = forms.CharField(label="성별", error_messages={'required': '성별을 선택해주세요.'})
     height = forms.IntegerField(label="키", error_messages={'required': '키를 입력해주세요.'})
     weight = forms.IntegerField(label="몸무게", error_messages={'required': '몸무게를 입력해주세요.'})
@@ -54,7 +55,7 @@ class UserForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2", "sex", "height", "weight")
+        fields = ("username", "email", "password1", "password2", "name", "sex", "height", "weight")
         
     
 class LoginForm(AuthenticationForm):

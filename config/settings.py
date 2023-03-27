@@ -39,9 +39,32 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.naver', 
+    'django.contrib.sites',
+
     'muapp',
 ]
+#소셜 로그인
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',    
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'naver': {
+    'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    'APP': {
+    'client_id': '3QrVtaDFHQvyl1UWFfHM',
+    'secret': 'oWKGCZXwSo',
+    'key': '' }
+    }
+ }
+
+SITE_ID = 1
+#소셜 로그인 여기까지
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -92,7 +115,6 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -145,3 +167,6 @@ SESSION_COOKIE_AGE = 600
 SESSION_SAVE_EVERY_REQUEST = True
 
 AUTH_USER_MODEL = 'muapp.User'
+
+NAVER_CLIENT_ID = '3QrVtaDFHQvyl1UWFfHM'
+NAVER_SECRET_KEY = 'oWKGCZXwSo'
