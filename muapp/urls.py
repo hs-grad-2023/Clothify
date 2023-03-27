@@ -41,7 +41,7 @@ urlpatterns = [
     path('detail_closet/<str:username>/<int:clothesID>/',views.detail_closet, name='detail_closet'),
     path('virtual_fit/<str:username>/',views.virtual_fit, name='virtual_fit'),
     path('update_closet/<str:username>/',views.updateCloset, name='updateCloset'),
-    path('remove_closet/<str:username>/<int:clothesID>/',views.remove_clothes, name='remove_clothes'),
+    path('remove_closet/<str:username>/<pk>/',views.remove_clothes, name='remove_clothes'),
   
 ]
 

@@ -19,11 +19,12 @@
         <div class="container">
             <div class="col-lg-6">
                 <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    
                     <form method="POST">
                         {% csrf_token %}
                         <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">나만의 옷장</h1>
                         <p class="jamsil" >👚 해당 옷을 정말로 삭제하시겠어요?!?!?! </p>
-
+                        <p>{{ remove_clothes.name }} - 삭제하기</p>
                         <button>삭제</button>
                     </form>
 

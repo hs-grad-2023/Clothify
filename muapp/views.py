@@ -202,18 +202,22 @@ def virtual_fit(request, username):
 
 
 @login_required(login_url='login')
-def remove_clothes(request, username, clothesID):
+def remove_clothes(request, username, pk):
     user = get_object_or_404(User, first_name=username)
-    remove_clothes= clothes.objects.get(id=clothesID) #models.py 의 clothes
-    if request.method == 'POST':
-        clothes.delete()
-        return redirect('/view_closet/') #상품목록으로 돌아가야함
+    remove_clothes= clothes.objects.get(pk=pk) #models.py 의 clothes
+    
     result={
 
         "user":user,
         "remove_clothes":remove_clothes,
         
     }
+
+    if request.method == 'POST':
+        remove_clothes.delete()
+        return render(request, 'view_closet.html', result) #상품목록으로 돌아가야함
+    
+    
     return render(request, 'remove_clothes.html', result)
 
 
