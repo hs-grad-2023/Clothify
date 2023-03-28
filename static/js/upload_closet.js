@@ -1,97 +1,5 @@
 window.onload=function(){
-
-    // ===== file reader =====
-
-    var formInfo = document.getElementsByName("FormInfo").item; // form을 sumitform 변수에 저장
-
-    console.log('forminfo',formInfo);
-
-    // ===== form 유효성 테스트 =====
-    var validationData_value = false;
-    var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
-    
-    // document.getElementById('btn-submit').addEventListener("click",validationData) // form이 submit되면 submitPhoto함수를 실행하겠다고 선언
-    
-
-    function Request(valuename){
-        var rtnval;
-        var nowAddress = unescape(location.href);
-        var parameters = new Array();
-        parameters = (nowAddress.slice(nowAddress.indexOf("?")+1,nowAddress.length)).split("&");
-        for(var i = 0 ; i < parameters.length ; i++){
-            if(parameters[i].split("=")[0] == valuename){
-                rtnval = parameters[i].split("=")[1];
-                if(rtnval == undefined || rtnval == null){
-                    rtnval = "";
-                }
-                return rtnval;
-            }
-        }
-    }
-
-    function validationData(event){
-        event.preventDefault(); //여기서 자동 submit을 막아줍니다.
-        console.log(Request("imgfile"));
-        if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
-            alert("분류1을 선택하지 않았습니다."); 
-            validationData_value= false;
-        }else if($('#type2').val() == "" || $('#type2').val() == "none" || $('#type2').val() == null){ // input form이 비어있으면
-            alert("분류2을 선택하지 않았습니다."); 
-            validationData_value= false;
-        }else if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
-            alert("이름을 입력하지 않았습니다."); 
-            validationData_value= false;
-            /*
-        }else if(Request.POST("imgfile") == "" || Request.POST("imgfile") == null){ // input form이 비어있으면
-            
-            alert("이미지가 없습니다."); 
-            validationData_value= false;
-            var name = Request.POST("imgfile");
-        }else if($('#imgfile').val() != ""){ // 사진이 있으면?
-            */
-        }else{ // 사진이 있으면?
-            submitform.submit(); //정상적으로 submit으로 넘어가겠습니다!
-            validationData_value= true;
-        }   
-    }
-
-    // ===== button function =====
-
-    document.getElementById("btn-submit").addEventListener("click", function(){
-        if(validationData_value){
-            document.getElementById("btnText").innerHTML = "Done";
-            document.getElementById("btn-submit").addClass('btn-active');
-        }
-    });
-    
-        // document.addEventListener("keyup", function(event) { //자동으로 submit 막는 코드
-        //     if (event.keyCode === 13) {
-        //         event.preventDefault();
-        //     }
-        //   });
-
-    document.getElementById("tag").addEventListener("keyup", function(event){
-        if (event.keyCode === 13) {
-            addtag();
-        }
-    });
-
-    const btn_addtag = document.getElementsByClassName("btn_addtag")
-    
-    if (btn_addtag){
-        for (let i = 0; i < btn_addtag.length; i++) {
-            btn_addtag[i].addEventListener("click", addtag);
-        }
-    }
-    const btn_deltag = document.getElementsByClassName("tag_delete")
-    if (btn_deltag){
-        for (let i = 0; i < btn_deltag.length; i++) {
-            btn_deltag[i].addEventListener("click", deletetag);
-        }
-    }
-
-
-    
+   
     // ===== tag =====
     function addtag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시키는 코드
         var value = $('#tag').val();
@@ -146,7 +54,26 @@ window.onload=function(){
         this.parentNode.remove();
     }
 
+    const btn_addtag = document.getElementsByClassName("btn_addtag")
     
+    if (btn_addtag){
+        for (let i = 0; i < btn_addtag.length; i++) {
+            btn_addtag[i].addEventListener("click", addtag);
+        }
+    }
+    const btn_deltag = document.getElementsByClassName("tag_delete")
+    if (btn_deltag){
+        for (let i = 0; i < btn_deltag.length; i++) {
+            btn_deltag[i].addEventListener("click", deletetag);
+        }
+    }
+
+    document.getElementById("tag").addEventListener("keyup", function(event){
+        if (event.keyCode === 13) {
+            addtag();
+        }
+    });
+
     // ===== type2 option =====
     document.getElementById("type1").addEventListener("change", itemChange);
     function itemChange(){
