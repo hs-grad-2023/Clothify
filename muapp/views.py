@@ -14,9 +14,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
-from django.contrib import messages
 from django.dispatch import receiver
 from allauth.account.signals import user_signed_up
+from django.db.models import Q
+from functools import reduce
+from operator import or_
 
 User = get_user_model()
 
@@ -26,15 +28,17 @@ User = get_user_model()
 #     return render(request,"404.html")
 
 typeCategory = {
-        '상의':  ["니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"],
-        '하의': ["데님 팬츠","숏 팬츠","코튼 팬츠", "레깅스","슈트 팬츠/슬랙스","점프 슈트/오버올","트레이닝/조거 팬츠","기타 바지"],
-        '치마': ["미니 스커트", "미디 스커트","롱 스커트"],
-        '원피스': ["미니 원피스", "미디 원피스","맥시 원피스"],
-        '아우터': ["후드 집업","환절기 코트", "블루종/MA-1","겨울 코트", "레더/라이더스 재킷","무스탕/퍼","롱패딩/롱헤비 아우터","슈트/블레이저 재킷","숏패딩/숏헤비 아우터","카디건","아노락 재킷","패딩 베스트","플리스/뽀글이","트레이닝 재킷","기타 아우터"],
-        '가방': ["백팩","메신저/크로스 백","파우치 백","숄더백","에코백","토트백","클로치 백","웨이스트백/힙색"],
-        '악세서리': ["모자","레그웨어","머플러","장갑","시계","팔찌","귀걸이","반지","발찌","목걸이","헤어 액세서리"],
-        '신발': ["구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"],
+        '상의':  ["== 상의 ==","니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"],
+        '하의': ["== 하의 ==","데님 팬츠","숏 팬츠","코튼 팬츠", "레깅스","슈트 팬츠/슬랙스","점프 슈트/오버올","트레이닝/조거 팬츠","기타 바지"],
+        '치마': ["== 치마 ==","미니 스커트", "미디 스커트","롱 스커트"],
+        '원피스': ["== 원피스 ==","미니 원피스", "미디 원피스","맥시 원피스"],
+        '아우터': ["== 아우터 ==","후드 집업","환절기 코트", "블루종/MA-1","겨울 코트", "레더/라이더스 재킷","무스탕/퍼","롱패딩/롱헤비 아우터","슈트/블레이저 재킷","숏패딩/숏헤비 아우터","카디건","아노락 재킷","패딩 베스트","플리스/뽀글이","트레이닝 재킷","기타 아우터"],
+        '가방': ["== 가방 ==","백팩","메신저/크로스 백","파우치 백","숄더백","에코백","토트백","클로치 백","웨이스트백/힙색"],
+        '악세서리': ["== 악세서리 ==","모자","레그웨어","머플러","장갑","시계","팔찌","귀걸이","반지","발찌","목걸이","헤어 액세서리"],
+        '신발': ["== 신발 ==","구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"],
 }
+
+allTypeCategory = [ "== 상의 ==", "== 하의 ==","== 치마 ==","== 원피스 ==","== 아우터 ==","== 가방 ==","== 악세서리 ==","== 신발 =="]
 
 @receiver(user_signed_up)
 def add_social_user_name(sender, request, user, **kwargs):
@@ -83,36 +87,33 @@ def view_closet(request, username):
         return HttpResponseForbidden()
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
-    # if request.is_ajax():
-    fl = request.GET.get('fl', '')  # 검색어
-    if request.method == 'POST':
-        if 'filter' in request.POST:
-            filterList = request.POST.get('filter');
-            filtered_clothes = clothes.objects.filter(type2__in=filterList)
-            #clothes_data = [{'id': c.id, 'name': c.name, 'category': c.category} for c in filtered_clothes]
-            #result = {'clothes': clothes_data}
-            #return JsonResponse(result)
-    
-    #result = {'clothes': [{'id': c.id, 'name': c.name, 'category': c.category} for c in clothesobject]}
-    #return render(request, 'view_closet.html', result)
-            result = {
-                    'clothesobject' : filtered_clothes,
-                    'user':user,
-                    'filterList':filterList,
-                }
+    fl = request.GET.get('fl')  # 검색어
+    if fl:
+        filterList = fl.split(',')
+        q_list=[]
+        # q_list = [Q(type2__icontains=item) for item in filterList]
 
-            return render(request, 'view_closet.html', result)
-        else:
-            result = {
-                    'clothesobject' : clothesobject,
-                    'user':user,
-                }
-            return render(request, 'view_closet.html', result)
+        for item in filterList: #==상의가 들어가면 모든 타입을 선택할 수 있게 추후에 작업 예정
+            if "==" in item:
+                type1Item = item.replace("==","").strip()
+                q_list.append(Q(type1__icontains=type1Item))
+                print(type1Item)
+            else:
+                q_list.append(Q(type2__icontains=item))
+
+        clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
+        
+        result = {
+                'clothesobject' : clothesobject,
+                'user':user,
+                'filterList':filterList,
+            }
+        return render(request, 'view_closet.html', result)
     else:
         result = {
-                    'clothesobject' : clothesobject,
-                    'user':user,
-                }
+                'clothesobject' : clothesobject,
+                'user':user,
+            }
         return render(request, 'view_closet.html', result)
 
 @login_required(login_url='login')
@@ -140,7 +141,7 @@ def uploadCloset(request, username):
             return render(request, 'upload_closet.html',{"user":user})
         else:
             error = True
-            print(request.FILES.get('imgfile'))
+            # print(request.FILES.get('imgfile'))
             # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
     return render(request, 'upload_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함
@@ -185,7 +186,7 @@ def updateCloset(request, username):
             return render(request, 'upload_closet.html',{"user":user})
         else:
             error = True
-            print(request.FILES.get('imgfile'))
+            # print(request.FILES.get('imgfile'))
             # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
     return render(request, 'update_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함
@@ -275,7 +276,7 @@ def uploadCloset(request, username):
             return render(request, 'upload_closet.html',{"user":user})
         else:
             error = True
-            print(request.FILES.get('imgfile'))
+            # print(request.FILES.get('imgfile'))
             # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
     return render(request, 'upload_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함
@@ -349,7 +350,7 @@ def updateCloset(request, username):
             return render(request, 'upload_closet.html',{"user":user})
         else:
             error = True
-            print(request.FILES.get('imgfile'))
+            # print(request.FILES.get('imgfile'))
             # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
     return render(request, 'update_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함

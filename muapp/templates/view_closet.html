@@ -34,11 +34,17 @@
     <!-- Product Start -->
     <div class="container-xxl py-5">
         <div class="container">
+            <div class="btn-container" name="btn-container">
+                <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
+                    <p id="btnText">Upload</p>
+                </button>
+            </div>
+            <br>
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-3">
                 </div> 
                 <div class="col-lg-9 text-start text-lg-end">
-                    <div class="option_container jamsil">
+                    <div class="option_container hahmelt">
                         <div class="type1_box">
                             <select id="type1" size="5">
                                 <option value="" disabled>== 분류 1 ==</option>
@@ -62,19 +68,34 @@
                                 {% comment %} <option value="">== 선택된 필터 ==</option> {% endcomment %}
                             </select>
                         </div>
-                        {% csrf_token %}
-                        <div> {% if filterList %}
-                            {{ filterList }}
-                        {% endif %}
-                        </div>
-                        <button class="searchFilter" id="searchFilter">검색</button>
-
+                        <button class="searchFilter border border-secondary rounded" id="searchFilter">검색</button>
+                        <button class="searchFilter border border-secondary rounded" id="resetFilter" onclick="location.href='{% url 'view_closet' user.first_name %}'">초기화</button>
                     </div>
 
                     <!-- filterList를 넘겨받는 폼 -->
+                    {% csrf_token %}
                     <form id="searchForm" method="get" action="{% url 'view_closet' user.first_name %}">
                         <input type="hidden" id="fl" name="fl" value="{{ fl|default_if_none:'' }}">
                     </form>
+                </div>
+            </div>
+            <br>
+            <div class="accordion hahmelt" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    <strong>검색된 필터</strong>
+                    </button>
+                  </h2>
+                  <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body">
+                        {% if filterList %}
+                            {{filterList}}
+                        {% else %}
+                            
+                        {% endif %}
+                    </div>
+                  </div>
                 </div>
             </div>
             <br>
@@ -96,7 +117,7 @@
                                         </div>
                                         <hr width="80%" align="center">
                                         <div class="text-end p-4">
-                                            <a class="d-block p mb-2 text-black-50" href="" style="">{{c.type1}}-{{c.type2}}</a>
+                                            <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.id %}" style="">{{c.type1}}-{{c.type2}}</a>
                                         </div>
                                     </div>      
                                 </div>
@@ -106,51 +127,7 @@
                     </div>
                 </div>
                 
-                <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <!-- <item 1개 시작>-->
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <item 1개 끝>-->
-                        <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tab 3 -->
-                <div id="tab-3" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-container" name="btn-container">
-                    <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
-                        <p id="btnText">Upload</p>
-                    </button>
-                </div>
+                
             </div>
         </div>
     </div>

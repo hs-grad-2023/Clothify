@@ -34,65 +34,13 @@
     <!-- Product Start -->
     <div class="container-xxl py-5 jamsil">
         <div class="container">
-            <!--
-            <div class="row g-0 gx-5 align-items-end">
-                <div class="col-lg-6">
-                </div>
-                <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
-                    <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">아우터</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-2" class="dropdown-item">가디건</a>
-                                    <a href="#tab-2" class="dropdown-item">후드집업</a>
-                                    <a href="#tab-2" class="dropdown-item">무스탕</a>
-                                    <a href="#tab-2" class="dropdown-item">코트</a>
-                                    <a href="#tab-2" class="dropdown-item">숏패딩</a>
-                                    <a href="#tab-2" class="dropdown-item">롱패딩</a>
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-3">상의</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-3" class="dropdown-item">반팔</a>
-                                    <a href="#tab-3" class="dropdown-item">긴팔</a>
-                                    <a href="#tab-3" class="dropdown-item">이너</a>
-                                    <a href="#tab-3" class="dropdown-item">목폴라</a>
-                                    <a href="#tab-3" class="dropdown-item">니트</a>
-                                    <a href="#tab-3" class="dropdown-item">원피스</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-3">하의</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-3" class="dropdown-item">반바지</a>
-                                    <a href="#tab-3" class="dropdown-item">긴바지</a>
-                                    <a href="#tab-3" class="dropdown-item">미니스커트</a>
-                                    <a href="#tab-3" class="dropdown-item">미디스커트</a>
-                                    <a href="#tab-3" class="dropdown-item">롱스커트</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+            <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
             </div>
-            -->
-
+            <br>
             <div class="tab-content">
-                
                 <div id="tab-1" class="tab-pane fade show p-0 active">
-                    
                     <div class="row g-4">
-
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
                             <div class="carousel-inner">
                                 {% for c in clothesobject %}
@@ -148,53 +96,16 @@
                         </table>
 
                         <div class="btn-container" name="btn-container">
-                            <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
-                                <p id="btnText">Update</p>
-                            </button>
-                            <button class="btn-submit" type="button" onclick = "location.href = '{% url 'remove_clothes' user.first_name clothesID %}' ">
-                                <p id="btnText">Delete</p>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-                
-                <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
-                                </div>
+                            <div class="d-inline p-2">
+                                <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
+                                    <p class="align-middle" id="btnText">Update</p>
+                                </button>
                             </div>
-                        </div>
-                        
-                        <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tab-3" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
-                                </div>
+                            <div>
+                                <button class="btn-submit" type="button" onclick = "location.href = '{% url 'remove_clothes' user.first_name clothesID %}' ">
+                                    <p class="align-middle" id="btnText">Delete</p>
+                                </button>
                             </div>
-                        </div>
-                        <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
                         </div>
                     </div>
                 </div>
