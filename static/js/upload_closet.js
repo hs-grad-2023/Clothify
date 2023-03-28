@@ -4,17 +4,16 @@ window.onload=function(){
 
     var formInfo = document.getElementsByName("FormInfo").item; // form을 sumitform 변수에 저장
 
-    console.log(formInfo);
+    console.log('forminfo',formInfo);
 
     // ===== form 유효성 테스트 =====
     var validationData_value = false;
     var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
     
-    submitform.addEventListener("submit",validationData) 
-    // form이 submit되면 submitPhoto함수를 실행하겠다고 선언
+    // document.getElementById('btn-submit').addEventListener("click",validationData) // form이 submit되면 submitPhoto함수를 실행하겠다고 선언
+    
 
-    function Request(valuename)
-    {
+    function Request(valuename){
         var rtnval;
         var nowAddress = unescape(location.href);
         var parameters = new Array();
@@ -58,23 +57,27 @@ window.onload=function(){
 
     // ===== button function =====
 
-
-
     document.getElementById("btn-submit").addEventListener("click", function(){
         if(validationData_value){
             document.getElementById("btnText").innerHTML = "Done";
             document.getElementById("btn-submit").addClass('btn-active');
         }
     });
-    document.getElementById("btn-submit").addEventListener("keyup", addtag);
-    document.addEventListener("keyup", function(event) {
+    
+        // document.addEventListener("keyup", function(event) { //자동으로 submit 막는 코드
+        //     if (event.keyCode === 13) {
+        //         event.preventDefault();
+        //     }
+        //   });
+
+    document.getElementById("tag").addEventListener("keyup", function(event){
         if (event.keyCode === 13) {
             addtag();
         }
-      });
-
+    });
 
     const btn_addtag = document.getElementsByClassName("btn_addtag")
+    
     if (btn_addtag){
         for (let i = 0; i < btn_addtag.length; i++) {
             btn_addtag[i].addEventListener("click", addtag);
@@ -161,13 +164,13 @@ window.onload=function(){
         var changeItem;
         
         if(selectItem == "상의"){
-        changeItem = top;
+            changeItem = top;
         }
         else if(selectItem == "바지"){
-        changeItem = pants;
+            changeItem = pants;
         }
         else if(selectItem == "치마"){
-        changeItem =  skirt;
+            changeItem =  skirt;
         }
         else if(selectItem == "원피스"){
             changeItem = dress;
