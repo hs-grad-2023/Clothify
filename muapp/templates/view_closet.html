@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block style %}
+<link href="{% static 'css/view.css' %}" rel="stylesheet">
+                 
+{% endblock style %}
+
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
     <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
 {% endblock %}
+
 {% block closet %}
     <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
 {% endblock closet %}
@@ -27,150 +34,71 @@
     <!-- Product Start -->
     <div class="container-xxl py-5">
         <div class="container">
+            <div class="btn-container" name="btn-container">
+                <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
+                    <p id="btnText">Upload</p>
+                </button>
+            </div>
+            <br>
             <div class="row g-0 gx-5 align-items-end">
-                <div class="col-lg-6">
-                </div>
-                <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
-                    <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-1">상의</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-1" class="dropdown-item">니트/스웨터</a>
-                                    <a href="#tab-1" class="dropdown-item">셔츠/블라우스</a>
-                                    <a href="#tab-1" class="dropdown-item">후드 티셔츠</a>
-                                    <a href="#tab-1" class="dropdown-item">피케/카라 티셔츠</a>
-                                    <a href="#tab-1" class="dropdown-item">맨투맨/스웨트셔츠</a>
-                                    <a href="#tab-1" class="dropdown-item">반소매 티셔츠</a>
-                                    <a href="#tab-1" class="dropdown-item">긴소매 티셔츠</a>
-                                    <a href="#tab-1" class="dropdown-item">민소매 티셔츠</a>
-                                    <a href="#tab-1" class="dropdown-item">기타 상의</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">하의</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-2" class="dropdown-item">데님 팬츠</a>
-                                    <a href="#tab-2" class="dropdown-item">숏 팬츠</a>
-                                    <a href="#tab-2" class="dropdown-item">코튼 팬츠</a>
-                                    <a href="#tab-2" class="dropdown-item">레깅스</a>
-                                    <a href="#tab-2" class="dropdown-item">슈트 팬츠/슬랙스</a>
-                                    <a href="#tab-2" class="dropdown-item">점프 슈트/오버올</a>
-                                    <a href="#tab-2" class="dropdown-item">트레이닝/조거 팬츠</a>
-                                    <a href="#tab-2" class="dropdown-item">기타 바지</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-0">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-3">치마</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-3" class="dropdown-item">미니 스커트</a>
-                                    <a href="#tab-3" class="dropdown-item">미디 스커트</a>
-                                    <a href="#tab-3" class="dropdown-item">롱 스커트</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-4">원피스</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-4" class="dropdown-item">미니 원피스</a>
-                                    <a href="#tab-4" class="dropdown-item">미디 원피스</a>
-                                    <a href="#tab-4" class="dropdown-item">맥시 원피스</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-5">아우터</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-5" class="dropdown-item">후드 집업</a>
-                                    <a href="#tab-5" class="dropdown-item">환절기 코트</a>
-                                    <a href="#tab-5" class="dropdown-item">블루종/MA-1</a>
-                                    <a href="#tab-5" class="dropdown-item">겨울 코트</a>
-                                    <a href="#tab-5" class="dropdown-item">레더/라이더스 재킷</a>
-                                    <a href="#tab-5" class="dropdown-item">롱패딩/롱헤비 아우터</a>
-                                    <a href="#tab-5" class="dropdown-item">슈트/블레이저 재킷</a>
-                                    <a href="#tab-5" class="dropdown-item">숏패딩/숏헤비 아우터</a>
-                                    <a href="#tab-5" class="dropdown-item">카디건</a>
-                                    <a href="#tab-5" class="dropdown-item">아노락 재킷</a>
-                                    <a href="#tab-5" class="dropdown-item">패딩 베스트</a>
-                                    <a href="#tab-5" class="dropdown-item">플리스/뽀글이</a>
-                                    <a href="#tab-5" class="dropdown-item">트레이닝 재킷</a>
-                                    <a href="#tab-5" class="dropdown-item">기타 아우터</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-1">가방</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-1" class="dropdown-item">백팩</a>
-                                    <a href="#tab-1" class="dropdown-item">메신저/크로스 백</a>
-                                    <a href="#tab-1" class="dropdown-item">파우치 백</a>
-                                    <a href="#tab-1" class="dropdown-item">숄더백</a>
-                                    <a href="#tab-1" class="dropdown-item">에코백</a>
-                                    <a href="#tab-1" class="dropdown-item">토트백</a>
-                                    <a href="#tab-1" class="dropdown-item">클로치 백</a>
-                                    <a href="#tab-1" class="dropdown-item">웨이스트백/힙색</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-1">악세서리</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <a href="#tab-1" class="dropdown-item">모자</a>
-                                    <a href="#tab-1" class="dropdown-item">레그웨어</a>
-                                    <a href="#tab-1" class="dropdown-item">머플러</a>
-                                    <a href="#tab-1" class="dropdown-item">장갑</a>
-                                    <a href="#tab-1" class="dropdown-item">시계</a>
-                                    <a href="#tab-1" class="dropdown-item">팔찌</a>
-                                    <a href="#tab-1" class="dropdown-item">귀걸이</a>
-                                    <a href="#tab-1" class="dropdown-item">반지</a>
-                                    <a href="#tab-1" class="dropdown-item">발찌</a>
-                                    <a href="#tab-1" class="dropdown-item">목걸이</a>
-                                    <a href="#tab-1" class="dropdown-item">헤어 액세서리</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-1">신발</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-body" data-bs-toggle="dropdown"></a>
-                                <div class="dropdown-menu m-0">
-                                    <ul>
-                                        <li>
-                                            <label for='shoes1'><span>구두</span></label>
-                                            <input type="checkbox" id="shoes1" class=""></input>
-                                        </li>
+                <div class="col-lg-3">
+                </div> 
+                <div class="col-lg-9 text-start text-lg-end">
+                    <div class="option_container hahmelt">
+                        <div class="type1_box">
+                            <select id="type1" size="5">
+                                <option value="" disabled>== 분류 1 ==</option>
+                                <option>상의</option>
+                                <option>하의</option>
+                                <option>치마</option>
+                                <option>원피스</option>
+                                <option>아우터</option>
+                                <option>가방</option>
+                                <option>악세서리</option>
+                                <option>신발</option>
+                            </select>
+                        </div>
+                        <div class="type2_box" multiple="multiple">
+                            <select id="type2" multiple size="5">
+                                {% comment %} <option value="" disabled>== 분류 2 ==</option> {% endcomment %}
+                            </select>
+                        </div>
+                        <div class="selected_box">
+                            <select id="selected" size="5">
+                                {% comment %} <option value="">== 선택된 필터 ==</option> {% endcomment %}
+                            </select>
+                        </div>
+                        <button class="searchFilter border border-secondary rounded" id="searchFilter">검색</button>
+                        <button class="searchFilter border border-secondary rounded" id="resetFilter" onclick="location.href='{% url 'view_closet' user.first_name %}'">초기화</button>
+                    </div>
 
-                                    </ul>
-                                    <a href="#tab-1" class="dropdown-item">구두</a>
-                                    <a href="#tab-1" class="dropdown-item">샌들</a>
-                                    <a href="#tab-1" class="dropdown-item">로퍼</a>
-                                    <a href="#tab-1" class="dropdown-item">힐/펌프스</a>
-                                    <a href="#tab-1" class="dropdown-item">플랫 슈즈</a>
-                                    <a href="#tab-1" class="dropdown-item">부츠</a>
-                                    <a href="#tab-1" class="dropdown-item">캔버스/단화</a>
-                                    <a href="#tab-1" class="dropdown-item">스포츠 스니커즈</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                    <!-- filterList를 넘겨받는 폼 -->
+                    {% csrf_token %}
+                    <form id="searchForm" method="get" action="{% url 'view_closet' user.first_name %}">
+                        <input type="hidden" id="fl" name="fl" value="{{ fl|default_if_none:'' }}">
+                    </form>
                 </div>
             </div>
-
+            <br>
+            <div class="accordion hahmelt" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    <strong>검색된 필터</strong>
+                    </button>
+                  </h2>
+                  <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body">
+                        {% if filterList %}
+                            {{filterList}}
+                        {% else %}
+                            
+                        {% endif %}
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <br>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
@@ -178,7 +106,7 @@
                             {% if c.uploadUser_id == user.id %}
                             {% if c.imgfile %}
                                 <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="product-item">
+                                    <div class="product-item jamsil">
                                         <div class="position-relative bg-light overflow-hidden">
                                             <a href="{% url 'detail_closet' user.first_name c.id %}">
                                                 <img class="img-fluid w-100" src="{{c.imgfile.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="{{ c.imgfile }}">
@@ -189,7 +117,7 @@
                                         </div>
                                         <hr width="80%" align="center">
                                         <div class="text-end p-4">
-                                            <a class="d-block p mb-2 text-black-50" href="" style="">{{c.type1}}-{{c.type2}}</a>
+                                            <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.id %}" style="">{{c.type1}}-{{c.type2}}</a>
                                         </div>
                                     </div>      
                                 </div>
@@ -199,51 +127,7 @@
                     </div>
                 </div>
                 
-                <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <!-- <item 1개 시작>-->
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2" href="">Fresh Tomato</a>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <item 1개 끝>-->
-                        <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tab 3 -->
-                <div id="tab-3" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block p mb-2 text-primary" href="">Fresh Tomato</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 text-center">
-                            <a class="btn btn-primary rounded-pill py-3 px-5" href="">Browse More Products</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-container" name="btn-container">
-                    <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
-                        <p id="btnText">Upload</p>
-                    </button>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -251,4 +135,171 @@
 {% endblock content %}
 
 {% block jsv %}
+<!--
+<script defer src="{% static 'js/view_closet.js' %}"></script>
+-->
+<script>
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{csrf_token}}' }
+      });
+    const typeCategory = {
+        '상의':  ["== 상의 ==","니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"],
+        '하의': ["== 하의 ==","데님 팬츠","숏 팬츠","코튼 팬츠", "레깅스","슈트 팬츠/슬랙스","점프 슈트/오버올","트레이닝/조거 팬츠","기타 바지"],
+        '치마': ["== 치마 ==","미니 스커트", "미디 스커트","롱 스커트"],
+        '원피스': ["== 원피스 ==","미니 원피스", "미디 원피스","맥시 원피스"],
+        '아우터': ["== 아우터 ==","후드 집업","환절기 코트", "블루종/MA-1","겨울 코트", "레더/라이더스 재킷","무스탕/퍼","롱패딩/롱헤비 아우터","슈트/블레이저 재킷","숏패딩/숏헤비 아우터","카디건","아노락 재킷","패딩 베스트","플리스/뽀글이","트레이닝 재킷","기타 아우터"],
+        '가방': ["== 가방 ==","백팩","메신저/크로스 백","파우치 백","숄더백","에코백","토트백","클로치 백","웨이스트백/힙색"],
+        '악세서리': ["== 악세서리 ==","모자","레그웨어","머플러","장갑","시계","팔찌","귀걸이","반지","발찌","목걸이","헤어 액세서리"],
+        '신발': ["== 신발 ==","구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"],
+}
+
+
+var selectedType1 = []; //type2 필터
+var selectedFilter = []; //최종 필터
+
+
+//동적으로 type2 삽입하기
+function addType2(type1_val, optLen) {
+    // select 엘리먼트 가져오기
+    var type2_element = document.getElementById("type2");
+
+    //선택리스트 만들기
+    if (!(type1_val in selectedType1)) { //type1이 선택되지 않았으면
+        selectedType1.push(type1_val);
+    } else { }//type1이 이미 선택됐으면
+
+    // 새로운 option 엘리먼트 생성하기
+    if (selectedType1.length <= 2) {
+        for (let i = 0; i < optLen; i++) { //type2의 개수(삽입할 옵션개수)만큼 반복
+            //$('.type2_box').multiSelect('addOption',(typeCategory[type1_val][i]));
+            //한번 추가했다가 지우면 다시 추가가 안됨.. 
+
+            let newOption = document.createElement("option");
+            newOption.text = typeCategory[type1_val][i];
+
+            // option 엘리먼트를 select 엘리먼트에 추가하기
+            type2_element.add(newOption);
+        }
+    }
+}
+
+//기존 type2 삭제하기
+function delType2() {
+    if (selectedType1.length >= 2) {
+        var oldElement = selectedType1.shift();
+        var optLen = typeCategory[oldElement].length; 
+
+        const type2_element = document.getElementById("type2");
+        for (let i = 0; i < optLen; i++) {
+            type2_element.remove(type2_element.options[type2_element.options.length]);
+        }
+    }
+}
+
+//type1으로 type2 추가
+document.getElementById("type1").addEventListener("click", function () {
+    var type1_val = document.getElementById("type1").value;
+    var optLen = typeCategory[type1_val].length; //getType에서 type1값을 가져옴
+
+    addType2(type1_val, optLen);
+    delType2();
+})
+
+// selected 추가하는 함수
+function addSelected() {
+    const type2_element = document.getElementById("type2"); //선택한 옵션값
+    const type2_val = type2_element.value; //선택한 옵션값
+    const selected_element = document.getElementById("selected"); //추가할 요소
+
+    // 선택 리스트 만들기
+    selectedFilter.push(type2_val);
+
+    // 선택된 리스트는 숨기기
+    const selectedOption = type2_element.selectedIndex;
+    type2_element.options[selectedOption].hidden = true;
+
+    // 새로운 option 엘리먼트 생성하기
+    let newOption = document.createElement("option");
+    newOption.text = type2_val;
+    // option 엘리먼트를 select 엘리먼트에 추가하기
+    selected_element.add(newOption);
+}
+
+//type2로 selected 추가
+document.getElementById("type2").addEventListener("click", function () {
+
+    addSelected();
+})
+
+// selected 삭제하는 함수
+function delSelected() {
+    const type1_val = document.getElementById("type1").value;
+    const optLen = typeCategory[type1_val].length; 
+    const type2_element = document.getElementById("type2"); //선택한 옵션값
+    const type2_val = type2_element.value;
+    const selected_element = document.getElementById("selected"); //다시 취소할 옵션 요소
+    const selected_val = selected_element.value; //취소할 옵션값
+
+    //selectedFilter에서 옵션을 삭제
+    for (let i = 0; i < selectedFilter.length; i++) {
+        if (selectedFilter[i] == selected_val) {
+            selectedFilter.splice(i, 1);
+            break;
+        }
+    }
+
+    //type2에 옵션 되돌리기
+    for (let i = 0; i < optLen; i++) { //type2의 개수(삽입할 옵션개수)만큼 반복
+        if (typeCategory[type1_val][i] == type2_val) {
+            type2_element.options[i].hidden = false;
+            break;
+        }
+    }
+    const selectedOption = selected_element.selectedIndex;
+    selected_element.remove(selected_element.options[selectedOption]);
+}
+
+//selected 제거
+document.getElementById("selected").addEventListener("click", function () {
+
+    delSelected();
+})
+
+//selectedFilter 보내기
+function SendFilter(){
+    $(document).ready(function() {
+        $("#searchFilter").click(function() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'view_closet' user.first_name%}", // 장고 URL 패턴 이름
+                data: {
+                    'filter': selectedFilter,
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log(data.clothes);
+                    console.log('filterList',filterList);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+};
+//filter 검색
+document.getElementById("searchFilter").addEventListener("click", function () {
+    //SendFilter();
+    document.getElementById('fl').value = selectedFilter;
+    document.getElementById('searchForm').submit();
+
+})
+
+
+
+
+
+    
+
+</script> 
 {% endblock jsv %}
