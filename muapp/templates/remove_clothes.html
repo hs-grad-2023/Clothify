@@ -23,8 +23,8 @@
                         {% csrf_token %}
                         <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">나만의 옷장</h1>
                         <p class="jamsil" >👚 해당 옷을 정말로 삭제하시겠어요?!?!?! </p>
-
-                        <button>삭제</button>
+                        <p>{{ remove_clothes.name }} <button>삭제</button></p>
+                       
                     </form>
 
                  </div>

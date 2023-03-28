@@ -251,6 +251,110 @@ def logins(request):
 
 
 @login_required(login_url='login')
+def uploadCloset(request, username):
+    groupID_val = get_random_string(length=5)
+    error = False
+    user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
+    if user != request.user:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        if request.FILES.get('imgfile'):
+            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
+            # groupID_val = get_random_string(length=5)
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+                uploadUser=request.user,
+                uploadUserName=request.user.username,
+                groupID = groupID_val,
+            )
+            return render(request, 'upload_closet.html',{"user":user})
+        else:
+            error = True
+            print(request.FILES.get('imgfile'))
+            # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
+    return render(request, 'upload_closet.html', {"user":user, 'error':error})
+        # return redirect('index') #상품목록으로 돌아가야함
+
+
+
+@login_required(login_url='login')
+def blog(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
+    return render(request,"blog.html",{"user":user})
+
+@login_required(login_url='login')
+def virtual_fit(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
+    return render(request,"virtual_fit.html",{"user":user})
+
+
+
+@login_required(login_url='login')
+def remove_clothes(request, username, pk):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
+    
+
+    clothesobject = clothes.objects.all()           # clothes의 모든 객체를 clothesobject에 담기
+    remove_clothes= clothes.objects.get(pk=pk)      # clothes에서 pk와 같은 primary_key 값을 remove_clothes에 담기
+
+    result={
+
+        "user":user,
+        "remove_clothes":remove_clothes,
+        "clothesobject":clothesobject,
+        
+    }
+
+    if request.method == 'POST':
+        remove_clothes.delete()
+        return render(request, 'view_closet.html', result) #상품목록으로 돌아가야함
+    
+    
+    return render(request, 'remove_clothes.html', result)
+
+
+@login_required(login_url='login')
+def updateCloset(request, username):
+    groupID_val = get_random_string(length=5)
+    error = False
+    user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
+    if user != request.user:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        if request.FILES.get('imgfile'):
+            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
+            # groupID_val = get_random_string(length=5)
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+                uploadUser=request.user,
+                uploadUserName=request.user.username,
+                groupID = groupID_val,
+            )
+            return render(request, 'upload_closet.html',{"user":user})
+        else:
+            error = True
+            print(request.FILES.get('imgfile'))
+            # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
+    return render(request, 'update_closet.html', {"user":user, 'error':error})
+        # return redirect('index') #상품목록으로 돌아가야함
+
+@login_required(login_url='login')
 def mypage(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
