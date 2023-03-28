@@ -204,12 +204,18 @@ def virtual_fit(request, username):
 @login_required(login_url='login')
 def remove_clothes(request, username, pk):
     user = get_object_or_404(User, first_name=username)
-    remove_clothes= clothes.objects.get(pk=pk) #models.py 의 clothes
+    if user != request.user:
+        return HttpResponseForbidden()
     
+
+    clothesobject = clothes.objects.all()           # clothes의 모든 객체를 clothesobject에 담기
+    remove_clothes= clothes.objects.get(pk=pk)      # clothes에서 pk와 같은 primary_key 값을 remove_clothes에 담기
+
     result={
 
         "user":user,
         "remove_clothes":remove_clothes,
+        "clothesobject":clothesobject,
         
     }
 
