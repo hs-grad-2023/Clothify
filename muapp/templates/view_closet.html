@@ -36,7 +36,7 @@
         <div class="container">
             <div class="btn-container" name="btn-container">
                 <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
-                    <p id="btnText">Upload</p>
+                    <p id="btnText" class="jamsil" style="padding-top: 15px;" >Upload</p>
                 </button>
             </div>
             <br>
@@ -68,8 +68,8 @@
                                 {% comment %} <option value="">== 선택된 필터 ==</option> {% endcomment %}
                             </select>
                         </div>
-                        <button class="searchFilter border border-secondary rounded" id="searchFilter">검색</button>
-                        <button class="searchFilter border border-secondary rounded" id="resetFilter" onclick="location.href='{% url 'view_closet' user.first_name %}'">초기화</button>
+                        <button class="searchFilter border border-secondary" id="searchFilter" style="border-radius: 10px">검색</button>
+                        <button class="searchFilter border border-secondary" id="resetFilter" style="border-radius: 10px" onclick="location.href='{% url 'view_closet' user.first_name %}'">초기화</button>
                     </div>
 
                     <!-- filterList를 넘겨받는 폼 -->
