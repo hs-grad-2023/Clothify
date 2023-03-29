@@ -51,10 +51,13 @@
                             </div>
                         </div>
                         <div>
+                            {% for c in clothesobject %}
+                            {% if c.uploadUser_id == user.id %}
+                            {% if c.id == pk %}
                             <form action=""
                                   method="POST"
-                                  name="clothesInfo"
-                                  id="clothesInfo"
+                                  name="clothesInfo_update"
+                                  id="clothesInfo_update"
                                   enctype="multipart/form-data"
 
                                   >
@@ -62,8 +65,10 @@
                                 <div class="mb-3 row">
                                     <label for="type1" class="col-sm-2 col-form-label text-end fw-bold">분류 1</label>
                                     <select name="type1" id="type1" size="1" class="form-select col" required>
-                                        <option value="none" selected>=== 분류 1 ===</option>
-                                        <option value="top">상의</option>
+
+                                        {% if c.type1 == 'top' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" selected>상의</option>
                                         <option value="pants">바지</option>
                                         <option value="skirt">치마</option>
                                         <option value="dress">원피스</option>
@@ -71,6 +76,84 @@
                                         <option value="bag">가방</option>
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'pants' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants" selected>바지</option>
+                                        <option value="skirt">치마</option>
+                                        <option value="dress">원피스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="bag">가방</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'skirt' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants">바지</option>
+                                        <option value="skirt" selected>치마</option>
+                                        <option value="dress">원피스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="bag">가방</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'dress' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants">바지</option>
+                                        <option value="skirt">치마</option>
+                                        <option value="dress" selected>원피스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="bag">가방</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'outer' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants">바지</option>
+                                        <option value="skirt">치마</option>
+                                        <option value="dress">원피스</option>
+                                        <option value="outer" selected>아우터</option>
+                                        <option value="bag">가방</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'bag' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants">바지</option>
+                                        <option value="skirt">치마</option>
+                                        <option value="dress">원피스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="bag" selected>가방</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'accessary' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants">바지</option>
+                                        <option value="skirt">치마</option>
+                                        <option value="dress">원피스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="bag">가방</option>
+                                        <option value="accessary" selected>악세서리</option>
+                                        <option value="shoes">신발</option>
+
+                                        {% elif c.type1 == 'shoes' %}
+                                        <option value="none" disabled>=== 분류 1 ===</option>
+                                        <option value="top" >상의</option>
+                                        <option value="pants">바지</option>
+                                        <option value="skirt">치마</option>
+                                        <option value="dress">원피스</option>
+                                        <option value="outer">아우터</option>
+                                        <option value="bag">가방</option>
+                                        <option value="accessary">악세서리</option>
+                                        <option value="shoes" selected>신발</option>
+
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
@@ -123,6 +206,9 @@
                                     </button>
                                 </div>
                             </form>
+                            {% endif%}
+                            {% endif%}
+                        {% endfor %}
                             <label id="TEST">
 
                             </label>

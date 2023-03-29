@@ -326,7 +326,7 @@ def remove_clothes(request, username, pk):
 
 
 @login_required(login_url='login')
-def updateCloset(request, username):
+def updateCloset(request, username, pk):
     groupID_val = get_random_string(length=5)
     error = False
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
