@@ -83,7 +83,7 @@
                 </div>
                 <div class="d-none d-lg-flex ms-2">
                     {% if user.is_authenticated %}
-                    <span class="nav-link jamsil" style="padding-left: 0px;"><a href="{% url 'mypage' user.first_name %}">{{ user.username|title }}</a><span style="color: black;">님 반갑습니다!</span></span><button type="button" class="nav-link btn btn-outline-primary btn-sm jamsil" style="color: black;" onclick="location.href='{% url 'logout' %}'">로그아웃</button>
+                    <span class="nav-link jamsil" style="padding-left: 0px;"><a href="{% url 'mypage' user.first_name %}">{{ user.name }}</a><span style="color: black;">님 반갑습니다!</span></span><button type="button" class="nav-link btn btn-outline-primary btn-sm jamsil" style="color: black;" onclick="location.href='{% url 'logout' %}'">로그아웃</button>
                     {% else %}
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="{% url 'login' %}">
                         <small class="fas fa-user-large text-body"></small>

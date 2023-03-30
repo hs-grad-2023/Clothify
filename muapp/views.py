@@ -13,6 +13,7 @@ from allauth.account.signals import user_signed_up
 from django.db.models import Q
 from functools import reduce
 from operator import or_
+from allauth.socialaccount.models import SocialAccount
 
 User = get_user_model()
 
@@ -32,6 +33,12 @@ typeCategory = {
 
 allTypeCategory = [ "== 상의 ==", "== 하의 ==","== 치마 ==","== 원피스 ==","== 아우터 ==","== 가방 ==","== 악세서리 ==","== 신발 =="]
 
+@receiver(user_signed_up)
+def add_social_user_name(sender, request, user, **kwargs):
+    social_accounts = SocialAccount.objects.get(user=user)
+    user.first_name = get_random_string(length=16)
+    user.name = social_accounts.extra_data['name']
+    user.save()
 
 def index(request):
     try:
