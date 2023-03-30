@@ -15,6 +15,7 @@ from functools import reduce
 from operator import or_
 from allauth.socialaccount.models import SocialAccount
 
+
 User = get_user_model()
 
 # Create your views here.
@@ -240,6 +241,7 @@ def logins(request):
                 if result == 'modify':
                     return redirect(f'/{result}/')
                 else:
+                    print(f'/{result}/{user}')
                     return redirect(f'/{result}/{user}')
             return redirect('/')
     else:
