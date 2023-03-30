@@ -30,12 +30,6 @@ class clothes(models.Model):
 
     class Meta:
         ordering = ['-upload_date']
-        # constraints = [
-        #      models.UniqueConstraint(
-        #         fields=["id","groupID"],
-        #         name="Unique groupID",
-        #      )
-        # ]
 
     def __str__(self): #식별자
         return self.type1 + " " + self.imgfile.name + " " +self.upload_date.strftime("%Y-%m-%d %H-%M:%S")

@@ -110,25 +110,26 @@ def view_closet(request, username):
 
 @login_required(login_url='login')
 def uploadCloset(request, username):
-    groupID_val = get_random_string(length=5)
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
     if user != request.user:
         return HttpResponseForbidden()
     if request.method == 'POST':
+        if request.FILES.get('imgfile'):
         # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
         # groupID_val = get_random_string(length=5)
-        new_clothes=clothes.objects.create(
-            type1=request.POST.get('type1'),
-            type2=request.POST.get('type2'),
-            tag=request.POST.get('tags'),
-            name=request.POST.get('clothesName'),
-            imgfile=request.FILES.get('imgfile'),
-            details=request.POST.get('details'),
-            uploadUser=request.user,
-            uploadUserName=request.user.username,
-            groupID = groupID_val,
-        )
-        return redirect('view_closet', username=user.first_name)
+            new_clothes=clothes.objects.create(
+                type1=request.POST.get('type1'),
+                type2=request.POST.get('type2'),
+                tag=request.POST.get('tags'),
+                name=request.POST.get('clothesName'),
+                imgfile=request.FILES.get('imgfile'),
+                details=request.POST.get('details'),
+                uploadUser=request.user,
+                uploadUserName=request.user.username,
+                groupID = request.POST.get('groupID'),
+            )
+            return render(request, 'upload_closet.html', {"user":user})
+            #return redirect('view_closet', username=user.first_name)
     return render(request, 'upload_closet.html', {"user":user})
 
 @login_required(login_url='login')
@@ -136,7 +137,6 @@ def detail_closet(request, username,clothesID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
-    # db = get_clothes_list()
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
     result = {

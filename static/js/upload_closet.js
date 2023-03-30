@@ -1,5 +1,7 @@
 window.onload=function(){
-   
+   document.getElementById("groupID").value = Math.random().toString(36).substring(2, 12);
+
+
     // ===== tag =====
     function addtag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시키는 코드
         var value = $('#tag').val();
