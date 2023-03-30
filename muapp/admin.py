@@ -1,16 +1,24 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import clothes, User
+from django.utils.html import mark_safe
 
 # Register your models here.
 
 
 #admin.site.register(clothes) #관리자가 옷(clothes)에 접근 가능
 class clothesAdmin(admin.ModelAdmin):
-    list_display = ('id','type1', 'type2', 'name', 'imgfile', 'upload_date')
+    list_display = ('id','type1', 'type2', 'name', 'thumbnail', 'upload_date')
     list_filter = ('type1', 'type2')
     fields = [('type1', 'type2'),'name','tag','imgfile','details']
     readonly_fields=('id','upload_date')
+
+    def thumbnail(self, obj):
+        if obj.imgfile:
+            return mark_safe(f"<img src='{obj.imgfile.url}' width='50px' height='50px' />")
+        else:
+            return None
+    thumbnail.short_description = 'Thumbnail'
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'username', 'first_name', 'password', 'email', 'height', 'weight', 'sex', 'joined_at', 'last_login_at', 'is_superuser')

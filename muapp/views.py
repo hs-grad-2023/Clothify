@@ -1,15 +1,9 @@
-from random import randint
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .getDB import get_clothes_list
 from .models import clothes
-import requests
-import datetime
-import math, json, sqlite3
-from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .forms import UserForm, LoginForm
+from .forms import UserForm, LoginForm, ModifyForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
@@ -151,7 +145,6 @@ def detail_closet(request, username,clothesID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
-    # db = get_clothes_list()
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     
     result = {
@@ -250,6 +243,16 @@ def logins(request):
         form = LoginForm()
     return render(request, 'login2.html', {'form': form}) 
 
+@login_required(login_url='login')
+def user_modify(request):
+    if request.method == 'POST':
+        form = ModifyForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = ModifyForm(instance=request.user)
+    return render(request,"user_modify.html", {'form': form,})
 
 @login_required(login_url='login')
 def uploadCloset(request, username):
@@ -280,24 +283,6 @@ def uploadCloset(request, username):
             # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
     return render(request, 'upload_closet.html', {"user":user, 'error':error})
         # return redirect('index') #상품목록으로 돌아가야함
-
-
-
-@login_required(login_url='login')
-def blog(request, username):
-    user = get_object_or_404(User, first_name=username)
-    if user != request.user:
-        return HttpResponseForbidden()
-    return render(request,"blog.html",{"user":user})
-
-@login_required(login_url='login')
-def virtual_fit(request, username):
-    user = get_object_or_404(User, first_name=username)
-    if user != request.user:
-        return HttpResponseForbidden()
-    return render(request,"virtual_fit.html",{"user":user})
-
-
 
 @login_required(login_url='login')
 def remove_clothes(request, username, pk):
@@ -363,26 +348,10 @@ def mypage(request, username):
     return render(request,"mypage.html",{"user":user})
 
 @login_required(login_url='login')
-def user_modify(request):
-    if request.method == 'POST':
-        user = request.user
-        user.username = request.POST["username"]
-        user.email = request.POST["email"]
-        user.name = request.POST["name"]
-        user.sex = request.POST["sex"]
-        user.height = request.POST["height"]
-        user.weight = request.POST["weight"]
-        user.save()
-        return redirect('/')
-
-    return render(request,"user_modify.html")
-    
-
-@login_required(login_url='login')
 def virtual_fit(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
-        return HttpResponseForbidden()
+        return redirect(f'/virtual_fit/{request.user.first_name}')
     return render(request,"virtual_fit.html",{"user":user})
 
 
