@@ -109,8 +109,6 @@ def uploadCloset(request, username):
         return HttpResponseForbidden()
     if request.method == 'POST':
         if request.FILES.get('imgfile'):
-        # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
-        # groupID_val = get_random_string(length=5)
             new_clothes=clothes.objects.create(
                 type1=request.POST.get('type1'),
                 type2=request.POST.get('type2'),
@@ -122,8 +120,8 @@ def uploadCloset(request, username):
                 uploadUserName=request.user.username,
                 groupID = request.POST.get('groupID'),
             )
-            return render(request, 'upload_closet.html', {"user":user})
-            #return redirect('view_closet', username=user.first_name)
+            #return render(request, 'upload_closet.html', {"user":user})
+            return redirect('view_closet', username=user.first_name)
     return render(request, 'upload_closet.html', {"user":user})
 
 @login_required(login_url='login')
