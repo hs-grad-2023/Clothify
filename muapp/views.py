@@ -1,15 +1,9 @@
-from random import randint
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .getDB import get_clothes_list
 from .models import clothes
-import requests
-import datetime
-import math, json, sqlite3
-from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .forms import UserForm, LoginForm
+from .forms import UserForm, LoginForm, ModifyForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
@@ -243,6 +237,16 @@ def logins(request):
         form = LoginForm()
     return render(request, 'login2.html', {'form': form}) 
 
+@login_required(login_url='login')
+def user_modify(request):
+    if request.method == 'POST':
+        form = ModifyForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = ModifyForm(instance=request.user)
+    return render(request,"user_modify.html", {'form': form,})
 
 @login_required(login_url='login')
 def mypage(request, username):
@@ -278,7 +282,7 @@ def blog(request, username):
 def virtual_fit(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
-        return HttpResponseForbidden()
+        return redirect(f'/virtual_fit/{request.user.first_name}')
     return render(request,"virtual_fit.html",{"user":user})
 
 

@@ -97,7 +97,7 @@
 
                         <div class="btn-container" name="btn-container">
                             <div class="d-inline p-2">
-                                <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
+                                <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name clothesID%}' " onkeyup="if(window.event.keyCode==13){}">
                                     <p class="align-middle" id="btnText">Update</p>
                                 </button>
                             </div>

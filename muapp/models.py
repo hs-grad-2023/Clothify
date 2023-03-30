@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.html import mark_safe
 from django.core.mail import send_mail
 
 # Create your models here.

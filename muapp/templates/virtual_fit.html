@@ -23,20 +23,15 @@
 
 
     <!-- Blog Start -->
-    <div class="container-xxl py-6 jamsil">
-        <div class="container jamsil">
-            <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <h1 class="display-5 mb-3">Latest Blog</h1>
-                <p>Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+    {% if user.is_authenticated %}
+    <div class="container-xxl py-5 justify-content-center">  
+        <div class="row justify-content-center">
+            <div class="col-md-6 ">
+                <video id="video" width="100%" height="auto" autoplay style="transform: rotateY(180deg); -webkit-transform:rotateY(180deg);"></video>
             </div>
-            <div class="row g-4">
-                <div class="mb-3 row">
-                    <label class="col-sm-2"></label>
-                    <div class="fileUploadContent col"></div>
-                </div>
-            </div>
-        </div>
+        </div>       
     </div>
+    {% endif %}
     <!-- Blog End -->
 {% endblock %}
 
@@ -44,4 +39,17 @@
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
 <script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
 <!-- Uppy 코드 삽입 예정,, 수정하고,, -->
+<script>
+    const video = document.querySelector('#video');
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                video.play();
+            };
+        })
+        .catch(err => {
+            console.error(err);
+        });
+</script>
 {% endblock jsv %}
