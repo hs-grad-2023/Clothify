@@ -1,94 +1,4 @@
 window.onload=function(){
-
-    // ===== file reader =====
-
-    var formInfo = document.getElementsByName("FormInfo").item; // form을 sumitform 변수에 저장
-
-    console.log(formInfo);
-
-    // ===== form 유효성 테스트 =====
-    var validationData_value = false;
-    var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
-    
-    submitform.addEventListener("submit",validationData) 
-    // form이 submit되면 submitPhoto함수를 실행하겠다고 선언
-
-    function Request(valuename)
-    {
-        var rtnval;
-        var nowAddress = unescape(location.href);
-        var parameters = new Array();
-        parameters = (nowAddress.slice(nowAddress.indexOf("?")+1,nowAddress.length)).split("&");
-        for(var i = 0 ; i < parameters.length ; i++){
-            if(parameters[i].split("=")[0] == valuename){
-                rtnval = parameters[i].split("=")[1];
-                if(rtnval == undefined || rtnval == null){
-                    rtnval = "";
-                }
-                return rtnval;
-            }
-        }
-    }
-
-    function validationData(event){
-        event.preventDefault(); //여기서 자동 submit을 막아줍니다.
-        console.log(Request("imgfile"));
-        if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
-            alert("분류1을 선택하지 않았습니다."); 
-            validationData_value= false;
-        }else if($('#type2').val() == "" || $('#type2').val() == "none" || $('#type2').val() == null){ // input form이 비어있으면
-            alert("분류2을 선택하지 않았습니다."); 
-            validationData_value= false;
-        }else if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
-            alert("이름을 입력하지 않았습니다."); 
-            validationData_value= false;
-            /*
-        }else if(Request.POST("imgfile") == "" || Request.POST("imgfile") == null){ // input form이 비어있으면
-            
-            alert("이미지가 없습니다."); 
-            validationData_value= false;
-            var name = Request.POST("imgfile");
-        }else if($('#imgfile').val() != ""){ // 사진이 있으면?
-            */
-        }else{ // 사진이 있으면?
-            submitform.submit(); //정상적으로 submit으로 넘어가겠습니다!
-            validationData_value= true;
-        }   
-    }
-
-    // ===== button function =====
-
-
-
-    document.getElementById("btn-submit").addEventListener("click", function(){
-        if(validationData_value){
-            document.getElementById("btnText").innerHTML = "Done";
-            document.getElementById("btn-submit").addClass('btn-active');
-        }
-    });
-    document.getElementById("btn-submit").addEventListener("keyup", addtag);
-    document.addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
-            addtag();
-        }
-      });
-
-
-    const btn_addtag = document.getElementsByClassName("btn_addtag")
-    if (btn_addtag){
-        for (let i = 0; i < btn_addtag.length; i++) {
-            btn_addtag[i].addEventListener("click", addtag);
-        }
-    }
-    const btn_deltag = document.getElementsByClassName("tag_delete")
-    if (btn_deltag){
-        for (let i = 0; i < btn_deltag.length; i++) {
-            btn_deltag[i].addEventListener("click", deletetag);
-        }
-    }
-
-
-    
     // ===== tag =====
     function addtag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시키는 코드
         var value = $('#tag').val();
@@ -143,9 +53,30 @@ window.onload=function(){
         this.parentNode.remove();
     }
 
+    const btn_addtag = document.getElementsByClassName("btn_addtag")
     
+    if (btn_addtag){
+        for (let i = 0; i < btn_addtag.length; i++) {
+            btn_addtag[i].addEventListener("click", addtag);
+        }
+    }
+    const btn_deltag = document.getElementsByClassName("tag_delete")
+    if (btn_deltag){
+        for (let i = 0; i < btn_deltag.length; i++) {
+            btn_deltag[i].addEventListener("click", deletetag);
+        }
+    }
+
+    document.getElementById("tag").addEventListener("keyup", function(event){
+        if (event.keyCode === 13) {
+            addtag();
+        }
+    });
+
     // ===== type2 option =====
     document.getElementById("type1").addEventListener("change", itemChange);
+    document.getElementById("type2").addEventListener("click", itemChange);
+
     function itemChange(){
 
         var top = ["=== 분류 2 ===","니트/스웨터","셔츠/블라우스","후드 티셔츠", "피케/카라 티셔츠","맨투맨/스웨트셔츠", "반소매 티셔츠","긴소매 티셔츠","민소매 티셔츠","기타 상의"];
@@ -158,16 +89,17 @@ window.onload=function(){
         var shoes = ["=== 분류 2 ===","구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"];
 
         var selectItem = $("#type1").val();
+        console.log("selectItem = ",selectItem)
         var changeItem;
         
         if(selectItem == "상의"){
-        changeItem = top;
+            changeItem = top;
         }
         else if(selectItem == "바지"){
-        changeItem = pants;
+            changeItem = pants;
         }
         else if(selectItem == "치마"){
-        changeItem =  skirt;
+            changeItem =  skirt;
         }
         else if(selectItem == "원피스"){
             changeItem = dress;

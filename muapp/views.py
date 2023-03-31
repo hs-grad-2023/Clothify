@@ -147,7 +147,7 @@ def uploadCloset(request, username):
                 )
                 new_photo.save()
         return redirect('view_closet', username=user.first_name)
-    else:
+    else: 
         return render(request, 'upload_closet.html', {"user":user})
 
 @login_required(login_url='login')
@@ -166,8 +166,6 @@ def detail_closet(request, username, groupID):
     )
 
     photosobject = photosobject.filter(groupID__exact=groupID)
-    for p in photosobject:
-        print(p.groupID_id, p.row_number)
 
     result = {
         'clothesobject' : clothesobject,
@@ -180,32 +178,51 @@ def detail_closet(request, username, groupID):
 @login_required(login_url='login')
 def updateCloset(request, username, groupID):
     groupID_val = get_random_string(length=5)
-    error = False
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
     if user != request.user:
         return HttpResponseForbidden()
     if request.method == 'POST':
-        if request.FILES.get('imgfile'):
-            # while(not(clothes.objects.filter(groupID=groupID_val).exists())):#groupID값이 겹치지 않을동안 반복해서 groupID값 새로 생성
-            # groupID_val = get_random_string(length=5)
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-                uploadUser=request.user,
-                uploadUserName=request.user.username,
-                groupID = groupID_val,
-            )
-            return render(request, 'upload_closet.html',{"user":user})
-        else:
-            error = True
-            # print(request.FILES.get('imgfile'))
-            # messages.add_message(self.request, messages.INFO, '이미지가 없습니다.')
-    return render(request, 'update_closet.html', {"user":user, 'error':error})
-        # return redirect('index') #상품목록으로 돌아가야함
+        if request.FILES.getlist('imgfile'):
+            for imgfile in request.FILES.getlist('imgfile'):
+                # try:
+                #     new_clothes = clothes.objects.get(groupID = getGroupID)
+                # except clothes.DoesNotExist:
+                #     new_clothes = clothes.objects.create(
+                #                         uploadUser_id=request.user.id,
+                #                         uploadUserName=request.user.username,
+                #                         type1=request.POST.get('type1'),
+                #                         type2=request.POST.get('type2'),
+                #                         tag=request.POST.get('tags'),
+                #                         name=request.POST.get('clothesName'),
+                #                         details=request.POST.get('details'),
+                #                         groupID = getGroupID,
+                #         )
+                #     new_clothes.save()
+
+                # new_photo = photos.objects.create(
+                #                 groupID_id=new_clothes.groupID,
+                #                 imgfile = imgfile,
+                # )
+                # new_photo.save()
+                return redirect('view_closet', username=user.first_name)
+    else:
+        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id))   #clothes의 모든 객체를 c에 담기
+        photosobject = photos.objects.annotate(
+                    row_number=Window(
+                        expression=RowNumber(),
+                        partition_by=[F('groupID')],
+                        order_by='groupID_id'
+                    )
+        )
+        photosobject = photosobject.filter(groupID__exact=groupID)
+        result = {
+            "user":user,
+            "clothesobject" : clothesobject,
+            "groupID" : groupID,
+            "photosobject" : photosobject,
+        }
+        return render(request, 'update_closet.html',result)
+
 
 
 @login_required(login_url='login')

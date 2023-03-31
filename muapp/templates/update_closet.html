@@ -52,8 +52,6 @@
                         </div>
                         <div>
                             {% for c in clothesobject %}
-                            {% if c.uploadUser_id == user.id %}
-                            {% if c.id == pk %}
                             <form action=""
                                   method="POST"
                                   name="clothesInfo_update"
@@ -66,7 +64,7 @@
                                     <label for="type1" class="col-sm-2 col-form-label text-end fw-bold">분류 1</label>
                                     <select name="type1" id="type1" size="1" class="form-select col" required>
 
-                                        {% if c.type1 == 'top' %}
+                                        {% if c.type1 == '상의' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" selected>상의</option>
                                         <option value="pants">바지</option>
@@ -77,7 +75,7 @@
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'pants' %}
+                                        {% elif c.type1 == '바지' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants" selected>바지</option>
@@ -88,7 +86,7 @@
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'skirt' %}
+                                        {% elif c.type1 == '치마' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants">바지</option>
@@ -99,7 +97,7 @@
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'dress' %}
+                                        {% elif c.type1 == '원피스' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants">바지</option>
@@ -110,7 +108,7 @@
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'outer' %}
+                                        {% elif c.type1 == '아우터' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants">바지</option>
@@ -121,7 +119,7 @@
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'bag' %}
+                                        {% elif c.type1 == '가방' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants">바지</option>
@@ -132,7 +130,7 @@
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'accessary' %}
+                                        {% elif c.type1 == '악세서리' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants">바지</option>
@@ -143,7 +141,7 @@
                                         <option value="accessary" selected>악세서리</option>
                                         <option value="shoes">신발</option>
 
-                                        {% elif c.type1 == 'shoes' %}
+                                        {% elif c.type1 == '신발' %}
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option value="top" >상의</option>
                                         <option value="pants">바지</option>
@@ -153,7 +151,7 @@
                                         <option value="bag">가방</option>
                                         <option value="accessary">악세서리</option>
                                         <option value="shoes" selected>신발</option>
-
+                                        {% endif %}
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
@@ -164,7 +162,7 @@
                                 </div>
                                 <div class="mb-3 row">
                                     <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
-                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" required/>
+                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" value="{{c.name}}" required/>
                                 </div>
                                 <!-- tag -->
                                 <div class="mb-3 row">
@@ -176,13 +174,13 @@
                                 <div class="mb-3 row">
                                     <label class="col-sm-2 col-form-label text-end"></label>
                                     <div class="col tag_area">
-
+                                        
                                     </div>
                                 </div>
                                 <!--tag 추가해서 띄우는 label-->
                                 <div class="mb-3 row" style="display:none">
                                     <label class="col-sm-2 col-form-label text-end"></label>
-                                    <input type="text" name="tags" id="tags" class="form-control col" readonly/>
+                                    <input type="text" name="tags" id="tags" class="form-control col" value="{{c.tag}}" readonly/>
                                 </div>
                                 <div class="mb-3 row">
                                     <label for="details" class="col-sm-2 col-form-label text-end fw-bold" >상세정보</label>
@@ -193,7 +191,7 @@
                                     <label class="col-sm-2"></label>
                                     <div class="fileUploadContent col"></div>
                                 </div>
-
+                            {% endfor %}
                                 <!-- button design -->
                                 <div class="btn-container" name="btn-container">
                                     <button id="btn-submit" class="btn-submit" type="sumbit" onkeyup="if(window.event.keyCode==13){}">
@@ -206,12 +204,7 @@
                                     </button>
                                 </div>
                             </form>
-                            {% endif%}
-                            {% endif%}
-                        {% endfor %}
-                            <label id="TEST">
-
-                            </label>
+                        
                         </div>
                     </div>
                 </div>
@@ -223,7 +216,7 @@
 <!-- Product End -->
 
 {% block jsv %}
-<script defer src="{% static 'js/upload_closet.js' %}"></script>
+<script defer src="{% static 'js/update_closet.js' %}"></script>
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
 <script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
 <script type="module">
@@ -311,10 +304,6 @@
             }
         });
         
-        {% comment %} uppy.on('complete', result => {
-            console.log('successful files:', result.successful)
-            console.log('failed files:', result.failed)
-        }) {% endcomment %}
 </script>
 
 {% endblock jsv%}
