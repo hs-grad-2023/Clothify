@@ -13,8 +13,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6" style="padding-top: 100px;">
-                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <div class="col-lg-6" style="padding-top: 150px; padding-bottom: 40px;">
+                <div class="section-header text-start mb-5 wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
                     <h1 class="display-5 mb-3 jamsil">로그인</h1>
                     <p class="jamsil">로그인을 해보세요!</p>
                     <div class="container my-3" style="padding-left: 0px;">
@@ -34,12 +34,15 @@
                             {% if request.GET.next %}
                                <input type="hidden" name="next" value="{{ request.GET.next }}">
                             {% endif %}
-                            <div class="d-flex align-items-center justify-content-start">
+                            <div class="d-flex align-items-center justify-content-start" style="width: 500px;">
                                 <button type="submit" class="btn btn-primary jamsil">로그인</button>
-                                <a href="{% provider_login_url "naver" method="oauth2" %}" style="margin-left: 10px;">
+                                <a href="{% provider_login_url "naver" method="oauth2" %}" class="ms-3 d-block d-sm-inline-block" style="margin-left: 10px;">
                                     <img src="{% static 'img/btnG_완성형.png' %}"
                                          onmouseover="this.src='{% static 'img/btnW_완성형.png' %}'"
-                                         onmouseleave="this.src='{% static 'img/btnG_완성형.png' %}'" height="45">
+                                         onmouseleave="this.src='{% static 'img/btnG_완성형.png' %}'" height="45" alt="네이버 아이디로 로그인" class="soicon">
+                                </a>
+                                <a href="{% provider_login_url 'kakao' method='oauth2' %}" class="ms-3 d-block d-sm-inline-block" style="margin-left: 10px;">
+                                    <img src="{% static 'img/kakao_login_large_narrow.png' %}" height="45" alt="카카오 아이디로 로그인" class="soicon">
                                 </a>
                             </div>
                         </form>

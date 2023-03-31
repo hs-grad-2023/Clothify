@@ -88,6 +88,7 @@ class ModifyForm(UserChangeForm):
         model = get_user_model()
         fields = ('username', 'email', 'name', 'sex', 'height', 'weight')
 
+
    
         
 

@@ -22,7 +22,7 @@
                             {% include "form_errors.html" %}
                             <div class="mb-3 jamsil">
                                 <label for="username">아이디</label>
-                                <input type="text" class="form-control" name="username" id="username"
+                                <input type="text" class="form-control" name="username" id="username" oninput="this.value = this.value.replace(/[^a-z0-9]/gi, '');"
                                        value="{{ form.username.value|default_if_none:'' }}">
                             </div>
                             <div class="mb-3 jamsil">

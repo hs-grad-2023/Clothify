@@ -48,6 +48,7 @@ class User(AbstractUser):
      weight = models.IntegerField('몸무게', null = True, blank = True)
      sex = models.CharField('성별', max_length=1, blank=True, null=True)
      name = models.CharField('이름', max_length=4, blank=True, null=True)
+     style = models.CharField('스타일', max_length=50, null=True, blank=True)
      
      def email_user(self, subject, message, from_email=None, **kwargs): # 이메일 발송 메소드
           send_mail(subject, message, from_email, [self.email], **kwargs)

@@ -21,7 +21,7 @@ class clothesAdmin(admin.ModelAdmin):
     thumbnail.short_description = 'Thumbnail'
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'username', 'first_name', 'password', 'email', 'height', 'weight', 'sex', 'joined_at', 'last_login_at', 'is_superuser')
+    list_display = ('id', 'name', 'username', 'first_name', 'password', 'email', 'height', 'weight', 'sex', 'joined_at', 'last_login_at', 'is_superuser', 'style')
     list_display_links = ('id', 'name', 'email', 'username')
     exclude = ('password',)
 
