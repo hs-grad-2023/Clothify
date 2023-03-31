@@ -268,6 +268,7 @@ def logins(request):
                 if result == 'modify':
                     return redirect(f'/{result}/')
                 else:
+                    print(f'/{result}/{user}')
                     return redirect(f'/{result}/{user}')
             return redirect('/')
     else:

@@ -63,6 +63,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
  }
 
+
 SITE_ID = 1
 #소셜 로그인 여기까지
 MIDDLEWARE = [
@@ -73,6 +74,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'muapp.middleware.RestrictedSocialLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -81,7 +84,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'templates', 'accounts'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
