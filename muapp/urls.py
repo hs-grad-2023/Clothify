@@ -37,10 +37,10 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('upload_closet/<str:username>/',views.uploadCloset, name='uploadCloset'),
     path('view_closet/<str:username>/',views.view_closet, name='view_closet'),
-    path('detail_closet/<str:username>/<int:clothesID>/',views.detail_closet, name='detail_closet'),
+    path('detail_closet/<str:username>/<str:groupID>/',views.detail_closet, name='detail_closet'),
     path('virtual_fit/<str:username>/',views.virtual_fit, name='virtual_fit'),
-    path('update_closet/<str:username>/<int:pk>/',views.updateCloset, name='updateCloset'),
-    path('remove_closet/<str:username>/<int:pk>/',views.remove_clothes, name='remove_clothes'),
+    path('update_closet/<str:username>/<str:groupID>/',views.updateCloset, name='updateCloset'),
+    path('remove_closet/<str:username>/<str:groupID>/',views.remove_clothes, name='remove_clothes'),
     path('mypage/<str:username>/',views.mypage, name='mypage'),
     path('modify/',views.user_modify, name='user_modify'),
 ]

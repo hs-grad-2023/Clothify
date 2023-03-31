@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .models import clothes
+from .models import clothes, photos
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, LoginForm, ModifyForm
 from django.contrib.auth.models import User
@@ -14,7 +14,9 @@ from django.db.models import Q
 from functools import reduce
 from operator import or_
 from allauth.socialaccount.models import SocialAccount
-
+from django.db.models.expressions import Window
+from django.db.models.functions import RowNumber
+from django.db.models import F
 User = get_user_model()
 
 # def 404(request):
@@ -81,16 +83,17 @@ def view_closet(request, username):
     if user != request.user:
         return HttpResponseForbidden()
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
-    
+    photoobject = photos.objects.all()
+
+    # ===== filtering ======
     fl = request.GET.get('fl')  # 검색어
-    if fl:
+    if fl: #검색어가 있고
         filterList = fl.split(',')
-        q_list=[]
+        q_list=[Q(uploadUser__exact=user.id)] #userID가 같은 값으로 1차 필터링
         for item in filterList:
             if "==" in item:
                 type1Item = item.replace("==","").strip()
                 q_list.append(Q(type1__icontains=type1Item))
-                print(type1Item)
             else:
                 q_list.append(Q(type2__icontains=item))
 
@@ -100,11 +103,16 @@ def view_closet(request, username):
                 'clothesobject' : clothesobject,
                 'user':user,
                 'filterList':filterList,
+                'photoobject':photoobject,
             }
         return render(request, 'view_closet.html', result)
-    else:
+    else: #검색어가 없으면
+        groupIdList = clothesobject.filter(uploadUser__exact=user.id).values_list("groupID") #<QuerySet [('vi3qalsycy',)]>
+        photoobject = photoobject.filter(groupID__in = groupIdList).values()
         result = {
                 'clothesobject' : clothesobject,
+                'photoobject' : photoobject,
+                'groupIdList' : groupIdList,
                 'user':user,
             }
         return render(request, 'view_closet.html', result)
@@ -115,38 +123,62 @@ def uploadCloset(request, username):
     if user != request.user:
         return HttpResponseForbidden()
     if request.method == 'POST':
-        if request.FILES.get('imgfile'):
-            new_clothes=clothes.objects.create(
-                type1=request.POST.get('type1'),
-                type2=request.POST.get('type2'),
-                tag=request.POST.get('tags'),
-                name=request.POST.get('clothesName'),
-                imgfile=request.FILES.get('imgfile'),
-                details=request.POST.get('details'),
-                uploadUser=request.user,
-                uploadUserName=request.user.username,
-                groupID = request.POST.get('groupID'),
-            )
-            #return render(request, 'upload_closet.html', {"user":user})
-            return redirect('view_closet', username=user.first_name)
-    return render(request, 'upload_closet.html', {"user":user})
+        getGroupID = request.POST.get('groupID')
+        if request.FILES.getlist('imgfile'):
+            for imgfile in request.FILES.getlist('imgfile'):
+                try:
+                    new_clothes = clothes.objects.get(groupID = getGroupID)
+                except clothes.DoesNotExist:
+                    new_clothes = clothes.objects.create(
+                                        uploadUser_id=request.user.id,
+                                        uploadUserName=request.user.username,
+                                        type1=request.POST.get('type1'),
+                                        type2=request.POST.get('type2'),
+                                        tag=request.POST.get('tags'),
+                                        name=request.POST.get('clothesName'),
+                                        details=request.POST.get('details'),
+                                        groupID = getGroupID,
+                        )
+                    new_clothes.save()
+
+                new_photo = photos.objects.create(
+                                groupID_id=new_clothes.groupID,
+                                imgfile = imgfile,
+                )
+                new_photo.save()
+        return redirect('view_closet', username=user.first_name)
+    else:
+        return render(request, 'upload_closet.html', {"user":user})
 
 @login_required(login_url='login')
-def detail_closet(request, username,clothesID):
+def detail_closet(request, username, groupID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
-    clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
-    
+    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id))   #clothes의 모든 객체를 c에 담기
+
+    photosobject = photos.objects.annotate(
+                row_number=Window(
+                    expression=RowNumber(),
+                    partition_by=[F('groupID')],
+                    order_by='groupID_id'
+                )
+    )
+
+    photosobject = photosobject.filter(groupID__exact=groupID)
+    for p in photosobject:
+        print(p.groupID_id, p.row_number)
+
     result = {
         'clothesobject' : clothesobject,
-        "user":user,
-        "clothesID":clothesID,
+        "user" : user,
+        "groupID" : groupID,
+        'photosobject':photosobject,
     }
     return render(request,"detail_closet.html",result)
 
 @login_required(login_url='login')
-def updateCloset(request, username):
+def updateCloset(request, username, groupID):
     groupID_val = get_random_string(length=5)
     error = False
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
