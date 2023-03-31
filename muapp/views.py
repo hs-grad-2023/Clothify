@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
 from .models import clothes, photos
@@ -39,8 +40,12 @@ allTypeCategory = [ "== 상의 ==", "== 하의 ==","== 치마 ==","== 원피스 
 def add_social_user_name(sender, request, user, **kwargs):
     social_accounts = SocialAccount.objects.get(user=user)
     user.first_name = get_random_string(length=16)
-    user.name = social_accounts.extra_data['name']
+    if social_accounts.provider == 'kakao':
+        user.name = social_accounts.extra_data['properties']['nickname']
+    else:
+        user.name = social_accounts.extra_data['name']
     user.save()
+    messages.success(request, '축하합니다!! Clothify의 회원가입이 완료되었습니다.\n마이페이지로 가서 좋아하는 스타일을 선택해 주세요!')
 
 def index(request):
     try:
@@ -264,7 +269,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             login(request, user)  # 로그인
-            
+            messages.success(request, '축하합니다!! Clothify의 회원가입이 완료되었습니다.\n좋아하는 스타일을 선택해 주세요!')
             return redirect('/')
     else:
         form = UserForm()
@@ -346,10 +351,27 @@ def blog(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
+    if user.style is None:
+        return redirect(f'/mypage/userstyle/{user.first_name}')
     return render(request,"blog.html",{"user":user})
 
 def feature(request):
     return render(request,"feature.html")
+
+@login_required(login_url='login')
+def user_style(request, username):
+    style = ['아메리칸 캐주얼', '캐주얼', '시크', '댄디', '포멀', '걸리시', '골프', '레트로', '로맨틱', '스포츠', '스트릿', '고프코어']
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return redirect('/')
+    if request.method == 'POST':
+        selected_styles = request.POST.getlist("style")
+        if not selected_styles:
+            return render(request, "user_style.html", {"user": user, "error": "적어도 하나 이상의 스타일을 선택해주세요.", "style": style})
+        user.style = selected_styles
+        user.save()
+        return redirect('/')
+    return render(request,"user_style.html",{"user": user, "style": style})
 
 # @login_required(login_url='login')
 # def product(request, username):

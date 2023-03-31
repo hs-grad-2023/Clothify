@@ -789,6 +789,16 @@
         </div>
     </div> {% endcomment %}
     <!-- Blog End -->
+    <!-- 회원가입 메시지 -->
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'success' %}
+<script>
+    alert('{{ message }}');
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}
 {% endblock %}
 
 

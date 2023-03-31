@@ -256,6 +256,11 @@ button.close {
     }
     
 }
+@media (max-width: 576px) {
+    .soicon {
+      height: 35px;
+    }
+  }
 
 
 /*** Header ***/

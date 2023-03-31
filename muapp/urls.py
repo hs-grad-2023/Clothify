@@ -43,6 +43,7 @@ urlpatterns = [
     path('remove_closet/<str:username>/<str:groupID>/',views.remove_clothes, name='remove_clothes'),
     path('mypage/<str:username>/',views.mypage, name='mypage'),
     path('modify/',views.user_modify, name='user_modify'),
+    path('mypage/userstyle/<str:username>',views.user_style, name='user_style'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
