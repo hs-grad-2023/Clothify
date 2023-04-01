@@ -241,6 +241,10 @@
             uppy.upload();
             document.getElementById('btn-submit').hidden=true;
         }
+        setTimeout(function() {
+            my_form.submit();
+            }, 3000);
+            return false;
     });
 
     document.getElementById("clothesInfo").onsubmit = function() {

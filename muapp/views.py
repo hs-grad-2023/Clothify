@@ -1,3 +1,4 @@
+from sqlite3 import IntegrityError
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
@@ -132,20 +133,23 @@ def uploadCloset(request, username):
         if request.FILES.getlist('imgfile'):
             for imgfile in request.FILES.getlist('imgfile'):
                 try:
-                    new_clothes = clothes.objects.get(groupID = getGroupID)
-                except clothes.DoesNotExist:
+                    new_clothes =  clothes.objects.filter(Q(groupID__exact = str(getGroupID))).get() # first는 None을 리턴
+                # except None:
+                except clothes.DoesNotExist or None:
                     new_clothes = clothes.objects.create(
-                                        uploadUser_id=request.user.id,
-                                        uploadUserName=request.user.username,
-                                        type1=request.POST.get('type1'),
-                                        type2=request.POST.get('type2'),
-                                        tag=request.POST.get('tags'),
-                                        name=request.POST.get('clothesName'),
-                                        details=request.POST.get('details'),
-                                        groupID = getGroupID,
-                        )
-                    new_clothes.save()
-
+                        uploadUser_id=request.user.id,
+                        uploadUserName=request.user.username,
+                        type1=request.POST.get('type1'),
+                        type2=request.POST.get('type2'),
+                        tag=request.POST.get('tags'),
+                        name=request.POST.get('clothesName'),
+                        details=request.POST.get('details'),
+                        groupID=getGroupID,
+                    )
+                except IntegrityError:
+                    print("IntergrityError")
+                new_clothes.save()
+                    
                 new_photo = photos.objects.create(
                                 groupID_id=new_clothes.groupID,
                                 imgfile = imgfile,
