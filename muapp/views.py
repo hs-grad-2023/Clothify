@@ -1,4 +1,5 @@
 from sqlite3 import IntegrityError
+import sqlite3
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
@@ -22,6 +23,10 @@ from django.db.models import F
 import json
 from ast import literal_eval
 from django.core.paginator import Paginator
+import io
+import base64
+from django.core.files import File
+from PIL import Image
 
 User = get_user_model()
 
@@ -143,6 +148,7 @@ def uploadCloset(request, username):
                 new_photo = photos.objects.create(
                                 groupID_id=new_clothes.groupID,
                                 imgfile = imgfile,
+                                contentType = imgfile.content_type,
                 )
                 new_photo.save()
         return redirect('view_closet', username=user.first_name)
@@ -180,29 +186,28 @@ def updateCloset(request, username, groupID):
     if user != request.user:
         return HttpResponseForbidden()
     if request.method == 'POST':
+        getgroupID = request.POST.get('groupID')
+        try:
+            new_clothes = clothes.objects.get(groupID__exact = getgroupID)
+            new_clothes.type1 = request.POST.get('type1')
+            new_clothes.type2 = request.POST.get('type2')
+            new_clothes.tag = request.POST.get('tags')
+            new_clothes.name = request.POST.get('clothesName')
+            new_clothes.details = request.POST.get('details')
+            new_clothes.save()
+        except clothes.DoesNotExist:
+            print('객체 오류')
+        
         if request.FILES.getlist('imgfile'):
             for imgfile in request.FILES.getlist('imgfile'):
-                # try:
-                #     new_clothes = clothes.objects.get(groupID = getGroupID)
-                # except clothes.DoesNotExist:
-                #     new_clothes = clothes.objects.create(
-                #                         uploadUser_id=request.user.id,
-                #                         uploadUserName=request.user.username,
-                #                         type1=request.POST.get('type1'),
-                #                         type2=request.POST.get('type2'),
-                #                         tag=request.POST.get('tags'),
-                #                         name=request.POST.get('clothesName'),
-                #                         details=request.POST.get('details'),
-                #                         groupID = getGroupID,
-                #         )
-                #     new_clothes.save()
+                new_photo = photos.objects.create(
+                                groupID_id=new_clothes.groupID,
+                                imgfile = imgfile,
+                                contentType = imgfile.content_type,
+                )
+                new_photo.save()
 
-                # new_photo = photos.objects.create(
-                #                 groupID_id=new_clothes.groupID,
-                #                 imgfile = imgfile,
-                # )
-                # new_photo.save()
-                return redirect('view_closet', username=user.first_name)
+        return redirect('view_closet', username=user.first_name)
     else:
         clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
         photosobject = photos.objects.annotate(
@@ -213,6 +218,7 @@ def updateCloset(request, username, groupID):
                     )
         )
         photosobject = photosobject.filter(groupID__exact=groupID)
+        
         result = {
             "user":user,
             "clothesobject" : clothesobject,
