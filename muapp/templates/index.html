@@ -6,6 +6,16 @@
 {% endblock %}
     
 {% block content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'success' %}
+<script>
+    alert('{{ message }}');
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}
     <!-- 배너 -->
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5 wow fadeIn" data-wow-delay="0.1s">
@@ -153,12 +163,12 @@
                         <li class="nav-item me-2">
                             <a class="btn btn-outline-primary border-2 active jamsil" data-bs-toggle="pill" href="#tab-1">전체</a>
                         </li>
-                        <li class="nav-item me-2">
+                        {% comment %} <li class="nav-item me-2">
                             <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-2">상의</a>
                         </li>
                         <li class="nav-item me-0">
                             <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-3">하의</a>
-                        </li>
+                        </li> {% endcomment %}
                     </ul>
                 </div>
                 {% endif %}
@@ -305,7 +315,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="tab-2" class="tab-pane fade show p-0">
+                {% comment %} <div id="tab-2" class="tab-pane fade show p-0">
                     <div class="row g-4">
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="product-item">
@@ -654,7 +664,7 @@
                             <a class="btn btn-primary btn-sm rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
             {% else %}
             <div class="bg-light text-center wow fadeInUp" style="padding-bottom: 120px;" data-wow-delay="0.1s">
@@ -694,7 +704,7 @@
         <div class="container">
             <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                 <h1 class="display-5 mb-3 jamsil">사용자 리뷰</h1>
-                <p class="jamsil">리뷰를 입력해주세요!</p>
+                <p class="jamsil">리뷰를 작성해주세요!</p>
             </div>
             <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
                 <div class="testimonial-item position-relative bg-white p-5 mt-4">
@@ -790,15 +800,7 @@
     </div> {% endcomment %}
     <!-- Blog End -->
     <!-- 회원가입 메시지 -->
-{% if messages %}
-{% for message in messages %}
-{% if message.tags == 'success' %}
-<script>
-    alert('{{ message }}');
-</script>
-{% endif %}
-{% endfor %}
-{% endif %}
+
 {% endblock %}
 
 

@@ -45,3 +45,12 @@ class User(AbstractUser):
      def email_user(self, subject, message, from_email=None, **kwargs): # 이메일 발송 메소드
           send_mail(subject, message, from_email, [self.email], **kwargs)
 
+
+class Musinsa(models.Model):
+    item_text = models.TextField()
+    item_title = models.TextField()
+    item_model = models.TextField()
+    item_picture = models.URLField()
+    item_page = models.URLField()
+
+

@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .models import clothes, photos
+from .models import clothes, photos, Musinsa
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, LoginForm, ModifyForm
 from django.contrib.auth.models import User
@@ -19,6 +19,10 @@ from allauth.socialaccount.models import SocialAccount
 from django.db.models.expressions import Window
 from django.db.models.functions import RowNumber
 from django.db.models import F
+import json
+from ast import literal_eval
+from django.core.paginator import Paginator
+
 User = get_user_model()
 
 # def 404(request):
@@ -80,8 +84,6 @@ def index(request):
             'errcode' : 1
             }
         return render(request,"index.html",results)
-
-
 
 @login_required(login_url='login')
 def view_closet(request, username):
@@ -233,7 +235,6 @@ def updateCloset(request, username, groupID):
         return render(request, 'update_closet.html',result)
 
 
-
 @login_required(login_url='login')
 def remove_clothes(request, username, pk):
     user = get_object_or_404(User, first_name=username)
@@ -254,12 +255,6 @@ def remove_clothes(request, username, pk):
         return render(request, 'view_closet.html', result) #상품목록으로 돌아가야함
     return render(request, 'remove_clothes.html', result)
 
-
-@receiver(user_signed_up)
-def add_social_user_name(sender, request, user, **kwargs):
-    user.first_name = get_random_string(length=16)
-    user.save()
-
 def signup(request):
     if request.user.is_authenticated:
         return redirect('/')
@@ -272,8 +267,8 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
-            login(request, user)  # 로그인
             messages.success(request, '축하합니다!! Clothify의 회원가입이 완료되었습니다.\n좋아하는 스타일을 선택해 주세요!')
+            login(request, user)  # 로그인
             return redirect('/')
     else:
         form = UserForm()
@@ -320,29 +315,6 @@ def mypage(request, username):
     return render(request,"mypage.html",{"user":user})
 
 @login_required(login_url='login')
-def user_modify(request):
-    if request.method == 'POST':
-        user = request.user
-        user.username = request.POST["username"]
-        user.email = request.POST["email"]
-        user.name = request.POST["name"]
-        user.sex = request.POST["sex"]
-        user.height = request.POST["height"]
-        user.weight = request.POST["weight"]
-        user.save()
-        return redirect('/')
-
-    return render(request,"user_modify.html")
-    
-
-@login_required(login_url='login')
-def blog(request, username):
-    user = get_object_or_404(User, first_name=username)
-    if user != request.user:
-        return HttpResponseForbidden()
-    return render(request,"blog.html",{"user":user})
-
-@login_required(login_url='login')
 def virtual_fit(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
@@ -357,7 +329,12 @@ def blog(request, username):
         return HttpResponseForbidden()
     if user.style is None:
         return redirect(f'/mypage/userstyle/{user.first_name}')
-    return render(request,"blog.html",{"user":user})
+    userstyle = literal_eval(user.style) # json으로 사용해도됨. 방법:리스트를 JSON 형식으로 직렬화하여 문자열로 저장 userstyle = json.loads(selected_styles)
+    musinsa = Musinsa.objects.filter(item_text__in=userstyle)
+    paginator = Paginator(musinsa, 9)
+    page = request.GET.get('page')
+    musinsa = paginator.get_page(page)
+    return render(request,"blog.html",{"user":user, "musinsa":musinsa})
 
 def feature(request):
     return render(request,"feature.html")
@@ -372,7 +349,7 @@ def user_style(request, username):
         selected_styles = request.POST.getlist("style")
         if not selected_styles:
             return render(request, "user_style.html", {"user": user, "error": "적어도 하나 이상의 스타일을 선택해주세요.", "style": style})
-        user.style = selected_styles
+        user.style = str(selected_styles) # json으로 사용해도됨. 방법:리스트를 JSON 형식으로 직렬화하여 문자열로 저장 user.style = json.dumps(selected_styles)
         user.save()
         return redirect('/')
     return render(request,"user_style.html",{"user": user, "style": style})

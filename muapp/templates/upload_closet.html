@@ -56,7 +56,6 @@
                                   name="clothesInfo"
                                   id="clothesInfo"
                                   enctype="multipart/form-data"
-
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
@@ -241,10 +240,6 @@
             uppy.upload();
             document.getElementById('btn-submit').hidden=true;
         }
-        setTimeout(function() {
-            my_form.submit();
-            }, 3000);
-            return false;
     });
 
     document.getElementById("clothesInfo").onsubmit = function() {
@@ -275,7 +270,7 @@
             validationData_value= true;
             setTimeout(function() {
                 submitform.submit();
-                }, 1500);
+                }, 3000);
         }
     }
 </script>

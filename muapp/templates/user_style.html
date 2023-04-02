@@ -21,9 +21,9 @@
                         <form method="post" action="{% url 'user_style' user.first_name %}">
                             {% csrf_token %}
                             <div class="mb-3 jamsil">
-                                <label for="style">좋아하는 스타일(다중선택 가능)</label></br>
+                                <label for="style" style="padding-bottom: 10px;">좋아하는 스타일(다중선택 가능)</label></br>
                                 {% for styles in style %}
-                                <label><input type="checkbox" name="style" id="style{{ forloop.counter }}" value="{{ styles }}">{{ styles }}</label></br>
+                                <label style="padding-bottom: 3px;"><input type="checkbox" name="style" id="style{{ forloop.counter }}" value="{{ styles }}">{{ styles }}</label></br>
                                 {% endfor %}
                             </div>
                             <button type="submit" class="btn btn-primary jamsil">저장하기</button>
