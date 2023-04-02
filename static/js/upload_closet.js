@@ -41,19 +41,16 @@ window.onload=function(){
         }
     }
 
-    function deletetag(){
-        //var tag = document.getElementsByClassName('tag_delete');
-        var tags_list = document.getElementById('tags').value;
+    function deleteTag(){
+        var tags_list = document.getElementById('tags').value.split(",");
         var delete_tag = this.previousSibling.textContent;
+        var delete_num = tags_list.indexOf(delete_tag)
         
-        if(tags_list.indexOf(',')!=-1){
-            tags_list = tags_list.replace(', '+delete_tag,'');
-        }else{
-            tags_list = '';
-        }
-        document.getElementById('tags').value = tags_list;
-        // console.log(tags_list);
+        tags_list = tags_list.splice(delete_num-1,1)
+
+        document.getElementById('tags').value = tags_list.join(',');
         this.parentNode.remove();
+    
     }
 
     const btn_addtag = document.getElementsByClassName("btn_addtag")
