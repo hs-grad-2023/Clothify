@@ -71,19 +71,7 @@ def index(request):
             }
         return render(request,"index.html",results)
     except:
-        results= {
-            'location' : location,
-            'date' : date,
-            'minTmp' : weather['minTmp'],
-            'maxTmp' : weather['maxTmp'] ,
-            'alertRain' : weather['alertRain'] ,
-            'curTmp' : weather['curTmp'] ,
-            'humidity' : weather['humidity'] ,
-            'sky' : weather['sky'] ,
-            'icon' : icon,
-            'errcode' : 1
-            }
-        return render(request,"index.html",results)
+        return render(request,"index.html")
 
 @login_required(login_url='login')
 def view_closet(request, username):
@@ -166,7 +154,7 @@ def detail_closet(request, username, groupID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
-    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id))   #clothes의 모든 객체를 c에 담기
+    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
 
     photosobject = photos.objects.annotate(
                 row_number=Window(
@@ -188,7 +176,6 @@ def detail_closet(request, username, groupID):
 
 @login_required(login_url='login')
 def updateCloset(request, username, groupID):
-    groupID_val = get_random_string(length=5)
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용
     if user != request.user:
         return HttpResponseForbidden()
@@ -217,7 +204,7 @@ def updateCloset(request, username, groupID):
                 # new_photo.save()
                 return redirect('view_closet', username=user.first_name)
     else:
-        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id))   #clothes의 모든 객체를 c에 담기
+        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
         photosobject = photos.objects.annotate(
                     row_number=Window(
                         expression=RowNumber(),
@@ -236,24 +223,18 @@ def updateCloset(request, username, groupID):
 
 
 @login_required(login_url='login')
-def remove_clothes(request, username, pk):
+def remove_closet(request, username, groupID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
+    try:
+        remove_clothes= clothes.objects.get(groupID=groupID)      # clothes에서 pk와 같은 primary_key 값을 remove_clothes에 담기
+        remove_clothes.delete()     # 삭제 후 메시지를 보여줍니다.
+        messages.success(request, '데이터를 삭제했습니다.')
+    except clothes.DoesNotExist:
+        messages.error(request, '삭제할 데이터가 없습니다.')
     
-    clothesobject = clothes.objects.all()           # clothes의 모든 객체를 clothesobject에 담기
-    remove_clothes= clothes.objects.get(pk=pk)      # clothes에서 pk와 같은 primary_key 값을 remove_clothes에 담기
-
-    result={
-        "user":user,
-        "remove_clothes":remove_clothes,
-        "clothesobject":clothesobject,
-    }
-
-    if request.method == 'POST':
-        remove_clothes.delete()
-        return render(request, 'view_closet.html', result) #상품목록으로 돌아가야함
-    return render(request, 'remove_clothes.html', result)
+    return redirect('view_closet', username=user.first_name)
 
 def signup(request):
     if request.user.is_authenticated:
