@@ -27,7 +27,7 @@ window.onload=function(){
             tagarea.appendChild(btnElement);
 
             const cnt_tag = document.getElementsByClassName("tag_delete").length -1
-            document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deletetag);
+            document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deleteTag);
             
             // 디자인
             document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
@@ -63,7 +63,7 @@ window.onload=function(){
     const btn_deltag = document.getElementsByClassName("tag_delete")
     if (btn_deltag){
         for (let i = 0; i < btn_deltag.length; i++) {
-            btn_deltag[i].addEventListener("click", deletetag);
+            btn_deltag[i].addEventListener("click", deleteTag);
         }
     }
 
