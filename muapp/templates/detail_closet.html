@@ -8,13 +8,6 @@
     <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
 {% endblock closet %}
 
-{% block jsv %}
-
-
-
-
-
-{% endblock jsv %}
 {% block content %}
     <!-- Page Header Start -->
     <div class="container-xxl py-5">
@@ -43,20 +36,16 @@
                     <div class="row g-4">
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
                             <div class="carousel-inner">
-                                {% for c in clothesobject %}
-                                    {% if c.uploadUser_id == user.id%}
-                                    {% if c.imgfile %}
-                                        {% if c.id == clothesID %}
-                                            <div class="carousel-item active" >
-                                                <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
-                                            </div>
-                                        {% else %}
-                                            <div class="carousel-item" >
-                                                <img src="{{c.imgfile.url}}" class="d-block w-100" alt="...">
-                                            </div>
-                                        {%endif%}
-                                    {% endif%}
-                                    {% endif%}
+                                {% for p in photosobject%}
+                                    {% if p.row_number == 1%}
+                                        <div class="carousel-item active" >
+                                            <img src="{{p.imgfile.url}}" class="d-block w-100" alt="...">
+                                        </div>
+                                    {% else %}
+                                        <div class="carousel-item" >
+                                            <img src="{{p.imgfile.url}}" class="d-block w-100" alt="...">
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -72,37 +61,35 @@
                         <table class="table" style="float:left;">
                             <tr>
                                 <th>이름</th>
-                                <th>종류</th>
-                                <th>구체적인 종류</th>
+                                <th>분류1</th>
+                                <th>분류2</th>
                                 <th>태그</th>
                                 <th>상세정보</th>
-                                <th>업로드 된 시간</th>
+                                <th>업로드 시간</th>
                             </tr>
 
-                            {% for c in clothesobject %}
-                                {% if user.id == c.uploadUser_id %}
+                                {% if clothesobject %}
                                 <tr>
                                     <tr>
-                                        <td>{{ c.name }}</td>
-                                        <td>{{ c.type1 }}</td>
-                                        <td>{{ c.type2 }}</td>
-                                        <td>{{ c.tag }}</td>
-                                        <td>{{ c.details }}</td>
-                                        <td>{{ c.upload_date }}</td>
+                                        <td>{{ clothesobject.name }}</td>
+                                        <td>{{ clothesobject.type1 }}</td>
+                                        <td>{{ clothesobject.type2 }}</td>
+                                        <td>{{ clothesobject.tag }}</td>
+                                        <td>{{ clothesobject.details }}</td>
+                                        <td>{{ clothesobject.upload_date }}</td>
                                     </tr>
                                 </tr>
                                 {%endif%}
-                            {% endfor%}
                         </table>
 
                         <div class="btn-container" name="btn-container">
                             <div class="d-inline p-2">
-                                <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name clothesID%}' " onkeyup="if(window.event.keyCode==13){}">
+                                <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name groupID %}' ">
                                     <p class="align-middle" id="btnText">Update</p>
                                 </button>
                             </div>
                             <div>
-                                <button class="btn-submit" type="button" onclick = "location.href = '{% url 'remove_clothes' user.first_name clothesID %}' ">
+                                <button class="btn-submit" type="button" id="btn_delete" onclick = "location.href = '{% url 'remove_closet' user.first_name groupID %}' ">
                                     <p class="align-middle" id="btnText">Delete</p>
                                 </button>
                             </div>
@@ -113,4 +100,15 @@
         </div>
     </div>
     <!-- Product End -->
-{% endblock  %}
+{% endblock content %}
+
+
+{% block jsv %}
+<script>
+
+    document.getElementById('btn_delete').addEventListener("click",function(){
+
+    })
+
+</script>
+{% endblock jsv %}

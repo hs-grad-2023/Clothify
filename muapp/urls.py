@@ -32,18 +32,18 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('about/',views.about, name='about'),
     path('blog/<str:username>/',views.blog, name='blog'),
-    path('feature/',views.feature, name='feature'),
     path('login/', views.logins, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('upload_closet/<str:username>/',views.uploadCloset, name='uploadCloset'),
     path('view_closet/<str:username>/',views.view_closet, name='view_closet'),
-    path('detail_closet/<str:username>/<int:clothesID>/',views.detail_closet, name='detail_closet'),
+    path('detail_closet/<str:username>/<str:groupID>/',views.detail_closet, name='detail_closet'),
     path('virtual_fit/<str:username>/',views.virtual_fit, name='virtual_fit'),
-    path('update_closet/<str:username>/<int:pk>/',views.updateCloset, name='updateCloset'),
-    path('remove_closet/<str:username>/<int:pk>/',views.remove_clothes, name='remove_clothes'),
+    path('update_closet/<str:username>/<str:groupID>/',views.updateCloset, name='updateCloset'),
+    path('remove_closet/<str:username>/<str:groupID>/',views.remove_closet, name='remove_closet'),
     path('mypage/<str:username>/',views.mypage, name='mypage'),
     path('modify/',views.user_modify, name='user_modify'),
+    path('mypage/userstyle/<str:username>',views.user_style, name='user_style'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

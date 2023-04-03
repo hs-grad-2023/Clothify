@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.naver', 
+    'allauth.socialaccount.providers.kakao', 
     'django.contrib.sites',
 
     'muapp',
@@ -60,8 +61,18 @@ SOCIALACCOUNT_PROVIDERS = {
     'client_id': '3QrVtaDFHQvyl1UWFfHM',
     'secret': 'oWKGCZXwSo',
     'key': '' }
+    },
+    
+    'kakao': {
+    'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    'APP': {
+    'client_id': '7799381eb82b2dd6460651004948b85d',
+    'secret': '',
+    'key': '' }
     }
+    
  }
+
 
 SITE_ID = 1
 #소셜 로그인 여기까지
@@ -73,6 +84,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'muapp.middleware.RestrictedSocialLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -81,7 +94,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'templates', 'accounts'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -167,6 +180,3 @@ SESSION_COOKIE_AGE = 600
 SESSION_SAVE_EVERY_REQUEST = True
 
 AUTH_USER_MODEL = 'muapp.User'
-
-NAVER_CLIENT_ID = '3QrVtaDFHQvyl1UWFfHM'
-NAVER_SECRET_KEY = 'oWKGCZXwSo'

@@ -33,7 +33,7 @@
             <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
                 <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
             </div>
-            <div class="row g-0 gx-5 align-items-end">
+            <div class="row g-0 gx-5 align-items-end pt-3">
                 <div class="col-lg-6">
                     <div class="section-header text-start mb-5 wow fadeInUp"
                          data-wow-delay="0.1s"
@@ -56,7 +56,6 @@
                                   name="clothesInfo"
                                   id="clothesInfo"
                                   enctype="multipart/form-data"
-
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
@@ -105,6 +104,7 @@
                                     <label for="details" class="col-sm-2 col-form-label text-end fw-bold" >상세정보</label>
                                     <textarea name="details" id="details" class="form-control col details" rows="5" placeholder="생략 가능"></textarea>
                                 </div>
+                                <input hidden id="groupID" type="text"></input>
                                 <!-- Uppy Dashboard -->
                                 <div class="mb-3 row">
                                     <label class="col-sm-2"></label>
@@ -153,7 +153,8 @@
                                     type2: type2,
                                     tag: tag,
                                     name: clothesName,
-                                    details: details
+                                    details: details,
+                                    groupID: groupID,
                                 },
                                 locale : Uppy.locales.ko_KR,
     })
@@ -200,9 +201,7 @@
 
         .use(Uppy.ImageEditor, { target: Uppy.Dashboard })
         
-            
-
-
+        
 
         // All remote services like Instagram and Google Drive in one package
         /*
@@ -217,37 +216,63 @@
         */
 
         
-        uppy.upload().then((result) => {
-            console.info('Successful uploads:', result.successful);
+    uppy.upload().then((result) => {
+        console.info('Successful uploads:', result.successful);
+    
+        if (result.failed.length > 0) {
+            console.error('Errors:');
+            result.failed.forEach((file) => {
+                console.error(file.error);
+            });
+        }
+    });
         
-            if (result.failed.length > 0) {
-                console.error('Errors:');
-                result.failed.forEach((file) => {
-                    console.error(file.error);
-                });
+    document.getElementById('clothesInfo').addEventListener('keydown', function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Enter 키 이벤트 기본 동작 중지
             }
         });
         
-        document.getElementById('btn-submit').addEventListener('click', () => {
+    document.getElementById('btn-submit').addEventListener('click', () => {
+        validationData();
+        
+        if(validationData_value){
             uppy.upload();
             document.getElementById('btn-submit').hidden=true;
-        });
-
-        var my_form = document.getElementById("clothesInfo"), button = document.getElementById("btn-submit");
-        my_form.onsubmit = function() {
-        return false;
         }
+    });
 
-        button.onclick = function() {
-        setTimeout(function() {
-        my_form.submit();
-        }, 1500);
+    document.getElementById("clothesInfo").onsubmit = function() {
         return false;
+    }
+
+    // ===== form 유효성 테스트 =====
+    var validationData_value = false;
+    var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
+    
+    function validationData(){
+        const files = uppy.getFiles();
+        console.log(files == "");
+        if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
+            alert("분류1을 선택하지 않았습니다."); 
+            validationData_value= false;
+        }else if($('#type2').val() == "" || $('#type2').val() == "none" || $('#type2').val() == null){ // input form이 비어있으면
+            alert("분류2을 선택하지 않았습니다."); 
+            validationData_value= false;
+        }else if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
+            alert("이름을 입력하지 않았습니다."); 
+            validationData_value= false;
+        }else if(files == "" || files == null){ // 사진이 없으면
+            alert("이미지가 없습니다."); 
+            validationData_value= false;
+        }else if(files != ""){ // 사진이 있으면?
+            alert("업로드 성공!")
+            validationData_value= true;
+            setTimeout(function() {
+                submitform.submit();
+                }, 3000);
         }
-        {% comment %} uppy.on('complete', result => {
-            console.log('successful files:', result.successful)
-            console.log('failed files:', result.failed)
-        }) {% endcomment %}
+    }
 </script>
 
 {% endblock jsv%}

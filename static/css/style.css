@@ -53,6 +53,7 @@ button.close {
     text-align: center;
 }
 
+
 @media screen and (min-width: 768px) { 
     .modal:before {
             display: inline-block;
@@ -255,6 +256,11 @@ button.close {
     }
     
 }
+@media (max-width: 576px) {
+    .soicon {
+      height: 35px;
+    }
+  }
 
 
 /*** Header ***/

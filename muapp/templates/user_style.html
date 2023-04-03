@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load socialaccount %} 
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+{% block content %}
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6" style="padding-top: 127px; padding-bottom: 190px;">
+                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                    <h1 class="mb-3 jamsil" style="font-size: 4vw; width: 550px;">선호하는 스타일</h1>
+                    <p class="jamsil">선호하는 스타일을 선택해 주세요!</p>
+                    <div class="container my-3" style="padding-left: 0px;">
+                        <form method="post" action="{% url 'user_style' user.first_name %}">
+                            {% csrf_token %}
+                            <div class="mb-3 jamsil">
+                                <label for="style" style="padding-bottom: 10px;">좋아하는 스타일(다중선택 가능)</label></br>
+                                {% for styles in style %}
+                                <label style="padding-bottom: 3px;"><input type="checkbox" name="style" id="style{{ forloop.counter }}" value="{{ styles }}">{{ styles }}</label></br>
+                                {% endfor %}
+                            </div>
+                            <button type="submit" class="btn btn-primary jamsil">저장하기</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    {% if error %}
+    alert('{{ error }}');
+    {% endif %}
+</script>
+
+{% endblock %}
