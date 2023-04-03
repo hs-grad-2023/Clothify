@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock nav%}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">가상 피팅(사진)</h1>
+                    <p class="jamsil">ദ്ദി˶˙ᵕ˙˶ ) </p>
+    
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Product Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
+            </div>
+            <div class="row g-0 gx-5 align-items-end pt-3">
+                <div class="col-lg-6">
+                    <div class="section-header text-start mb-5 wow fadeInUp"
+                         data-wow-delay="0.1s"
+                         style="max-width: 500px">
+                        <h1 class="display-5 mb-3 jamsil">사진 업로드</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content jamsil wow fadeInUp" data-wow-delay="0.1s">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div>
+                            <div id="att_zone" data-placeholder="">
+                                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <form action=""
+                                  method="POST"
+                                  name="clothesInfo"
+                                  id="clothesInfo"
+                                  enctype="multipart/form-data"
+                                  >
+                                {% csrf_token %}
+                                <div class="mb-3 row">
+                                    <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
+                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" required/>
+                                </div>
+                                <!-- tag -->
+                                <div class="mb-3 row">
+                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">태그</label>
+                                    <input type="text" name="tag" id="tag" class="form-control col" 
+                                           placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
+                                    <button type="button" id="btn_addtag" class="btn_addtag col-sm-2" style="border:none" >추가</button>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-2 col-form-label text-end"></label>
+                                    <div class="col tag_area">
+
+                                    </div>
+                                </div>
+                                <!--tag 추가해서 띄우는 label-->
+                                <div class="mb-3 row" style="display:none">
+                                    <label class="col-sm-2 col-form-label text-end"></label>
+                                    <input type="text" name="tags" id="tags" class="form-control col" readonly/>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="details" class="col-sm-2 col-form-label text-end fw-bold" >상세정보</label>
+                                    <textarea name="details" id="details" class="form-control col details" rows="5" placeholder="생략 가능"></textarea>
+                                </div>
+                                <!-- Uppy Dashboard -->
+                                <div class="mb-3 row">
+                                    <label class="col-sm-2"></label>
+                                    <div class="fileUploadContent col"></div>
+                                </div>
+
+                                <!-- button design -->
+                                <div class="btn-container" name="btn-container">
+                                    <button id="btn-submit" class="btn-submit">
+                                        <p class="jamsil" id="btnText" style="padding-top: 15px;">저장</p>
+                                        <div class="check-box">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                                <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+
+{% block jsv %}
+<script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
+<script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
+<script type="module">
+    // import {Uppy, Dashboard, DropTarget, Compressor, XHRUpload, ImageEditor} from "https://releases.transloadit.com/uppy/v3.6.1/uppy.min.mjs"
+    //const COMPANION_URL = "http://companion.uppy.io"
+    // const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
+    // const COMPANION_URL = '{% url 'uploadCloset' user.username %}'
+    //const COMPANION_ALLOWED_HOSTS = ['http://127.0.0.1:8000/']
+    
+    var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger ,
+                                meta: {
+                                    name: clothesName,
+                                    tag: tag,
+                                    details: details,
+                                },
+                                locale : Uppy.locales.ko_KR,
+    })
+        // The main UI that shows files, progress and holds all plugins
+        .use(Uppy.Dashboard, {
+            id: 'Dashboard',
+            target: '.fileUploadContent',
+            inline: true,
+            height: 800,
+            width: 1000,
+            metaFields: [ //이미지 수정용 metaFields
+                { id: 'name', name: 'Name', placeholder: 'file name' },
+                { id: 'caption', name: 'Caption', placeholder: 'add description' },
+            ],
+            note: 'Images only, Up to 10 files',
+            produlyDisplayPoweredByUppy:false,
+            autoOpenFileEditor: false,
+            hideUploadButton : true,
+            hideProgressAfterFinish : true,
+        })
+
+        .use(Uppy.Form, { 
+                        target: '#clothesInfo',
+                        getMetaFromForm: true,
+                        addResultToForm: true,
+                        //triggerUploadOnSubmit: true, //Uppy가 업로드/인코딩을 완료한 후 양식을 제출할지 여부를 구성합니다(부울, 기본값: false).
+                        //submitOnSuccess: true, //모든 파일이 업로드된 후 양식을 실제로 제출해야 하는 경우
+                        resultName: 'FormInfo', //<input type="hidden">의 요소의 이름 (string, default: uppyResult).
+                      })
+        
+        // Allow dropping files on any element or the whole document
+        .use(Uppy.DropTarget, { target: document.body })
+        // Optimize images
+        .use(Uppy.Compressor)
+        // Upload
+        .use(Uppy.XHRUpload,{
+            endpoint: "{% url 'virtual_fit_upload' user.first_name %}",
+            headers: {'X-CSRFToken':"{{csrf_token}}"},
+            formData: true,
+            fileData: true,
+            fieldName:'imgfile',
+            allowedMetaFields:true,
+        })
+
+        .use(Uppy.ImageEditor, { target: Uppy.Dashboard })
+        .use(Uppy.Webcam, { target: Uppy.Dashboard })
+  
+
+    uppy.upload().then((result) => {
+        console.info('Successful uploads:', result.successful);
+    
+        if (result.failed.length > 0) {
+            console.error('Errors:');
+            result.failed.forEach((file) => {
+                console.error(file.error);
+            });
+        }
+    });
+        
+    document.getElementById('clothesInfo').addEventListener('keydown', function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault(); // Enter 키 이벤트 기본 동작 중지
+        }
+    });
+    
+    document.getElementById('btn-submit').addEventListener('click', () => {
+        validationData();
+        
+        if(validationData_value){
+            uppy.upload();
+            document.getElementById('btn-submit').hidden=true;
+        }
+        
+        setTimeout(function() {
+            my_form.submit();
+            }, 3000);
+            return false;
+    }); 
+
+
+    document.getElementById("clothesInfo").onsubmit = function() {
+        return false;
+    }
+    // ===== form 유효성 테스트 =====
+    var validationData_value = false;
+    var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
+
+    function validationData(){
+        const files = uppy.getFiles();
+        if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
+            alert("이름을 입력하지 않았습니다."); 
+            validationData_value= false;
+        }else{ // 사진이 있으면?
+            alert("등록 완료!")
+            validationData_value= true;
+            setTimeout(function() {
+                submitform.submit();
+                }, 1500);
+        }
+    }
+</script>
+<script>
+    function addTag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시키는 코드
+        var value = $('#tag').val();
+        var valuelist = $('#tags').val();
+        var tagarea = document.getElementsByClassName("tag_area")[0];
+        var reg = /[\s\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+        var tagvalue = value.replace(reg, "");
+    
+        if (value===''|| value==null || value ==false){
+            alert("추가할 tag를 입력해주세요.");
+        }else{
+            if (valuelist==''){
+                $('#tags').val('#' + tagvalue); // value 삽입하는 코드
+            }
+            else{
+                $('#tags').val(valuelist+', #'+tagvalue); // value 삽입하는 코드
+            }
+            //버튼 삽입
+            const btnElement = document.createElement('button');
+            btnElement.type = "button";
+            btnElement.classList.add("tag_btn");
+            btnElement.innerHTML = '<span class="tag_text">#' + tagvalue + '</span><i class="fa-sharp fa-solid fa-xmark tag_delete"></i>';
+            tagarea.appendChild(btnElement);
+    
+            const cnt_tag = document.getElementsByClassName("tag_delete").length -1
+            document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deleteTag);
+            
+            // 디자인
+            document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
+            document.getElementsByClassName('tag_btn')[cnt_tag].style.border = '1px solid gray';
+            document.getElementsByClassName('tag_btn')[cnt_tag].style.marginRight = '15px';
+            document.getElementsByClassName('tag_btn')[cnt_tag].style.marginTop = '10px';
+            document.getElementsByClassName('tag_btn')[cnt_tag].style.padding = '10px';
+            document.getElementsByClassName('tag_delete')[cnt_tag].style.marginLeft = '10px';
+            
+        $('#tag').val('');
+        }
+    }
+
+    function deleteTag(){
+        var tags_list = document.getElementById('tags').value.split(",");
+        var delete_tag = this.previousSibling.textContent;
+        var delete_num = tags_list.indexOf(delete_tag)
+        
+        tags_list = tags_list.splice(delete_num-1,1)
+
+        document.getElementById('tags').value = tags_list.join(',');
+        this.parentNode.remove();
+    
+    }
+
+    window.onload=function(){
+        document.getElementById("btn_addtag").addEventListener("click", addTag);
+    }
+</script>
+{% endblock jsv %}

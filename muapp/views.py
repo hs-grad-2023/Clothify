@@ -1,5 +1,6 @@
 from sqlite3 import IntegrityError
 import sqlite3
+import sys
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
@@ -130,19 +131,26 @@ def uploadCloset(request, username):
                 try:
                     new_clothes =  clothes.objects.filter(Q(groupID__exact = str(getGroupID))).get() # first는 None을 리턴
                 # except None:
-                except clothes.DoesNotExist or None:
-                    new_clothes = clothes.objects.create(
-                        uploadUser_id=request.user.id,
-                        uploadUserName=request.user.username,
-                        type1=request.POST.get('type1'),
-                        type2=request.POST.get('type2'),
-                        tag=request.POST.get('tags'),
-                        name=request.POST.get('clothesName'),
-                        details=request.POST.get('details'),
-                        groupID=getGroupID,
-                    )
-                except IntegrityError:
+                except clothes.DoesNotExist or None as e:
+                    try:
+                        new_clothes = clothes.objects.create(
+                            uploadUser_id=request.user.id,
+                            uploadUserName=request.user.username,
+                            type1=request.POST.get('type1'),
+                            type2=request.POST.get('type2'),
+                            tag=request.POST.get('tags'),
+                            name=request.POST.get('clothesName'),
+                            details=request.POST.get('details'),
+                            groupID=getGroupID,
+                        )
+                    except:
+                        new_clothes =  clothes.objects.filter(Q(groupID__exact = str(getGroupID))).get() # first는 None을 리턴
+                        print("에러정보 : ",e)
+                except IntegrityError as e:
                     print("IntergrityError")
+                except (ValueError, TypeError) as e:
+                    print('에러정보 : ', e, file=sys.stderr)
+
                 new_clothes.save()
                     
                 new_photo = photos.objects.create(
@@ -305,6 +313,32 @@ def virtual_fit(request, username):
     if user != request.user:
         return redirect(f'/virtual_fit/{request.user.first_name}')
     return render(request,"virtual_fit.html",{"user":user})
+
+@login_required(login_url='login')
+def virtual_fit_upload(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return redirect(f'/virtual_fit_upload/{request.user.first_name}')
+    if request.method == 'POST':
+        if request.FILES.getlist('imgfile'):
+            for imgfile in request.FILES.getlist('imgfile'):
+                try:
+                    new_clothes = clothes.objects.create(
+                        uploadUser_id=request.user.id,
+                        uploadUserName=request.user.username,
+                        type1=request.POST.get('type1'),
+                        type2=request.POST.get('type2'),
+                        tag=request.POST.get('tags'),
+                        name=request.POST.get('clothesName'),
+                        details=request.POST.get('details'),
+                    )
+                except:
+                    print()
+                new_clothes.save()
+
+        return redirect('view_closet', username=user.first_name)
+    else: 
+        return render(request,"virtual_fit_upload.html",{"user":user})
 
 
 @login_required(login_url='login')
