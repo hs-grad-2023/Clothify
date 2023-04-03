@@ -148,7 +148,6 @@ def uploadCloset(request, username):
                 new_photo = photos.objects.create(
                                 groupID_id=new_clothes.groupID,
                                 imgfile = imgfile,
-                                contentType = imgfile.content_type,
                 )
                 new_photo.save()
         return redirect('view_closet', username=user.first_name)
@@ -203,7 +202,6 @@ def updateCloset(request, username, groupID):
                 new_photo = photos.objects.create(
                                 groupID_id=new_clothes.groupID,
                                 imgfile = imgfile,
-                                contentType = imgfile.content_type,
                 )
                 new_photo.save()
 

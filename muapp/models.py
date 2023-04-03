@@ -34,7 +34,6 @@ class photos(models.Model):
     groupID = models.ForeignKey(clothes, verbose_name="groupClothes", on_delete=models.CASCADE)
     photoID = models.AutoField(primary_key=True)
     imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
-    contentType = models.CharField(max_length=20,default="image/jpeg")
 
 class User(AbstractUser):
      height = models.IntegerField('키', null = True, blank = True)
