@@ -131,18 +131,19 @@ def uploadCloset(request, username):
                     new_clothes =  clothes.objects.filter(Q(groupID__exact = str(getGroupID))).get() # first는 None을 리턴
                 # except None:
                 except clothes.DoesNotExist or None:
-                    new_clothes = clothes.objects.create(
-                        uploadUser_id=request.user.id,
-                        uploadUserName=request.user.username,
-                        type1=request.POST.get('type1'),
-                        type2=request.POST.get('type2'),
-                        tag=request.POST.get('tags'),
-                        name=request.POST.get('clothesName'),
-                        details=request.POST.get('details'),
-                        groupID=getGroupID,
-                    )
-                except IntegrityError:
-                    print("IntergrityError")
+                    try:
+                        new_clothes = clothes.objects.create(
+                            uploadUser_id=request.user.id,
+                            uploadUserName=request.user.username,
+                            type1=request.POST.get('type1'),
+                            type2=request.POST.get('type2'),
+                            tag=request.POST.get('tags'),
+                            name=request.POST.get('clothesName'),
+                            details=request.POST.get('details'),
+                            groupID=getGroupID,
+                        )
+                    except:
+                        new_clothes =  clothes.objects.filter(Q(groupID__exact = str(getGroupID))).get() # first는 None을 리턴
                 new_clothes.save()
                     
                 new_photo = photos.objects.create(
