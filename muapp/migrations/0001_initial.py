@@ -81,6 +81,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('photoID', models.AutoField(primary_key=True, serialize=False)),
                 ('imgfile', models.ImageField(blank=True, default='imgfiles/no_image.png', null=True, upload_to='imgfiles/%m/%d')),
+                ('contentType', models.CharField(default='image/jpeg', max_length=20)),
                 ('groupID', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='muapp.clothes', verbose_name='groupClothes')),
             ],
         ),
