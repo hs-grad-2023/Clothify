@@ -1,5 +1,6 @@
 from sqlite3 import IntegrityError
 import sqlite3
+import sys
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
@@ -307,9 +308,35 @@ def virtual_fit(request, username):
         return redirect(f'/virtual_fit/{request.user.first_name}')
     return render(request,"virtual_fit.html",{"user":user})
 
+@login_required(login_url='login')
+def virtual_fit_upload(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return redirect(f'/virtual_fit_upload/{request.user.first_name}')
+    if request.method == 'POST':
+        if request.FILES.getlist('imgfile'):
+            for imgfile in request.FILES.getlist('imgfile'):
+                try:
+                    new_clothes = clothes.objects.create(
+                        uploadUser_id=request.user.id,
+                        uploadUserName=request.user.username,
+                        type1=request.POST.get('type1'),
+                        type2=request.POST.get('type2'),
+                        tag=request.POST.get('tags'),
+                        name=request.POST.get('clothesName'),
+                        details=request.POST.get('details'),
+                    )
+                except:
+                    print()
+                new_clothes.save()
+
+        return redirect('view_closet', username=user.first_name)
+    else: 
+        return render(request,"virtual_fit_upload.html",{"user":user})
+
 
 @login_required(login_url='login')
-def blog(request, username):
+def codibook(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
@@ -320,7 +347,10 @@ def blog(request, username):
     paginator = Paginator(musinsa, 9)
     page = request.GET.get('page')
     musinsa = paginator.get_page(page)
-    return render(request,"blog.html",{"user":user, "musinsa":musinsa})
+    return render(request,"codibook.html",{"user":user, "musinsa":musinsa})
+
+def blog(request):
+    return render(request,"blog.html")
 
 def feature(request):
     return render(request,"feature.html")

@@ -35,6 +35,9 @@ class photos(models.Model):
     photoID = models.AutoField(primary_key=True)
     imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)
 
+# class virtual_fitting_photos(models.Model):
+     
+
 class User(AbstractUser):
      height = models.IntegerField('키', null = True, blank = True)
      weight = models.IntegerField('몸무게', null = True, blank = True)
