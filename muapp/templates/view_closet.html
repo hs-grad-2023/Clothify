@@ -228,18 +228,31 @@ function addSelected() {
     const type2_val = type2_element.value; //선택한 옵션값
     const selected_element = document.getElementById("selected"); //추가할 요소
 
-    // 선택 리스트 만들기
-    selectedFilter.push(type2_val);
+    console.log(type2_val);
+
+    
 
     // 선택된 리스트는 숨기기
     const selectedOption = type2_element.selectedIndex;
     type2_element.options[selectedOption].hidden = true;
 
-    // 새로운 option 엘리먼트 생성하기
-    let newOption = document.createElement("option");
-    newOption.text = type2_val;
-    // option 엘리먼트를 select 엘리먼트에 추가하기
-    selected_element.add(newOption);
+
+    console.log(selectedFilter.indexOf(type2_val));
+    console.log(selectedFilter);
+
+    
+    if(selectedFilter.indexOf(type2_val) < 0){
+        // 선택 리스트 만들기
+        selectedFilter.push(type2_val);
+        // 새로운 option 엘리먼트 생성하기
+        let newOption = document.createElement("option");
+        newOption.text = type2_val;
+        // option 엘리먼트를 select 엘리먼트에 추가하기
+        selected_element.add(newOption);
+    }else{
+        
+    }
+
 }
 
 //type2로 selected 추가
