@@ -52,7 +52,7 @@
         <div class="container">
             <div class="btn-container" name="btn-container">
                 <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
-                    <p id="btnText" class="jamsil" style="padding-top: 15px;" >Upload</p>
+                    <p id="btnText" class="jamsil" style="padding-top: 15px;" >옷 업로드</p>
                 </button>
             </div>
             <br>
@@ -132,9 +132,9 @@
                                             <div class="text-center p-4">
                                                 <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
                                             </div>
-                                            <hr width="80%" align="center">
-                                            <div class="text-end p-4">
-                                                <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style="">{{c.type1}}-{{c.type2}}</a>
+                                            <hr width="90%" align="center" style="margin-left: 14px;">
+                                            <div class="text-end p-3">
+                                                <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
                                             </div>
                                         </div>      
                                     </div>

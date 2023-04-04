@@ -39,11 +39,11 @@
                                 {% for p in photosobject%}
                                     {% if p.row_number == 1%}
                                         <div class="carousel-item active" >
-                                            <img src="{{p.imgfile.url}}" class="d-block w-100" alt="...">
+                                            <img src="{{p.imgfile.url}}" class="d-block w-50 mx-auto" alt="...">
                                         </div>
                                     {% else %}
                                         <div class="carousel-item" >
-                                            <img src="{{p.imgfile.url}}" class="d-block w-100" alt="...">
+                                            <img src="{{p.imgfile.url}}" class="d-block w-50 mx-auto" alt="...">
                                         </div>
                                     {% endif %}
                                 {% endfor %}
@@ -85,12 +85,12 @@
                         <div class="btn-container" name="btn-container">
                             <div class="d-inline p-2">
                                 <button class="btn-submit" type="button" float:right; onclick = "location.href = '{% url 'updateCloset' user.first_name groupID %}' ">
-                                    <p class="align-middle" id="btnText">Update</p>
+                                    <p class="align-middle jamsil" id="btnText" style="padding-top: 15px;">옷 업데이트</p>
                                 </button>
                             </div>
                             <div>
                                 <button class="btn-submit" type="button" id="btn_delete" onclick = "location.href = '{% url 'remove_closet' user.first_name groupID %}' ">
-                                    <p class="align-middle" id="btnText">Delete</p>
+                                    <p class="align-middle jamsil" id="btnText" style="padding-top: 15px;">옷 삭제</p>
                                 </button>
                             </div>
                         </div>
