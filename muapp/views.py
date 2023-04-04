@@ -59,6 +59,9 @@ def add_social_user_name(sender, request, user, **kwargs):
     messages.success(request, '축하합니다!! Clothify의 회원가입이 완료되었습니다.\n마이페이지로 가서 좋아하는 스타일을 선택해 주세요!')
 
 def index(request):
+
+    clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+
     try:
         location = get_loc_data()
         date = get_time()
@@ -74,6 +77,7 @@ def index(request):
             'humidity' : weather['humidity'] ,
             'sky' : weather['sky'] ,
             'icon' : icon,
+            'clothesobject':clothesobject,
             }
         return render(request,"index.html",results)
     except:
@@ -94,11 +98,12 @@ def view_closet(request, username):
         q_list=[Q(uploadUser__exact=user.id)] #userID가 같은 값으로 1차 필터링
         for item in filterList:
             if "==" in item:
-                type1Item = item.replace("==","").strip()
-                q_list.append(Q(type1__icontains=type1Item))
+                type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
+                q_list.append(Q(type1__icontains=type1Item))    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
+                
             else:
                 q_list.append(Q(type2__icontains=item))
-
+                
         clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
         
         result = {

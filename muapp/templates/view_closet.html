@@ -98,11 +98,11 @@
             <br>
             <div class="accordion hahmelt" id="accordionPanelsStayOpenExample">
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                  <p class="accordion-header" id="panelsStayOpen-headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                     <strong>검색된 필터</strong>
                     </button>
-                  </h2>
+                    </p>
                   <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
                         {% if filterList %}
@@ -118,29 +118,29 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        {% for c in clothesobject %}
-                            {% if c.uploadUser_id == user.id and c.groupID %}
-                            {% if c.groupID %}
-                                    <div class="col-xl-3 col-lg-4 col-md-6">
-                                        <div class="product-item jamsil">
-                                            <div class="position-relative bg-light overflow-hidden">
-                                                {% load clothes_extra %}
-                                                    <a href="{% url 'detail_closet' user.first_name c.groupID %}">
-                                                        <img class="img-fluid w-100" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
-                                                    </a>
-                                            </div>
-                                            <div class="text-center p-4">
-                                                <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
-                                            </div>
-                                            <hr width="90%" align="center" style="margin-left: 14px;">
-                                            <div class="text-end p-3">
-                                                <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
-                                            </div>
-                                        </div>      
-                                    </div>
-                            {% endif%}
-                            {% endif%}
-                        {% endfor %}
+                            {% for c in clothesobject %}
+                                {% if c.uploadUser_id == user.id and c.groupID %}
+                                {% if c.groupID %}
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
+                                            <div class="product-item jamsil">
+                                                <div class="position-relative bg-light overflow-hidden">
+                                                    {% load clothes_extra %}
+                                                        <a href="{% url 'detail_closet' user.first_name c.groupID %}">
+                                                            <img class="img-fluid w-100" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                                        </a>
+                                                </div>
+                                                <div class="text-center p-4">
+                                                    <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
+                                                </div>
+                                                <hr width="90%" align="center" style="margin-left: 14px;">
+                                                <div class="text-end p-3">
+                                                    <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
+                                                </div>
+                                            </div>      
+                                        </div>
+                                {% endif%}
+                                {% endif%}
+                            {% endfor %}
                     </div>
                 </div>
                 
@@ -318,6 +318,7 @@ function SendFilter(){
 document.getElementById("searchFilter").addEventListener("click", function () {
     
     //SendFilter();
+
     document.getElementById('fl').value = selectedFilter;
     document.getElementById('searchForm').submit();
 

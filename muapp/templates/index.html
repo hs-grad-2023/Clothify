@@ -173,146 +173,14 @@
                 </div>
                 {% endif %}
             </div>
-            {% if user.is_authenticated %}
+            
             <div class="tab-content jamsil">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                    {% comment %} <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span> {% endcomment %}
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                    {% comment %} <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small> {% endcomment %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 text-center wow fadeInUp" style="padding-top: 20px;" data-wow-delay="0.1s">
-                            <a class="btn btn-primary btn-sm rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>
-                        </div>
+                        {% if user.is_authenticated %}
+                        
+                        {%else%}
+                        {%endif%}
                     </div>
                 </div>
                 {% comment %} <div id="tab-2" class="tab-pane fade show p-0">
@@ -666,13 +534,6 @@
                     </div>
                 </div> {% endcomment %}
             </div>
-            {% else %}
-            <div class="bg-light text-center wow fadeInUp" style="padding-bottom: 120px;" data-wow-delay="0.1s">
-                <div class="col-12 text-center wow fadeInUp" style="padding-top: 110px;" data-wow-delay="0.1s">
-                    <a class="btn btn-primary rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' " " %}">로그인 하기</a>
-                </div>
-            </div>
-            {% endif %}
         </div>
     </div>
     <!-- Product End -->
