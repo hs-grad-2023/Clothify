@@ -31,7 +31,7 @@ urlpatterns = [
     # path('404', views.404, name='404'),
     path('', views.index, name='index'),
     path('about/',views.about, name='about'),
-    path('blog/<str:username>/',views.blog, name='blog'),
+    path('codibook/<str:username>/',views.codibook, name='codibook'),
     path('login/', views.logins, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
@@ -44,6 +44,7 @@ urlpatterns = [
     path('mypage/<str:username>/',views.mypage, name='mypage'),
     path('modify/',views.user_modify, name='user_modify'),
     path('mypage/userstyle/<str:username>',views.user_style, name='user_style'),
+    path('blog/',views.blog, name='blog'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

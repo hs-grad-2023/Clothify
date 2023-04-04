@@ -309,7 +309,7 @@ def virtual_fit(request, username):
 
 
 @login_required(login_url='login')
-def blog(request, username):
+def codibook(request, username):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
@@ -320,7 +320,10 @@ def blog(request, username):
     paginator = Paginator(musinsa, 9)
     page = request.GET.get('page')
     musinsa = paginator.get_page(page)
-    return render(request,"blog.html",{"user":user, "musinsa":musinsa})
+    return render(request,"codibook.html",{"user":user, "musinsa":musinsa})
+
+def blog(request):
+    return render(request,"blog.html")
 
 def feature(request):
     return render(request,"feature.html")
