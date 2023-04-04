@@ -228,19 +228,12 @@ function addSelected() {
     const type2_val = type2_element.value; //선택한 옵션값
     const selected_element = document.getElementById("selected"); //추가할 요소
 
-    console.log(type2_val);
-
-    
 
     // 선택된 리스트는 숨기기
     const selectedOption = type2_element.selectedIndex;
     type2_element.options[selectedOption].hidden = true;
 
 
-    console.log(selectedFilter.indexOf(type2_val));
-    console.log(selectedFilter);
-
-    
     if(selectedFilter.indexOf(type2_val) < 0){
         // 선택 리스트 만들기
         selectedFilter.push(type2_val);
@@ -273,20 +266,22 @@ function delSelected() {
     //selectedFilter에서 옵션을 삭제
     for (let i = 0; i < selectedFilter.length; i++) {
         if (selectedFilter[i] == selected_val) {
-            selectedFilter.splice(i, 1);
+            selectedFilter.splice(i, 1);        // i번째 요소부터 한 개만 삭제
             break;
         }
     }
 
     //type2에 옵션 되돌리기
     for (let i = 0; i < optLen; i++) { //type2의 개수(삽입할 옵션개수)만큼 반복
-        if (typeCategory[type1_val][i] == type2_val) {
+        
+        if (typeCategory[type1_val][i] == selected_val) {
             type2_element.options[i].hidden = false;
             break;
         }
     }
+
     const selectedOption = selected_element.selectedIndex;
-    selected_element.remove(selected_element.options[selectedOption]);
+    selected_element.remove([selectedOption]);              
 }
 
 //selected 제거
@@ -298,7 +293,7 @@ document.getElementById("selected").addEventListener("click", function () {
 //selectedFilter 보내기
 function SendFilter(){
     $(document).ready(function() {
-        $("#searchFilter").click(function() {
+        $('#searchFilter').click(function() {
             $.ajax({
                 type: "POST",
                 url: "{% url 'view_closet' user.first_name%}", // 장고 URL 패턴 이름
@@ -317,8 +312,11 @@ function SendFilter(){
         });
     });
 };
+
+
 //filter 검색
 document.getElementById("searchFilter").addEventListener("click", function () {
+    
     //SendFilter();
     document.getElementById('fl').value = selectedFilter;
     document.getElementById('searchForm').submit();
