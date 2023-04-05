@@ -81,7 +81,7 @@ def index(request):
             }
         return render(request,"index.html",results)
     except:
-        return render(request,"index.html")
+        return render(request,"index.html",{ 'clothesobject':clothesobject, })
 
 @login_required(login_url='login')
 def view_closet(request, username):
@@ -104,10 +104,13 @@ def view_closet(request, username):
             else:
                 q_list.append(Q(type2__icontains=item))
                 
-        clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
-        
+        #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
+        clothesobject = clothesobject.filter(Q(type1__icontains=q_list)&Q(uploadUser__exact=user.id))
+        #clothesobject = clothesobject.filter(Q(type1__icontains="상의"))
+
+        print(clothesobject)
         result = {
-                'clothesobject' : clothesobject,
+                'clothesobject':clothesobject,
                 'user':user,
                 'filterList':filterList,
                 'photoobject':photoobject,
@@ -166,7 +169,7 @@ def detail_closet(request, username, groupID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
-    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
+    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()  
 
     photosobject = photos.objects.annotate(
                 row_number=Window(
@@ -214,7 +217,7 @@ def updateCloset(request, username, groupID):
 
         return redirect('view_closet', username=user.first_name)
     else:
-        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
+        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   
         photosobject = photos.objects.annotate(
                     row_number=Window(
                         expression=RowNumber(),
