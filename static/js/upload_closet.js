@@ -118,11 +118,14 @@ window.onload=function(){
 
         $('#type2').empty();
 
-        for(var count = 0; count < changeItem.length; count++){
-            var option = $("<option>"+changeItem[count]+"</option>");
-            $('#type2').append(option);
-            
+        if(changeItem){
+            for(var count = 0; count < changeItem.length; count++){
+                var option = $("<option>"+changeItem[count]+"</option>");
+                $('#type2').append(option);
+    
+            }
         }
+        
         
         
         

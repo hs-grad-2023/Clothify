@@ -137,7 +137,11 @@
 <!-- Product End -->
 
 {% block jsv %}
-<script defer src="{% static 'js/upload_closet.js' %}"></script>
+
+<script defer src="{% static 'js/upload_closet.js' %}?ver=1"></script> 
+{%comment%} '?ver=1'는 수정된 파일을 인식하게끔(숫자는 상관x) {%endcomment%}
+
+
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
 <script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
 <script type="module">
