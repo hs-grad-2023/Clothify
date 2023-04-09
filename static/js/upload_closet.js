@@ -9,9 +9,21 @@ window.onload=function(){
         var tagarea = document.getElementsByClassName("tag_area")[0];
         var reg = /[\s\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
         var tagvalue = value.replace(reg, "");
+        const Toast = Swal.mixin({ //팝업창
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+          })
 
         if (value===''|| value==null || value ==false){
-            alert("추가할 tag를 입력해주세요.");
+            Toast.fire({
+                icon: 'error',
+                title: '추가할 Tag를 입력해주세요',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
         }else{
             if (valuelist==''){
                 $('#tags').val('#' + tagvalue); // value 삽입하는 코드

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">옷 자랑</h1>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Blog Start -->
+    <div class="container-xxl py-6" style="padding-bottom: 20px; padding-top: 60px;">
+        <div class="container jamsil">
+            <div class="section-header text-center mx-auto wow fadeIn jamsil" data-wow-delay="0.1s" style="max-width: 500px; margin-bottom: 30px;">
+                <h1 class="display-5 mb-3 jamsil">옷 자랑</h1>       
+                <p>다른 사람들의 옷이나 코디들을 확인해 보세요!</p>
+            </div>
+            <div class="row g-4">
+                {% for c in cloth %}
+                {% load clothes_extra %}
+                <div class="col-lg-4 col-md-6 wow fadeIn" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
+                    <div class="p-4 mucodi" style="background-color: #F5F5F5;">  
+                        <a class="d-block h5 lh-base mb-4 jamsil text-center border-bottom pb-3" target="_blank" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white; font-size: 25px;" href="{% url 'detail_usercodi' c.groupID %}" >{{c.name}}</a>
+                        <a class="d-block h5 lh-base mb-4 jamsil text-center" title="{{c.name}}" href="{% url 'detail_usercodi' c.groupID %}" >
+                            <img src="{{ c.groupID|getGroupIdFirst }}" class="img-fluid mt-2 shadow" alt="{{mu.item_title}}" style="border-radius: 20px;"></a>
+                        <div class="text-muted border-top pt-4 d-flex justify-content-between">
+                            <small><i class="fa fa-user text-primary me-2 jamsil"></i>{{c.uploadUserName}}</small>
+                            <small><i class="fa fas fa-clone text-secondary me-2"></i>{{c.type1}} - {{c.type2}}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                    {% if cloth.has_other_pages %}
+                    <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                        {% if cloth.has_previous %}
+                        <a class="btn btn-primary rounded-pill px-3" href="?page=1">처음</a>
+                        <a class="btn btn-primary rounded-pill px-3" href="?page={{ cloth.previous_page_number }}">이전</a>
+                        {% endif %}
+                        {% for i in cloth.paginator.page_range %}
+                        {% if cloth.number == i %}
+                        <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                        {% elif i > cloth.number|add:'-3' and i < cloth.number|add:'3' %}
+                        <a class="btn btn-primary rounded-pill px-3" href="?page={{ i }}">{{ i }}</a>
+                        {% endif %}
+                        {% endfor %}
+                        {% if cloth.has_next %}
+                        <a class="btn btn-primary rounded-pill px-3" href="?page={{ cloth.next_page_number }}">다음</a>
+                        <a class="btn btn-primary rounded-pill px-2" href="?page={{ cloth.paginator.num_pages }}">마지막</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% comment %} <script>
+    function sendDetailUsercodi(event, groupID, index) {
+        event.preventDefault();
+        
+        // <form> 요소 가져오기
+        var form = document.getElementById('form_detail_usercodi_'+index);
+        
+        // <input> 요소의 값 변경하기
+        var input_groupID = document.getElementById('input_groupID_'+index);
+        input_groupID.value = groupID;
+        
+        // <form> 요소 제출하기
+        form.submit();
+    }
+    </script> {% endcomment %}
+    <!-- Blog End -->
+{% endblock %}

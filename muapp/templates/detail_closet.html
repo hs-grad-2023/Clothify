@@ -89,7 +89,7 @@
                                 </button>
                             </div>
                             <div>
-                                <button class="btn-submit" type="button" id="btn_delete" onclick = "location.href = '{% url 'remove_closet' user.first_name groupID %}' ">
+                                <button class="btn-submit" type="button" id="btn_delete" onclick="confirmDelete()">
                                     <p class="align-middle jamsil" id="btnText" style="padding-top: 15px;">옷 삭제</p>
                                 </button>
                             </div>
@@ -105,10 +105,37 @@
 
 {% block jsv %}
 <script>
-
-    document.getElementById('btn_delete').addEventListener("click",function(){
-
-    })
-
-</script>
+    function confirmDelete() {
+      Swal.fire({
+        title: '정말로 삭제할 건가요?',
+        text: "삭제하면 복구할 수 없습니다",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '삭제',
+        cancelButtonText: '안 함',
+        customClass: {
+            title: 'jamsil',
+            container: 'jamsil',
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                icon: 'success',
+                title: '삭제 완료!',
+                text: '잠시 후 내 옷장으로 돌아갑니다',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                customClass: {
+                    title: 'jamsil',
+                    container: 'jamsil',
+                }
+              })
+            setTimeout(() => {
+                window.location.href = "{% url 'remove_closet' user.first_name groupID %}"; // 폼 제출
+            }, 2000)}
+      });
+    }
+    </script>
 {% endblock jsv %}

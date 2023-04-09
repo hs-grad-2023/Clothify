@@ -262,7 +262,6 @@ button.close {
     }
   }
 
-
 /*** Header ***/
 .carousel-caption {
     top: 0;
@@ -422,6 +421,13 @@ button.close {
     color: var(--primary) !important;
 }
 
+.mucodi:hover img {
+    transform: scale(1.1);
+}
+
+.mucodi img {
+    transition: .5s;
+}
 
 /*** Testimonial ***/
 .testimonial-carousel .owl-item .testimonial-item img {
