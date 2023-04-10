@@ -33,6 +33,7 @@ function addtag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시�
         document.getElementsByClassName('tag_btn')[cnt_tag].style.padding = '10px';
         document.getElementsByClassName('tag_delete')[cnt_tag].style.marginLeft = '10px';
         
+        
     $('#tag').val('');
     }
 }

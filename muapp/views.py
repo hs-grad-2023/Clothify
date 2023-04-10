@@ -200,16 +200,22 @@ def updateCloset(request, username, groupID):
     if request.method == 'POST':
         getgroupID = request.POST.get('groupID')
         try:
-            new_clothes = clothes.objects.get(groupID__exact = getgroupID)
+            new_clothes = clothes.objects.get(groupID__exact = groupID)
             new_clothes.type1 = request.POST.get('type1')
             new_clothes.type2 = request.POST.get('type2')
             new_clothes.tag = request.POST.get('tags')
             new_clothes.name = request.POST.get('clothesName')
             new_clothes.details = request.POST.get('details')
+            if request.POST.get('ucodi') == 'True':
+                new_clothes.ucodi = True
+            else:
+                new_clothes.ucodi = False
             new_clothes.save()
         except clothes.DoesNotExist:
             print('객체 오류')
+            
         
+
         if request.FILES.getlist('imgfile'):
             for imgfile in request.FILES.getlist('imgfile'):
                 new_photo = photos.objects.create(

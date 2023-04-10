@@ -129,8 +129,7 @@
                                         <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
                                             
                                             <a href="{% url 'detail_closet' user.first_name c.groupID %}">
-                                                
-                                                <img class="img-fluid w-100" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                                <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
                                             </a>
                                         </div>
                                         <div class="text-center p-4">
@@ -139,12 +138,13 @@
                                         <hr width="90%" align="center" style="margin-left: 14px;">
                                         <div class="text-end p-3">
                                             <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
-                                            {% if c.ucodi == True %}
-                                            <span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position:relative; top: 40px; left: 60px; font-size: 1rem;">자랑!</span>
-                                            {% endif %}
+                                            
                                         </div>
                                         
-                                    </div>      
+                                    </div>
+                                    {% if c.ucodi == True %}
+                                    <a href="{% url 'detail_usercodi' c.groupID %}"><span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position: relative; left: 290px; font-size: 1rem;">자랑!</span></a>
+                                    {% endif %}      
                                 </div>
                                 {% endif%}
                             {% endif%}

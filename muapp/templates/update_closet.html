@@ -59,7 +59,7 @@
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
-                                    <label for="type1" class="col-sm-2 col-form-label text-end fw-bold">분류 1</label>
+                                    <label for="type1" class="col-sm-1 col-form-label text-end fw-bold">분류 1</label>
                                     <select name="type1" id="type1" size="1" class="form-select col" required>
                                         <option value="none" disabled>=== 분류 1 ===</option>
                                         <option>상의</option>
@@ -73,41 +73,48 @@
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="type2" class="col-sm-2 col-form-label text-end fw-bold">분류 2</label>
+                                    <label for="type2" class="col-sm-1 col-form-label text-end fw-bold">분류 2</label>
                                     <select name="type2" id="type2" size="1" class="form-select col" required>
                                         <option value="none" disabled selected>=== 분류 2 ===</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
+                                    <label for="name" class="col-sm-1 col-form-label text-end fw-bold">옷 이름</label>
                                     <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" value="{{clothesobject.name}}" required/>
                                 </div>
                                 <!-- tag -->
                                 <div class="mb-3 row">
-                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">태그</label>
+                                    <label for="tag" class="col-sm-1 col-form-label text-end fw-bold">태그</label>
                                     <input type="text" name="tag" id="tag" class="form-control col" 
                                            placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
-                                    <button type="button" id="btn_addtag" class="btn_addtag col-sm-2" style="border:none" >추가</button>
+                                           <button type="button" id="btn_addtag" class="btn_addtag col-sm-1 btn btn-outline-dark border-2" style="border-radius:6px; margin-left: 10px; width: 120px;">추가</button>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-sm-2 col-form-label text-end"></label>
+                                    <label class="col-sm-1 col-form-label text-end"></label>
                                     <div class="col tag_area">
                                         
                                     </div>
                                 </div>
                                 <!--tag 추가해서 띄우는 label-->
                                 <div class="mb-3 row" >
-                                    <label class="col-sm-2 col-form-label text-end"></label>
+                                    <label class="col-sm-1 col-form-label text-end"></label>
                                     <input type="text" name="tags" id="tags" class="form-control col" value="{{clothesobject.tag}}" readonly/>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="details" class="col-sm-2 col-form-label text-end fw-bold" >상세정보</label>
+                                    <label for="details" class="col-sm-1 col-form-label text-end fw-bold" >상세정보</label>
                                     <textarea name="details" id="details" class="form-control col details" rows="5" placeholder="생략 가능" >{{clothesobject.details}}</textarea>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-1 col-form-label fw-bold"></label>
+                                    <div class="form-check col">
+                                        <label class="form-check-label jamsil" for="ucodi">내 옷 자랑하기</label>
+                                        <input class="form-check-input" type="checkbox" id="ucodi" name='ucodi' style="float:none; margin-left:0.2em;" value="True" {% if clothesobject.ucodi == True %}checked{% endif %}>
+                                    </div>
                                 </div>
                                 <!-- hidden  -->
                                 <input hidden id="groupID" type="text" value="{{clothesobject.groupID}}"></input>
                                 <div class="mb-3 row">
-                                    <label for="details" class="col-sm-2 col-form-label text-end fw-bold" >업로드 사진</label>
+                                    <label for="details" class="col-sm-1 col-form-label text-end fw-bold" >업로드 사진</label>
                                     <div class="container col">
                                         <div class="row row-cols-4">
                                             {% for p in photosobject %}
@@ -122,7 +129,7 @@
                                 <br>
                                 <!-- Uppy Dashboard -->
                                 <div class="mb-3 row">
-                                    <label class="col-sm-2"></label>
+                                    <label class="col-sm-1"></label>
                                     <div class="fileUploadContent col"></div>
                                 </div>
                                 <!-- button design -->
@@ -267,23 +274,62 @@
     var validationData_value = false;
     var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
 
+    const Toast = Swal.mixin({ //팝업창
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+
     function validationData(){
         const files = uppy.getFiles();
+        console.log(files == "");
         if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
-            alert("분류1을 선택하지 않았습니다."); 
+            Toast.fire({
+                icon: 'error',
+                title: '분류1을 선택하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
             validationData_value= false;
         }else if($('#type2').val() == "" || $('#type2').val() == "none" || $('#type2').val() == null){ // input form이 비어있으면
-            alert("분류2을 선택하지 않았습니다."); 
+            Toast.fire({
+                icon: 'error',
+                title: '분류2를 선택하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
             validationData_value= false;
         }else if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
-            alert("이름을 입력하지 않았습니다."); 
+            Toast.fire({
+                icon: 'error',
+                title: '이름을 입력하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              }); 
             validationData_value= false;
         }else{ // 사진이 있으면?
-            alert("수정 완료!")
             validationData_value= true;
-            setTimeout(function() {
-                submitform.submit();
-                }, 1500);
+            uppy.on('complete', (result) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '업로드 성공!',
+                    text: '잠시 후 내 옷장으로 돌아갑니다',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        title: 'jamsil',
+                        container: 'jamsil',
+                    }
+                  });
+                // 파일 업로드가 완료되면 실행되는 콜백 함수
+                setTimeout(() => {
+                    submitform.submit(); // 폼 제출
+                }, 2000)
+            });
         }
     }
 </script>
@@ -412,11 +458,12 @@
                 document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deleteTag);
                 
                 // 디자인
-                document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
+                //document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
                 document.getElementsByClassName('tag_btn')[cnt_tag].style.border = '1px solid gray';
                 document.getElementsByClassName('tag_btn')[cnt_tag].style.marginRight = '15px';
                 document.getElementsByClassName('tag_btn')[cnt_tag].style.marginTop = '10px';
                 document.getElementsByClassName('tag_btn')[cnt_tag].style.padding = '10px';
+                document.getElementsByClassName('tag_btn')[cnt_tag].className += ' border-2';
                 document.getElementsByClassName('tag_delete')[cnt_tag].style.marginLeft = '10px';
             }
             
@@ -451,11 +498,12 @@
             document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deleteTag);
             
             // 디자인
-            document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
+            //document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.border = '1px solid gray';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.marginRight = '15px';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.marginTop = '10px';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.padding = '10px';
+            document.getElementsByClassName('tag_btn')[cnt_tag].className += ' border-2';
             document.getElementsByClassName('tag_delete')[cnt_tag].style.marginLeft = '10px';
             
         $('#tag').val('');

@@ -131,6 +131,9 @@ button.close {
     background-size: contain;
 }
 
+.uppy-Dashboard-inner {
+    left: 60px;
+}
 
 /*** Spinner ***/
 #spinner {
@@ -311,6 +314,11 @@ button.close {
         position: relative;
         min-height: 450px;
     }
+
+    .uppy-Dashboard-inner {
+        left: 0px;
+    }
+    
     
     #header-carousel .carousel-item img {
         position: absolute;

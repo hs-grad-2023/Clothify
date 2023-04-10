@@ -46,6 +46,7 @@ window.onload=function(){
             document.getElementsByClassName('tag_btn')[cnt_tag].style.marginRight = '15px';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.marginTop = '10px';
             document.getElementsByClassName('tag_btn')[cnt_tag].style.padding = '10px';
+            document.getElementsByClassName('tag_btn')[cnt_tag].className += ' border-2';
             document.getElementsByClassName('tag_delete')[cnt_tag].style.marginLeft = '10px';
             
         }
