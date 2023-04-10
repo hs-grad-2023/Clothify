@@ -152,6 +152,8 @@ def uploadCloset(request, username):
                             ucodi=request.POST.get('ucodi'),
                             groupID=getGroupID,
                         )
+                        if request.POST.get('ucodi') != True:
+                            new_clothes.ucodi = False
                     except:
                         new_clothes =  clothes.objects.filter(Q(groupID__exact = str(getGroupID))).get() # first는 None을 리턴
                 new_clothes.save()

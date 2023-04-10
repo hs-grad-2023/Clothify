@@ -17,7 +17,7 @@ class clothes(models.Model):
     details = models.CharField(max_length=200, default="", null=True,  blank=True, )
     upload_date = models.DateTimeField(default=timezone.now)
     groupID = models.CharField(max_length=10,primary_key=True)
-    ucodi = models.BooleanField(default=False)
+    ucodi = models.BooleanField(null=True,  blank=True)
     # imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)    
 
     class Meta:
