@@ -28,6 +28,7 @@ import io
 import base64
 from django.core.files import File
 from PIL import Image
+from itertools import chain
 
 User = get_user_model()
 
@@ -95,20 +96,21 @@ def view_closet(request, username):
     fl = request.GET.get('fl')  # 검색어
     if fl: #검색어가 있고
         filterList = fl.split(',')
-        q_list=[Q(uploadUser__exact=user.id)] #userID가 같은 값으로 1차 필터링
+        q_list=[]                   # 필터링 하기 위한 배열
         for item in filterList:
             if "==" in item:
                 type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
-                q_list.append(Q(type1__icontains=type1Item))    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
-                
+                type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건&
+                q_list.append(type1_filter)                     # 조건에 맞은 type1_filter를 q_list에 넣기
             else:
-                q_list.append(Q(type2__icontains=item))
-                
-        #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
-        clothesobject = clothesobject.filter(Q(type1__icontains=q_list)&Q(uploadUser__exact=user.id))
-        #clothesobject = clothesobject.filter(Q(type1__icontains="상의"))
-
-        print(clothesobject)
+                type2_filter = clothesobject.filter(type2__icontains=item)&clothesobject.filter(uploadUser__exact=user.id)
+                q_list.append(type2_filter)
+            
+            
+        #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct()   # 타입 검색 -> queryset끼리 중복 제외하고 합병( 조건부 표현식에 대해 필터링 할 수 없다고 뜸)
+            
+        clothesobject = reduce(or_, q_list).distinct()                          # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+        
         result = {
                 'clothesobject':clothesobject,
                 'user':user,
