@@ -17,6 +17,7 @@ class clothes(models.Model):
     details = models.CharField(max_length=200, default="", null=True,  blank=True, )
     upload_date = models.DateTimeField(default=timezone.now)
     groupID = models.CharField(max_length=10,primary_key=True)
+    ucodi = models.BooleanField(default=False)
     # imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)    
 
     class Meta:
@@ -55,5 +56,14 @@ class Musinsa(models.Model):
     item_model = models.TextField()
     item_picture = models.URLField()
     item_page = models.URLField()
+
+class Comment(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(clothes, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.author} - {self.post} - {self.text}'
 
 

@@ -9,9 +9,21 @@ window.onload=function(){
         var tagarea = document.getElementsByClassName("tag_area")[0];
         var reg = /[\s\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
         var tagvalue = value.replace(reg, "");
+        const Toast = Swal.mixin({ //팝업창
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+          })
 
         if (value===''|| value==null || value ==false){
-            alert("추가할 tag를 입력해주세요.");
+            Toast.fire({
+                icon: 'error',
+                title: '추가할 Tag를 입력해주세요',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
         }else{
             if (valuelist==''){
                 $('#tags').val('#' + tagvalue); // value 삽입하는 코드
@@ -89,10 +101,11 @@ window.onload=function(){
         var selectItem = $("#type1").val();
         var changeItem;
         
+        
         if(selectItem == "상의"){
             changeItem = top;
         }
-        else if(selectItem == "바지"){
+        else if(selectItem == "하의"){
             changeItem = pants;
         }
         else if(selectItem == "치마"){
@@ -113,13 +126,21 @@ window.onload=function(){
         else if(selectItem == "신발"){
             changeItem = shoes;
         }
-        
+
+
         $('#type2').empty();
+
+        if(changeItem){
+            for(var count = 0; count < changeItem.length; count++){
+                var option = $("<option>"+changeItem[count]+"</option>");
+                $('#type2').append(option);
+    
+            }
+        }
         
-        for(var count = 0; count < changeItem.length; count++){                
-                        var option = $("<option>"+changeItem[count]+"</option>");
-                        $('#type2').append(option);
-                    }
+        
+        
+        
         
     }
 }

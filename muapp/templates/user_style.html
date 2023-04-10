@@ -17,13 +17,13 @@
                 <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                     <h1 class="mb-3 jamsil" style="font-size: 4vw; width: 550px;">선호하는 스타일</h1>
                     <p class="jamsil">선호하는 스타일을 선택해 주세요!</p>
+                    <p class="jamsil">좋아하는 스타일(다중선택 가능)</p>
                     <div class="container my-3" style="padding-left: 0px;">
-                        <form method="post" action="{% url 'user_style' user.first_name %}">
+                        <form method="post" action="{% url 'user_style' user.first_name %}" id='style-form'>
                             {% csrf_token %}
-                            <div class="mb-3 jamsil">
-                                <label for="style" style="padding-bottom: 10px;">좋아하는 스타일(다중선택 가능)</label></br>
+                            <div class="mb-3 jamsil form-check">
                                 {% for styles in style %}
-                                <label style="padding-bottom: 3px;"><input type="checkbox" name="style" id="style{{ forloop.counter }}" value="{{ styles }}">{{ styles }}</label></br>
+                                <label style="padding-bottom: 3px;"><input class="form-check-input" type="checkbox" name="style" id="style{{ forloop.counter }}" value="{{ styles }}">{{ styles }}</label></br>
                                 {% endfor %}
                             </div>
                             <button type="submit" class="btn btn-primary jamsil">저장하기</button>
@@ -34,10 +34,73 @@
         </div>
     </div>
 </div>
+    {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            <script>
+                const Toast = Swal.mixin({ //팝업창
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                  })
+
+                Toast.fire({
+                    icon: 'error',
+                    title: '{{message}}',
+                    customClass: {
+                    title: 'jamsil',
+                }
+            });
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 <script>
-    {% if error %}
-    alert('{{ error }}');
-    {% endif %}
+const styleForm = document.getElementById('style-form');
+
+styleForm.addEventListener('submit', function(event) {
+  const styleInputs = styleForm.querySelectorAll('input[type="checkbox"]');
+  let isChecked = false;
+  const Toast = Swal.mixin({ //팝업창
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+  })
+  
+  styleInputs.forEach(function(input) {
+    if (input.checked) {
+      isChecked = true;
+      Swal.fire({
+        icon: 'success',
+        title: '선호하는 스타일 반영 성공!',
+        text: '잠시 후 메인으로 돌아갑니다',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        customClass: {
+        title: 'jamsil',
+        container: 'jamsil',
+    }
+});
+      setTimeout(() => {
+        styleForm.submit(); // 폼 제출
+    }, 2000)
+    }
+  });
+  
+  if (!isChecked) {
+    event.preventDefault();
+    Toast.fire({
+        icon: 'error',
+        title: '적어도 하나 이상의 스타일을\n선택해주세요',
+        customClass: {
+        title: 'jamsil',
+    }
+});
+  }
+});
 </script>
 
 {% endblock %}

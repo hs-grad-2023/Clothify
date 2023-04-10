@@ -8,14 +8,26 @@
 {% block content %}
 
 {% if messages %}
-{% for message in messages %}
-{% if message.tags == 'success' %}
+    {% for message in messages %}
+        {% if message.tags == 'success' and '로그인' not in message.message  %}
+            <script>
+                Swal.fire({
+                    title: '회원가입이 되었습니다!',
+                    text: '{{ message }}',
+                    icon: 'success',
+                    customClass: {
+                      title: 'jamsil',
+                      confirmButton: 'jamsil',
+                      content: 'jamsil',
+                    }
+                  })
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 <script>
-    alert('{{ message }}');
+    
 </script>
-{% endif %}
-{% endfor %}
-{% endif %}
     <!-- 배너 -->
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5 wow fadeIn" data-wow-delay="0.1s">
@@ -27,12 +39,12 @@
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-8-auto">
-                                    <h1 class="display-1 mb-5 animated slideInDown jamsil fonts" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
+                                    <h1 class="display-1 mb-5 jamsil fonts animated slideInDown" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
                                     {% if user.is_authenticated %}
-                                    <a href="{% url 'virtual_fit' user.first_name %}" class="btn btn-primary btn-lg rounded-pill py-sm-3 px-sm-5 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
-                                    <a href="{% url 'codibook' user.first_name %}" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
+                                    <a href="{% url 'virtual_fit' user.first_name %}" class="btn btn-primary btn-lg rounded-pill py-sm-3 px-sm-5 jamsil wow fadeIn" data-wow-delay="0.1s" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
+                                    <a href="{% url 'codibook' user.first_name %}" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil wow fadeIn" data-wow-delay="0.1s" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
                                     {% else %}
-                                    <a href="{% url 'codibook' " " %}" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
+                                    <a href="{% url 'codibook' " " %}" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil wow fadeIn" data-wow-delay="0.1s" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -102,7 +114,7 @@
             </div>
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="bg-white text-center h-100 p-4 p-xl-5">
+                    <div class="bg-white text-center h-100 p-4 p-xl-5 shadow" style="border-radius: 20px;">
                         <img class="img-fluid mb-4" src="{% static 'img/icon-1.jpg' %}" alt="">
                         <h4 class="mb-3 jamsil">가상 피팅</h4>
                         <p class="mb-4 jamsil">옷을 실제로 입지 않고도 가상에서<br>먼저 확인해 볼 수 있습니다!</p>
@@ -114,7 +126,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="bg-white text-center h-100 p-4 p-xl-5">
+                    <div class="bg-white text-center h-100 p-4 p-xl-5 shadow" style="border-radius: 20px;">
                         <img class="img-fluid mb-4" src="{% static 'img/icon-2.jpg' %}" alt="">
                         <h4 class="mb-3 jamsil">옷장 관리</h4>
                         <p class="mb-4 jamsil">내 전용 옷장을 만들어서 손쉽게 자신의 옷들을<br>관리할 수 있습니다!</p>
@@ -126,7 +138,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="bg-white text-center h-100 p-4 p-xl-5">
+                    <div class="bg-white text-center h-100 p-4 p-xl-5 shadow" style="border-radius: 20px;">
                         <img class="img-fluid mb-4" src="{% static 'img/icon-3.jpg' %}" alt="">
                         <h4 class="mb-3 jamsil">코디 추천</h4>
                         <p class="mb-4 jamsil">오늘 날씨에 뭘 입어야할지 모를때<br>코디를 추천해줍니다!</p>
@@ -144,11 +156,16 @@
 
 
     <!-- Product Start -->
+
+    {%comment%}
     {% if user.is_authenticated %}
-    <div class="container-xxl py-5">
+        <div class="container-xxl py-5">
     {% else %}
-    <div class="container-xxl py-5" style="height: 500px;">
+        <div class="container-xxl py-5" style="height: 500px;">
     {% endif %}
+    {%endcomment%}
+
+    <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
@@ -157,11 +174,12 @@
                         <p class="jamsil">나의 옷장을 마음대로 꾸며보세요!</p>
                     </div>
                 </div>
+
                 {% if user.is_authenticated %}
                 <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
                     <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
                         <li class="nav-item me-2">
-                            <a class="btn btn-outline-primary border-2 active jamsil" data-bs-toggle="pill" href="#tab-1">전체</a>
+                            <a class="btn btn-outline-primary border-2 active jamsil shadow" data-bs-toggle="pill" href="#tab-1">전체</a>
                         </li>
                         {% comment %} <li class="nav-item me-2">
                             <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-2">상의</a>
@@ -173,506 +191,52 @@
                 </div>
                 {% endif %}
             </div>
+            
             {% if user.is_authenticated %}
             <div class="tab-content jamsil">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                    {% comment %} <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span> {% endcomment %}
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                    {% comment %} <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small> {% endcomment %}
-                                </div>
+                        {% for c in clothesobject|slice:":8" %}
+                            {% if c.uploadUser_id == user.id and c.groupID %}
+                            {% if c.groupID %}
+                            {% load clothes_extra %}
+                            <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
+                                <div class="product-item jamsil shadow" style="border-radius: 20px;">
+                                    <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
+                                        {% load clothes_extra %}
+                                            <a href="{% url 'detail_closet' user.first_name c.groupID %}">
+                                                <img class="img-fluid w-100" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                            </a>
+                                    </div>
+                                    <div class="text-center p-4">
+                                        <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
+                                    </div>
+                                    <hr width="90%" align="center" style="margin-left: 14px;">
+                                    <div class="text-end p-3">
+                                        <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
+                                        {% if c.ucodi == True %}
+                                        <span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position:relative; top: 40px; left: 60px; font-size: 1rem;">자랑!</span>
+                                        {% endif %}
+                                    </div>
+                                </div>      
                             </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2 jamsil" href="">옷1</a>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-100 text-center py-2">
-                                        <a class="text-body jamsil" href=""><i class="fa fa-eye text-primary me-2"></i>자세히</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
+                            {% endif%}
+                            {% endif%}
+                        {% endfor %}
                         <div class="col-12 text-center wow fadeInUp" style="padding-top: 20px;" data-wow-delay="0.1s">
-                            <a class="btn btn-primary btn-sm rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>
+                            <a class="btn btn-primary rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>    
                         </div>
                     </div>
                 </div>
-                {% comment %} <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-5.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-6.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-7.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-8.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 text-center" style="padding-top: 20px;">
-                            <a class="btn btn-primary btn-sm rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-3" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-5.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-6.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-7.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="product-item">
-                                <div class="position-relative bg-light overflow-hidden">
-                                    <img class="img-fluid w-100" src="{% static 'img/product-8.jpg' %}" alt="">
-                                    <div class="bg-secondary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
-                                </div>
-                                <div class="text-center p-4">
-                                    <a class="d-block h5 mb-2" href="">Fresh Tomato</a>
-                                    <span class="text-primary me-1">$19.00</span>
-                                    <span class="text-body text-decoration-line-through">$29.00</span>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body" href=""><i class="fa fa-eye text-primary me-2"></i>View detail</a>
-                                    </small>
-                                    <small class="w-50 text-center py-2">
-                                        <a class="text-body" href=""><i class="fa fa-shopping-bag text-primary me-2"></i>Add to cart</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 text-center" style="padding-top: 20px;">
-                            <a class="btn btn-primary btn-sm rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>
-                        </div>
-                    </div>
-                </div> {% endcomment %}
-            </div>
+            </div>    
             {% else %}
-            <div class="bg-light text-center wow fadeInUp" style="padding-bottom: 120px;" data-wow-delay="0.1s">
+            <div class="bg-light text-center wow fadeInUp shadow" style="padding-bottom: 120px;" data-wow-delay="0.1s">
                 <div class="col-12 text-center wow fadeInUp" style="padding-top: 110px;" data-wow-delay="0.1s">
-                    <a class="btn btn-primary rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' " " %}">로그인 하기</a>
+                    <a class="btn btn-primary rounded-pill py-3 px-5 jamsil shadow-sm" href="{% url 'view_closet' " " %}">로그인 하기</a>
                 </div>
             </div>
             {% endif %}
+            </div>
         </div>
     </div>
     <!-- Product End -->
@@ -802,5 +366,6 @@
     <!-- 회원가입 메시지 -->
 
 {% endblock %}
+
 
 

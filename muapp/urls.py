@@ -46,6 +46,8 @@ urlpatterns = [
     path('modify/',views.user_modify, name='user_modify'),
     path('mypage/userstyle/<str:username>',views.user_style, name='user_style'),
     path('blog/',views.blog, name='blog'),
+    path('usercodi/',views.usercodi, name='usercodi'),
+    path('usercodi/<str:id>/',views.detail_usercodi, name='detail_usercodi'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

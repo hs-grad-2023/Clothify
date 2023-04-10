@@ -1,5 +1,5 @@
 from django import forms
-from .models import clothes
+from .models import clothes, Comment
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -88,6 +88,10 @@ class ModifyForm(UserChangeForm):
         model = get_user_model()
         fields = ('username', 'email', 'name', 'sex', 'height', 'weight')
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
 
    
         

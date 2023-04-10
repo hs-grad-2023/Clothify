@@ -71,7 +71,7 @@ function itemChange(){
     if(selectItem == "상의"){
         changeItem = top;
     }
-    else if(selectItem == "바지"){
+    else if(selectItem == "하의"){
         changeItem = pants;
     }
     else if(selectItem == "치마"){

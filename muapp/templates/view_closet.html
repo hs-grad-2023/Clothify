@@ -48,7 +48,7 @@
     <!-- Message End-->
 
     <!-- Product Start -->
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5 wow fadeIn" data-wow-delay="0.2s">
         <div class="container">
             <div class="btn-container" name="btn-container">
                 <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
@@ -98,11 +98,11 @@
             <br>
             <div class="accordion hahmelt" id="accordionPanelsStayOpenExample">
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                  <p class="accordion-header" id="panelsStayOpen-headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                     <strong>검색된 필터</strong>
                     </button>
-                  </h2>
+                    </p>
                   <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
                         {% if filterList %}
@@ -120,25 +120,33 @@
                     <div class="row g-4">
                         {% for c in clothesobject %}
                             {% if c.uploadUser_id == user.id and c.groupID %}
-                            {% if c.groupID %}
-                                    <div class="col-xl-3 col-lg-4 col-md-6">
-                                        <div class="product-item jamsil">
-                                            <div class="position-relative bg-light overflow-hidden">
-                                                {% load clothes_extra %}
-                                                    <a href="{% url 'detail_closet' user.first_name c.groupID %}">
-                                                        <img class="img-fluid w-100" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
-                                                    </a>
-                                            </div>
-                                            <div class="text-center p-4">
-                                                <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
-                                            </div>
-                                            <hr width="90%" align="center" style="margin-left: 14px;">
-                                            <div class="text-end p-3">
-                                                <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
-                                            </div>
-                                        </div>      
-                                    </div>
-                            {% endif%}
+                                {% if c.groupID %}
+                                {% load clothes_extra %}
+                                <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
+                                    
+                                    <div class="product-item jamsil shadow" style="border-radius: 20px;">
+                                        
+                                        <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
+                                            
+                                            <a href="{% url 'detail_closet' user.first_name c.groupID %}">
+                                                
+                                                <img class="img-fluid w-100" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="text-center p-4">
+                                            <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
+                                        </div>
+                                        <hr width="90%" align="center" style="margin-left: 14px;">
+                                        <div class="text-end p-3">
+                                            <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
+                                            {% if c.ucodi == True %}
+                                            <span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position:relative; top: 40px; left: 60px; font-size: 1rem;">자랑!</span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                    </div>      
+                                </div>
+                                {% endif%}
                             {% endif%}
                         {% endfor %}
                     </div>
@@ -228,19 +236,12 @@ function addSelected() {
     const type2_val = type2_element.value; //선택한 옵션값
     const selected_element = document.getElementById("selected"); //추가할 요소
 
-    console.log(type2_val);
-
-    
 
     // 선택된 리스트는 숨기기
     const selectedOption = type2_element.selectedIndex;
     type2_element.options[selectedOption].hidden = true;
 
 
-    console.log(selectedFilter.indexOf(type2_val));
-    console.log(selectedFilter);
-
-    
     if(selectedFilter.indexOf(type2_val) < 0){
         // 선택 리스트 만들기
         selectedFilter.push(type2_val);
@@ -273,20 +274,22 @@ function delSelected() {
     //selectedFilter에서 옵션을 삭제
     for (let i = 0; i < selectedFilter.length; i++) {
         if (selectedFilter[i] == selected_val) {
-            selectedFilter.splice(i, 1);
+            selectedFilter.splice(i, 1);        // i번째 요소부터 한 개만 삭제
             break;
         }
     }
 
     //type2에 옵션 되돌리기
     for (let i = 0; i < optLen; i++) { //type2의 개수(삽입할 옵션개수)만큼 반복
-        if (typeCategory[type1_val][i] == type2_val) {
+        
+        if (typeCategory[type1_val][i] == selected_val) {
             type2_element.options[i].hidden = false;
             break;
         }
     }
+
     const selectedOption = selected_element.selectedIndex;
-    selected_element.remove(selected_element.options[selectedOption]);
+    selected_element.remove([selectedOption]);              
 }
 
 //selected 제거
@@ -298,7 +301,7 @@ document.getElementById("selected").addEventListener("click", function () {
 //selectedFilter 보내기
 function SendFilter(){
     $(document).ready(function() {
-        $("#searchFilter").click(function() {
+        $('#searchFilter').click(function() {
             $.ajax({
                 type: "POST",
                 url: "{% url 'view_closet' user.first_name%}", // 장고 URL 패턴 이름
@@ -317,9 +320,13 @@ function SendFilter(){
         });
     });
 };
+
+
 //filter 검색
 document.getElementById("searchFilter").addEventListener("click", function () {
+    
     //SendFilter();
+
     document.getElementById('fl').value = selectedFilter;
     document.getElementById('searchForm').submit();
 

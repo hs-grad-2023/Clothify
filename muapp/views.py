@@ -5,15 +5,15 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .models import clothes, photos, Musinsa
+from .models import clothes, photos, Musinsa, Comment
 from django.contrib.auth import authenticate, login
-from .forms import UserForm, LoginForm, ModifyForm
+from .forms import UserForm, LoginForm, ModifyForm, CommentForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
-from allauth.account.signals import user_signed_up
+from allauth.account.signals import user_signed_up, user_logged_in
 from django.db.models import Q
 from functools import reduce
 from operator import or_
@@ -56,9 +56,12 @@ def add_social_user_name(sender, request, user, **kwargs):
     else:
         user.name = social_accounts.extra_data['name']
     user.save()
-    messages.success(request, '축하합니다!! Clothify의 회원가입이 완료되었습니다.\n마이페이지로 가서 좋아하는 스타일을 선택해 주세요!')
+    messages.success(request, '축하합니다!!\nClothify의 회원가입이 완료되었습니다!')
 
 def index(request):
+
+    clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
+
     try:
         location = get_loc_data()
         date = get_time()
@@ -74,10 +77,11 @@ def index(request):
             'humidity' : weather['humidity'] ,
             'sky' : weather['sky'] ,
             'icon' : icon,
+            'clothesobject':clothesobject,
             }
         return render(request,"index.html",results)
     except:
-        return render(request,"index.html")
+        return render(request,"index.html",{ 'clothesobject':clothesobject, })
 
 @login_required(login_url='login')
 def view_closet(request, username):
@@ -94,15 +98,19 @@ def view_closet(request, username):
         q_list=[Q(uploadUser__exact=user.id)] #userID가 같은 값으로 1차 필터링
         for item in filterList:
             if "==" in item:
-                type1Item = item.replace("==","").strip()
-                q_list.append(Q(type1__icontains=type1Item))
+                type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
+                q_list.append(Q(type1__icontains=type1Item))    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
+                
             else:
                 q_list.append(Q(type2__icontains=item))
+                
+        #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
+        clothesobject = clothesobject.filter(Q(type1__icontains=q_list)&Q(uploadUser__exact=user.id))
+        #clothesobject = clothesobject.filter(Q(type1__icontains="상의"))
 
-        clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct() # 타입 검색
-        
+        print(clothesobject)
         result = {
-                'clothesobject' : clothesobject,
+                'clothesobject':clothesobject,
                 'user':user,
                 'filterList':filterList,
                 'photoobject':photoobject,
@@ -141,6 +149,7 @@ def uploadCloset(request, username):
                             tag=request.POST.get('tags'),
                             name=request.POST.get('clothesName'),
                             details=request.POST.get('details'),
+                            ucodi=request.POST.get('ucodi'),
                             groupID=getGroupID,
                         )
                     except:
@@ -161,7 +170,7 @@ def detail_closet(request, username, groupID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
-    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
+    clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()  
 
     photosobject = photos.objects.annotate(
                 row_number=Window(
@@ -209,7 +218,7 @@ def updateCloset(request, username, groupID):
 
         return redirect('view_closet', username=user.first_name)
     else:
-        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   #clothes의 모든 객체를 c에 담기
+        clothesobject = clothes.objects.filter(Q(groupID__exact=groupID) & Q(uploadUser__exact=user.id)).get()   
         photosobject = photos.objects.annotate(
                     row_number=Window(
                         expression=RowNumber(),
@@ -236,7 +245,7 @@ def remove_closet(request, username, groupID):
     try:
         remove_clothes= clothes.objects.get(groupID=groupID)      # clothes에서 pk와 같은 primary_key 값을 remove_clothes에 담기
         remove_clothes.delete()     # 삭제 후 메시지를 보여줍니다.
-        messages.success(request, '데이터를 삭제했습니다.')
+        # messages.success(request, '데이터를 삭제했습니다.')
     except clothes.DoesNotExist:
         messages.error(request, '삭제할 데이터가 없습니다.')
     
@@ -254,8 +263,8 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
-            messages.success(request, '축하합니다!! Clothify의 회원가입이 완료되었습니다.\n좋아하는 스타일을 선택해 주세요!')
             login(request, user)  # 로그인
+            messages.success(request, '축하합니다!!\nClothify의 회원가입이 완료되었습니다!')
             return redirect('/')
     else:
         form = UserForm()
@@ -275,6 +284,8 @@ def logins(request):
                 result = next_string.split('/')[1]
                 if result == 'modify':
                     return redirect(f'/{result}/')
+                elif result == 'usercodi':
+                    return redirect(request.POST.get('next'))
                 else:
                     print(f'/{result}/{user}')
                     return redirect(f'/{result}/{user}')
@@ -364,11 +375,12 @@ def user_style(request, username):
     if request.method == 'POST':
         selected_styles = request.POST.getlist("style")
         if not selected_styles:
-            return render(request, "user_style.html", {"user": user, "error": "적어도 하나 이상의 스타일을 선택해주세요.", "style": style})
+            messages.error(request, '적어도 하나 이상의 스타일을 선택해주세요')
+            return render(request, "user_style.html", {"user": user, "style": style})
         user.style = str(selected_styles) # json으로 사용해도됨. 방법:리스트를 JSON 형식으로 직렬화하여 문자열로 저장 user.style = json.dumps(selected_styles)
         user.save()
         return redirect('/')
-    return render(request,"user_style.html",{"user": user, "style": style})
+    return render(request, "user_style.html", {"user": user, "style": style})
 
 # @login_required(login_url='login')
 # def product(request, username):
@@ -377,4 +389,47 @@ def user_style(request, username):
 
 
 def about(request):
-    return render(request,"about.html")
+    return render(request, "about.html")
+
+
+def usercodi(request):
+    clothesobject = clothes.objects.filter(ucodi=True)
+    paginator = Paginator(clothesobject, 9)
+    page = request.GET.get('page')
+    clothesobject = paginator.get_page(page)
+    return render(request,"usercodi.html",{'cloth':clothesobject})
+
+def detail_usercodi(request, id):
+    clothesobject = clothes.objects.filter(groupID__exact=id).get()  
+
+    comments = Comment.objects.filter(post=clothesobject)
+
+    photosobject = photos.objects.annotate(
+                row_number=Window(
+                    expression=RowNumber(),
+                    partition_by=[F('groupID')],
+                    order_by='groupID_id'
+                )
+    )
+
+    photosobject = photosobject.filter(groupID__exact=id)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = clothesobject
+            comment.save()
+    else:
+        form = CommentForm()
+
+    result = {
+        'clothesobject' : clothesobject,
+        'photosobject' : photosobject,
+        'comments' : comments,
+        'form' : form,
+    }
+    return render(request,"detail_usercodi.html", result)
+
+

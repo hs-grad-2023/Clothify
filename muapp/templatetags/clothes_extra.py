@@ -12,3 +12,7 @@ def getGroupIdFirst(clothesgroupID): #c.groupID|getGroupId {{ somevariable|cut:"
     except photos.DoesNotExist:
         return False
 
+@register.filter
+def delay(value, arg):
+    return float(value) * float(arg)
+

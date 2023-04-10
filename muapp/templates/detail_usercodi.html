@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">옷 자랑</h1>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Blog Start -->
+    <div class="container-xxl py-6" style="padding-bottom: 20px; padding-top: 60px;">
+        <div class="container jamsil">
+            <div class="section-header text-center mx-auto wow fadeIn jamsil" data-wow-delay="0.1s" style="max-width: 500px; margin-bottom: 30px;">
+                <h1 class="display-5 mb-3 jamsil">옷 자랑</h1>       
+                <p>다른 사람들의 옷이나 코디들을 확인해 보세요!</p>
+            </div>
+            <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'usercodi' %}">목록</a>
+            </div>
+            <br>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
+                            <div class="carousel-inner">
+                                {% for p in photosobject%}
+                                    {% if p.row_number == 1%}
+                                        <div class="carousel-item active" >
+                                            <img src="{{p.imgfile.url}}" class="d-block w-50 mx-auto" alt="...">
+                                        </div>
+                                    {% else %}
+                                        <div class="carousel-item" >
+                                            <img src="{{p.imgfile.url}}" class="d-block w-50 mx-auto" alt="...">
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+
+                        <table class="table" style="float:left;">
+                            <tr>
+                                <th>이름</th>
+                                <th>분류1</th>
+                                <th>분류2</th>
+                                <th>태그</th>
+                                <th>상세정보</th>
+                                <th>업로드 시간</th>
+                            </tr>
+
+                                {% if clothesobject %}
+                                <tr>
+                                    <tr>
+                                        <td>{{ clothesobject.name }}</td>
+                                        <td>{{ clothesobject.type1 }}</td>
+                                        <td>{{ clothesobject.type2 }}</td>
+                                        <td>{{ clothesobject.tag }}</td>
+                                        <td>{{ clothesobject.details }}</td>
+                                        <td>{{ clothesobject.upload_date }}</td>
+                                    </tr>
+                                </tr>
+                                {%endif%}
+                        </table>
+                        
+                        {% for comment in comments %}
+                        <div class="comment">
+                            <p class="comment-info">{{ comment.author }} 작성일: {{ comment.created_date }}</p>
+                            <p class="comment-text">{{ comment.text }}</p>
+                        </div>
+                        {% empty %}
+                            <p>댓글이 없습니다.</p>
+                        {% endfor %}
+
+                        {% if user.is_authenticated %}
+                        <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3 jamsil">
+                            <p><label for="comment">댓글</label></p>
+                            <textarea name="text" class="form-control" id="comment" cols="30" rows="5" placeholder="댓글을 입력하세요!" style="resize: none;"></textarea>
+                        </div>
+                        <button type="submit">댓글 작성</button>
+                        </form>
+                        {% else %}
+                        <div class="mb-3 jamsil">
+                            <p><label for="comment">댓글</label></p>
+                            <input class="form-control" id="disabledInput" type="text" placeholder="로그인을 하고 댓글을 남겨보세요!" disabled>
+                            <button type="button" class="btn btn-outline-primary mt-3" onclick="location.href='{% url 'login' %}?next={{ request.path }}'">로그인</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Product End -->
+{% endblock content %}
+
+
+{% block jsv %}
+{% endblock jsv %}
