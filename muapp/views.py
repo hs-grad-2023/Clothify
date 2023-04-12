@@ -386,7 +386,7 @@ def user_style(request, username):
         selected_styles = request.POST.getlist("style")
         if not selected_styles:
             messages.error(request, '적어도 하나 이상의 스타일을 선택해주세요')
-            return render(request, "user_style.html", {"user": user, "style": style})
+            return redirect('user_style', username=username)
         user.style = str(selected_styles) # json으로 사용해도됨. 방법:리스트를 JSON 형식으로 직렬화하여 문자열로 저장 user.style = json.dumps(selected_styles)
         user.save()
         return redirect('/')
@@ -412,7 +412,7 @@ def usercodi(request):
 def detail_usercodi(request, id):
     clothesobject = clothes.objects.filter(groupID__exact=id).get()  
 
-    comments = Comment.objects.filter(post=clothesobject)
+    comments = Comment.objects.filter(post=clothesobject).order_by('-created_date')
 
     photosobject = photos.objects.annotate(
                 row_number=Window(
@@ -431,8 +431,13 @@ def detail_usercodi(request, id):
             comment.author = request.user
             comment.post = clothesobject
             comment.save()
+            return redirect('detail_usercodi', id=id)
     else:
         form = CommentForm()
+
+    paginator = Paginator(comments, 5)
+    page = request.GET.get('page')
+    comments = paginator.get_page(page)
 
     result = {
         'clothesobject' : clothesobject,
@@ -440,6 +445,7 @@ def detail_usercodi(request, id):
         'comments' : comments,
         'form' : form,
     }
+    
     return render(request,"detail_usercodi.html", result)
 
 

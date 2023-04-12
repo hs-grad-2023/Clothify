@@ -15,7 +15,7 @@
         <div class="container">
             <div class="col-lg-6">
                 <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
-                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">옷 자랑</h1>
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4rem;">옷 자랑</h1>
                  </div>
             </div>
         </div>
@@ -50,7 +50,9 @@
                                         </div>
                                     {% endif %}
                                 {% endfor %}
+
                             </div>
+                            {% if photosobject.count != 1 %}
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                               <span class="visually-hidden">Previous</span>
@@ -59,6 +61,7 @@
                               <span class="carousel-control-next-icon" aria-hidden="true"></span>
                               <span class="visually-hidden">Next</span>
                             </button>
+                            {% endif %}
                           </div>
 
                         <table class="table" style="float:left;">
@@ -85,27 +88,56 @@
                                 {%endif%}
                         </table>
                         
-                        {% for comment in comments %}
-                        <div class="comment">
-                            <p class="comment-info">{{ comment.author }} 작성일: {{ comment.created_date }}</p>
-                            <p class="comment-text">{{ comment.text }}</p>
+                        {% for comment in comments%}
+                        <div class="comment shadow row mt-4 border border-2{% if forloop.counter|divisibleby:2 %} border-success {% else %} border-primary {% endif %} pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
+                            <div class="col">
+                                <p class="comment-info text-dark" style="font-size:0.9rem;">{{ comment.author }}</p>
+                            </div>
+                            <div class="col text-end">
+                                <p style="font-size:0.8rem;">{{ comment.created_date }}</p>
+                            </div>
+                            <p class="comment-text lh-base border border-2 p-3 shadow-sm text-dark">{{ comment.text }}</p>
                         </div>
                         {% empty %}
+                        <div class="comment shadow-sm row mt-4 border border-2 border-success pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
                             <p>댓글이 없습니다. 댓글을 입력해주세요!</p>
+                        </div>
                         {% endfor %}
 
+                        <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                            {% if comments.has_other_pages %}
+                            <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                                {% if comments.has_previous %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?page=1">처음</a>
+                                <a class="btn btn-primary rounded-pill px-3" href="?page={{ comments.previous_page_number }}">이전</a>
+                                {% endif %}
+                                {% for i in comments.paginator.page_range %}
+                                {% if comments.number == i %}
+                                <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                                {% elif i > comments.number|add:'-3' and i < comments.number|add:'3' %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?page={{ i }}">{{ i }}</a>
+                                {% endif %}
+                                {% endfor %}
+                                {% if comments.has_next %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?page={{ comments.next_page_number }}">다음</a>
+                                <a class="btn btn-primary rounded-pill px-2" href="?page={{ comments.paginator.num_pages }}">마지막</a>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+
                         {% if user.is_authenticated %}
-                        <form method="post">
+                        <form method="post" class="border pb-3 pt-2 border-2 border-primary wow fadeIn" data-wow-delay="0.1s" style="border-radius:10px">
                         {% csrf_token %}
                         <div class="mb-3 jamsil">
-                            <p><label for="comment">댓글</label></p>
-                            <textarea name="text" class="form-control" id="comment" cols="30" rows="5" placeholder="댓글을 입력하세요!" style="resize: none;"></textarea>
+                            <p class="pt-2"><label for="comment">댓글</label></p>
+                            <textarea name="text" class="form-control shadow-sm" id="comment" cols="30" rows="5" placeholder="댓글을 입력하세요!" style="resize: none;"></textarea>
                         </div>
-                        <button type="submit">댓글 작성</button>
+                        <button type="submit" class="btn btn-outline-success border-2" style="float: right;">댓글 작성</button>
                         </form>
                         {% else %}
-                        <div class="mb-3 jamsil">
-                            <p><label for="comment">댓글</label></p>
+                        <div class="mb-3 jamsil border pb-3 pt-2 border-2 border-primary wow fadeIn" data-wow-delay="0.1s" style="border-radius:10px">
+                            <p class="pt-2"><label for="comment">댓글</label></p>
                             <input class="form-control" id="disabledInput" type="text" placeholder="로그인을 하고 댓글을 남겨보세요!" disabled>
                             <button type="button" class="btn btn-outline-primary mt-3" onclick="location.href='{% url 'login' %}?next={{ request.path }}'">로그인</button>
                         </div>
