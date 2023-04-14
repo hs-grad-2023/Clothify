@@ -92,6 +92,13 @@ def view_closet(request, username):
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     photoobject = photos.objects.all()
 
+    del_clothes = request.POST.getlist('delete_clothes')
+    if del_clothes:
+        for group_id in del_clothes:
+            remove = clothesobject.get(groupID=group_id)
+            remove.delete()
+
+
     # ===== filtering ======
     fl = request.GET.get('fl')  # 검색어
     if fl: #검색어가 있고
@@ -100,7 +107,7 @@ def view_closet(request, username):
         for item in filterList:
             if "==" in item:
                 type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
-                type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건&
+                type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
                 q_list.append(type1_filter)                     # 조건에 맞은 type1_filter를 q_list에 넣기
             else:
                 type2_filter = clothesobject.filter(type2__icontains=item)&clothesobject.filter(uploadUser__exact=user.id)
@@ -252,6 +259,7 @@ def remove_closet(request, username, groupID):
     user = get_object_or_404(User, first_name=username)
     if user != request.user:
         return HttpResponseForbidden()
+    
     try:
         remove_clothes= clothes.objects.get(groupID=groupID)      # clothes에서 pk와 같은 primary_key 값을 remove_clothes에 담기
         remove_clothes.delete()     # 삭제 후 메시지를 보여줍니다.

@@ -23,13 +23,15 @@
     </div>
     <!-- Page Header End -->
 
-
+    
     <!-- Product Start -->
     <div class="container-xxl py-5 jamsil">
         <div class="container">
             <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
                 <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
+    {%comment%} <a class="btn btn-lg btn-outline-danger border-2 jamsil" onclick="confirmDelete()">삭제</a>     {%endcomment%}
             </div>
+           
             <br>
             <div class="tab-content wow fadeIn" data-wow-delay="0.1s">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
@@ -88,6 +90,7 @@
                                     <p class="align-middle jamsil" id="btnText" style="padding-top: 15px;">옷 업데이트</p>
                                 </button>
                             </div>
+                            
                             <div>
                                 <button class="btn-submit" type="button" id="btn_delete" onclick="confirmDelete()">
                                     <p class="align-middle jamsil" id="btnText" style="padding-top: 15px;">옷 삭제</p>

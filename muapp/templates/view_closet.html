@@ -51,11 +51,21 @@
     <div class="container-xxl py-5 wow fadeIn" data-wow-delay="0.2s">
         <div class="container">
             <div class="btn-container" name="btn-container">
-                <button class="btn-submit" type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
-                    <p id="btnText" class="jamsil" style="padding-top: 15px;" >옷 업로드</p>
-                </button>
+                <div class="d-inline p-2">
+                    <button class="btn-submit" float:right; type="button" onclick = "location.href = '{% url 'uploadCloset' user.first_name %}' " onkeyup="if(window.event.keyCode==13){}">
+                        <p id="btnText" class="jamsil" style="padding-top: 15px;" >옷 업로드</p>
+                    </button>
+                </div>
+                <div>
+                    <button id="deleteBtn" class="btn-submit" type="button" onclick="visible_check();">
+                        <p id="deleteText" class="jamsil" style="padding-top: 15px;" >옷 삭제</p>
+                    </button>
+                </div>
+                
             </div>
+            <button onclick="folderDeleteClick()"> 삭제하기 </button>
             <br>
+            
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-3">
                 </div> 
@@ -122,32 +132,41 @@
                             {% if c.uploadUser_id == user.id and c.groupID %}
                                 {% if c.groupID %}
                                 {% load clothes_extra %}
-                                <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
-                                    
+                                
+                                <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp position-relative" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.1 }}s">
                                     <div class="product-item jamsil shadow" style="border-radius: 20px;">
-                                        
+
                                         <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
-                                            
                                             <a href="{% url 'detail_closet' user.first_name c.groupID %}">
+                                                
                                                 <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                                
                                             </a>
                                         </div>
+                                        
                                         <div class="text-center p-4">
                                             <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}">{{c.name}}</a>
                                         </div>
                                         <hr width="90%" align="center" style="margin-left: 14px;">
                                         <div class="text-end p-3">
                                             <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
-                                            
                                         </div>
                                         
                                     </div>
                                     {% if c.ucodi == True %}
                                     <a href="{% url 'detail_usercodi' c.groupID %}"><span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position: relative; left: 290px; font-size: 1rem;">자랑!</span></a>
-                                    {% endif %}      
+                                    {% endif %}   
+
+                                    <div class="delete_checkbox position-absolute" style="left: 25px; top: 15px; visibility: hidden;" >
+                                        <input style="width: 20px; height: 20px;" type="checkbox" name="delete_clothes" value="{{c.groupID}}">
+                                    </div>
+
                                 </div>
+                                
+
                                 {% endif%}
                             {% endif%}
+                            
                         {% endfor %}
                     </div>
                 </div>
@@ -333,6 +352,29 @@ document.getElementById("searchFilter").addEventListener("click", function () {
 })
 
 
+// 옷 삭제 버튼 시 checkbox 보여주기
+function visible_check(){
+
+    var checkbox = document.getElementsByClassName("delete_checkbox");      // delete_checkbox를 가진 클래스 요소들
+    
+    for(let i = 0; i < checkbox.length; i++){       //해당 클래스 개수만큼
+        checkbox[i].style.visibility = "visible";   //checkbox 보여주기(클래스는 인덱스를 지정해줘야 수정 가능)
+        
+    }
+
+}
+
+
+// 체크박스 선택 후 삭제 버튼 클릭시 이벤트 
+function folderDeleteClick(){
+    var checkBoxArr = []; 
+    $("input:checkbox[name='delete_clothes']:checked").each(function() {
+    checkBoxArr.push($(this).val());     // 체크된 것만 값을 뽑아서 배열에 push
+    console.log(checkBoxArr);
+    
+  })
+
+}
 
 
 

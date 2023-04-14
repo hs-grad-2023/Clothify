@@ -197,6 +197,7 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
                         {% for c in clothesobject|slice:":8" %}
+                        
                             {% if c.uploadUser_id == user.id and c.groupID %}
                             {% if c.groupID %}
                             {% load clothes_extra %}
