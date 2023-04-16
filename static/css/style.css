@@ -432,11 +432,48 @@ button.close {
 
 .mucodi:hover img {
     transform: scale(1.1);
+    
 }
 
 .mucodi img {
     transition: .5s;
 }
+
+.like-container {
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.image-container:hover .like-container {
+    opacity: 1;
+    transition: opacity 1s;
+}
+
+.image-container:not(:hover) .like-container {
+    opacity: 0; 
+}
+
+.image-container:hover img {
+    filter: blur(20px);
+}
+
+.image-container2:hover .like-container {
+    opacity: 1;
+    transition: opacity 1s;
+}
+
+.image-container2:not(:hover) .like-container {
+    opacity: 0; 
+}
+
+.image-container2:hover img {
+    filter: blur(10px);
+}
+
 
 /*** Testimonial ***/
 .testimonial-carousel .owl-item .testimonial-item img {
@@ -487,7 +524,6 @@ button.close {
     color: #FFFFFF;
     background: var(--primary);
 }
-
 /*** Footer ***/
 .footer {
     color: #999999;

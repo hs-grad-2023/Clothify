@@ -35,8 +35,23 @@
                 <div class="col-lg-4 col-md-6 wow fadeIn" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
                     <div class="p-4 mucodi" style="background-color: #F5F5F5;">  
                         <a class="d-block h5 lh-base mb-4 jamsil text-center border-bottom pb-3" target="_blank" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white; font-size: 25px;" href="{{mu.item_page}}">{{mu.item_title}}</a>
-                        <a class="d-block h5 lh-base mb-4 jamsil text-center" target="_blank" title="{{mu.item_title}}" href="{{mu.item_page}}">
-                            <img src="{{ mu.item_picture }}" class="img-thumbnail shadow mt-2" alt="{{mu.item_title}}" style="border-radius: 20px;"></a>
+                        <div class="position-relative image-container2">
+                            <a class="d-block h5 lh-base mb-4 jamsil text-center" target="_blank" title="{{mu.item_title}}" href="{{mu.item_page}}">
+                                <img src="{{ mu.item_picture }}" class="img-thumbnail shadow mt-2" alt="{{mu.item_title}}" style="border-radius: 20px;"></a>
+
+                                <div class="d-flex justify-content-center like-container" style="position: absolute; bottom: 50%; left: 0; right: 0;">
+                                    {% if user.is_authenticated %}
+                                    <span style="cursor: pointer;">
+                                        <i id="like-btn-{{mu.id}}" onclick="post_like({{ mu.id }}); event.stopPropagation();" class="heart-icon {% if request.user in mu.like.all %}fas liked{% else %}far{% endif %} fa-heart change-on-hover" style="color: #F54C4C; font-size: 20px;"></i>
+                                    {% else %}
+                                    <span style="cursor: pointer;">
+                                        <i id="like-btn-{{mu.id}}" onclick="redirectToLogin(); event.stopPropagation();" class="heart-icon {% if request.user in mu.like.all %}fas liked{% else %}far{% endif %} fa-heart change-on-hover" style="color: #F54C4C; font-size: 20px;"></i>
+                                    {% endif %}
+                                        <span id="like-count-{{mu.id}}" style="color: white; font-size: 20px; cursor: default;">{{mu.like.count}}</span>
+                                    </span>
+                                </div>
+                        </div>
+
                         <div class="text-muted border-top pt-4 d-flex justify-content-between">
                             <small><i class="fa fa-user text-primary me-2 jamsil"></i>{{mu.item_model}}</small>
                             <small><i class="fa fas fa-clone text-secondary me-2"></i>{{mu.item_text}}</small>
@@ -69,4 +84,56 @@
         </div>
     </div>
     <!-- Blog End -->
+
+<script type="text/javascript">
+    function post_like(id) {
+        $.ajax({
+            url: "{%url 'likes2' %}", 
+            data: {
+                'id': id
+            }, 
+            dataType: "json",
+            success: function (response) { 
+                $('#like-count-'+id).html(response.like_count);
+                $('#like-btn-'+id+' i.heart-icon').toggleClass('fas far');
+                const iconElement = $('#like-btn-' + id + ' i.heart-icon');
+                const isNotLiked = iconElement.hasClass('far');
+
+                if (isNotLiked) {
+                  iconElement.removeClass('far');
+                  iconElement.addClass('fas');
+                } else {
+                  iconElement.removeClass('fas');
+                  iconElement.addClass('far');
+                }
+                iconElement.toggleClass('liked');
+          
+                
+              }
+            });
+          }
+    
+          const changeOnHoverIcons = document.querySelectorAll('.change-on-hover');
+          
+          changeOnHoverIcons.forEach((icon) => {
+              icon.addEventListener('mouseover', () => {
+                  if (icon.classList.contains('far') && !icon.classList.contains('liked')) {
+                      icon.classList.remove('far');
+                      icon.classList.add('fas');
+                    }
+                });
+                
+                icon.addEventListener('mouseout', () => {
+                    if (icon.classList.contains('fas') && !icon.classList.contains('liked') && !icon.classList.contains('hovered')) {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                });
+            });
+            
+            function redirectToLogin() {
+                window.location.href = "{% url 'login' %}";
+            }
+
+    </script>
 {% endblock %}

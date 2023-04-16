@@ -16,3 +16,7 @@ def getGroupIdFirst(clothesgroupID): #c.groupID|getGroupId {{ somevariable|cut:"
 def delay(value, arg):
     return float(value) * float(arg)
 
+@register.filter
+def count_matching_comments(value, arg):
+    return len([values for values in value if values.post_id == arg])
+
