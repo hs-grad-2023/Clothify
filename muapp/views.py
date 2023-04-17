@@ -92,50 +92,70 @@ def view_closet(request, username):
     clothesobject = clothes.objects.all()   #clothes의 모든 객체를 c에 담기
     photoobject = photos.objects.all()
 
-    del_clothes = request.POST.getlist('delete_clothes')
-    if del_clothes:
-        for group_id in del_clothes:
-            remove = clothesobject.get(groupID=group_id)
-            remove.delete()
+    
+    if request.method == 'POST':
+        del_clothes = request.POST.getlist('del_clothes')   #여러 개의 값 받아오기
+        tmp = del_clothes[0].split(",")                     # 받아온 groupID 값 자르기
 
-
-    # ===== filtering ======
-    fl = request.GET.get('fl')  # 검색어
-    if fl: #검색어가 있고
-        filterList = fl.split(',')
-        q_list=[]                   # 필터링 하기 위한 배열
-        for item in filterList:
-            if "==" in item:
-                type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
-                type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
-                q_list.append(type1_filter)                     # 조건에 맞은 type1_filter를 q_list에 넣기
-            else:
-                type2_filter = clothesobject.filter(type2__icontains=item)&clothesobject.filter(uploadUser__exact=user.id)
-                q_list.append(type2_filter)
-            
-            
-        #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct()   # 타입 검색 -> queryset끼리 중복 제외하고 합병( 조건부 표현식에 대해 필터링 할 수 없다고 뜸)
-            
-        clothesobject = reduce(or_, q_list).distinct()                          # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+        if del_clothes:
+            for group_id in tmp:
+                remove = clothesobject.filter(groupID__exact=group_id)
+                remove.delete()
+        result = {
+                    'clothesobject':clothesobject,
+                    'user':user,
+                    'photoobject':photoobject,
+                }
+        return render(request, "view_closet.html", result)
         
-        result = {
-                'clothesobject':clothesobject,
-                'user':user,
-                'filterList':filterList,
-                'photoobject':photoobject,
-            }
-        return render(request, 'view_closet.html', result)
-    else: #검색어가 없으면
-        groupIdList = clothesobject.filter(uploadUser__exact=user.id).values_list("groupID") #<QuerySet [('vi3qalsycy',)]>
-        photoobject = photoobject.filter(groupID__in = groupIdList).values()
-        result = {
-                'clothesobject' : clothesobject,
-                'photoobject' : photoobject,
-                'groupIdList' : groupIdList,
-                'user':user,
-            }
-        return render(request, 'view_closet.html', result)
+            
+        #result = {
+        #        'clothesobject' : clothesobject,
+        #        'photoobject' : photoobject,
+        #        'user':user,
+        #}
+        #return render(request, "view_closet.html", result)
+    
+    elif request.method == 'GET':
+        # ===== filtering ======
+        fl = request.GET.get('fl')  # 검색어
+        if fl: #검색어가 있고
+            filterList = fl.split(',')
+            q_list=[]                   # 필터링 하기 위한 배열
+            for item in filterList:
+                if "==" in item:
+                    type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
+                    type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
+                    q_list.append(type1_filter)                     # 조건에 맞은 type1_filter를 q_list에 넣기
+                else:
+                    type2_filter = clothesobject.filter(type2__icontains=item)&clothesobject.filter(uploadUser__exact=user.id)
+                    q_list.append(type2_filter)
+                
+                
+            #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct()   # 타입 검색 -> queryset끼리 중복 제외하고 합병( 조건부 표현식에 대해 필터링 할 수 없다고 뜸)
+                
+            clothesobject = reduce(or_, q_list).distinct()                          # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+            
+            result = {
+                    'clothesobject':clothesobject,
+                    'user':user,
+                    'filterList':filterList,
+                    'photoobject':photoobject,
+                }
+            return render(request, 'view_closet.html', result)
+        elif not fl: #검색어가 없으면
+            groupIdList = clothesobject.filter(uploadUser__exact=user.id).values_list("groupID") #<QuerySet [('vi3qalsycy',)]>
+            photoobject = photoobject.filter(groupID__in = groupIdList).values()
+            result = {
+                    'clothesobject' : clothesobject,
+                    'photoobject' : photoobject,
+                    'groupIdList' : groupIdList,
+                    'user':user,
+                }
+            return render(request, 'view_closet.html', result)
 
+
+    
 @login_required(login_url='login')
 def uploadCloset(request, username):
     user = get_object_or_404(User, first_name=username) #user = User.objects.get(first_name=username) 예외 처리를 따로 하고 싶을 때 사용

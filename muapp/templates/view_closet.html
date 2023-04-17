@@ -57,13 +57,19 @@
                     </button>
                 </div>
                 <div>
-                    <button id="deleteBtn" class="btn-submit" type="button" onclick="visible_check();">
+                    <button class="btn-submit" type="button" onclick="ClickDeletBtn('show');">
                         <p id="deleteText" class="jamsil" style="padding-top: 15px;" >옷 삭제</p>
                     </button>
                 </div>
                 
             </div>
-            <button onclick="folderDeleteClick()"> 삭제하기 </button>
+
+            <!-- deleteClothes를 넘겨받는 폼 -->
+            <form id="deleteForm" method="post" action="{% url 'view_closet' user.first_name %}">
+                {% csrf_token %}
+                <input type="hidden" id="del_clothes" name="del_clothes" value="">
+            </form>
+            
             <br>
             
             <div class="row g-0 gx-5 align-items-end">
@@ -125,6 +131,15 @@
                 </div>
             </div>
             <br>
+
+            <div class="deleteClothesBtn" id="deleteClothesBtn" style="display: none; width: 100%; height: auto;">
+                <button id="check_all" class="btn jamsil" onclick="ClickDeletBtn('allCheck');"> 전체 선택 </button>
+                <button id="check_cancel" class="btn jamsil" onclick="ClickDeletBtn('allCancel')"> 전체 선택 취소 </button>
+                <button id="deleteBtn" class="btn jamsil" onclick="ClickDeletBtn('ClothesDelete')"> 삭제하기 </button>
+                <button id="DeleteCancel" class="btn jamsil" onclick="location.href='{% url 'view_closet' user.first_name %}'"> 취소하기 </button>
+            </div>
+
+            <br>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
@@ -157,10 +172,12 @@
                                     <a href="{% url 'detail_usercodi' c.groupID %}"><span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position: relative; left: 290px; font-size: 1rem;">자랑!</span></a>
                                     {% endif %}   
 
-                                    <div class="delete_checkbox position-absolute" style="left: 25px; top: 15px; visibility: hidden;" >
+                                    <div class="delete_checkbox position-absolute" style="left: 25px; top: 15px; display: none;" >
+                                        {% csrf_token %}
                                         <input style="width: 20px; height: 20px;" type="checkbox" name="delete_clothes" value="{{c.groupID}}">
+                                        
                                     </div>
-
+                                    
                                 </div>
                                 
 
@@ -200,6 +217,7 @@
 
 var selectedType1 = []; //type2 필터
 var selectedFilter = []; //최종 필터
+
 
 
 //동적으로 type2 삽입하기
@@ -347,38 +365,78 @@ document.getElementById("searchFilter").addEventListener("click", function () {
     //SendFilter();
 
     document.getElementById('fl').value = selectedFilter;
+    console.log(document.getElementById('fl').value)
     document.getElementById('searchForm').submit();
 
 })
 
 
-// 옷 삭제 버튼 시 checkbox 보여주기
-function visible_check(){
 
-    var checkbox = document.getElementsByClassName("delete_checkbox");      // delete_checkbox를 가진 클래스 요소들
+
+/* ------------- 옷 삭제 & 삭제 옵션 버튼 함수 ------------------*/
+function ClickDeletBtn(value){
     
-    for(let i = 0; i < checkbox.length; i++){       //해당 클래스 개수만큼
-        checkbox[i].style.visibility = "visible";   //checkbox 보여주기(클래스는 인덱스를 지정해줘야 수정 가능)
+    var v = value;          // 매개변수 값을 v에 담기
+    var deleteClothes = [];   // 삭제할 옷들의 groupID 담기
+    var deleteBtn = document.getElementById("deleteBtn");       //삭제하기 버튼
+
+    switch (v) {
+
+        case 'show':   // 옷 삭제 클릭 시 checkbox랑 삭제 옵션 보여주기
+            $(".delete_checkbox").show();    //.show()는 style"display: none;"으로 돼 있어야 실행됨
+            $(".deleteClothesBtn").show();
         
+            break;
+
+        case 'allCheck': // 전체 선택
+            $('[name=delete_clothes]').prop('checked', true);       //checked 값을 true로 반환
+
+            break;
+        
+        case 'allCancel':  //전체 선택 취소
+            $('[name=delete_clothes]').prop('checked', false);      //checked 값을 false로 반환
+
+            break;
+        
+        case 'ClothesDelete': //삭제하기
+            $("input:checkbox[name='delete_clothes']:checked").each(function() {
+                deleteClothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                document.getElementById('del_clothes').value = deleteClothes;       // 배열을 del_clothes의 value에 담기
+                //console.log(deleteClothes);
+                document.getElementById('deleteForm').submit();  
+            })
+
+            break;
+        
+        case 'DeleteCancel':    //취소하기
+            $(".deleteClothesBtn").hide();      //전체 삭제, 전체 삭제, ... 등 숨기기              
+            $(".delete_checkbox").hide();       //체크박스 숨기기
+
+            break;
     }
-
 }
 
 
-// 체크박스 선택 후 삭제 버튼 클릭시 이벤트 
-function folderDeleteClick(){
-    var checkBoxArr = []; 
-    $("input:checkbox[name='delete_clothes']:checked").each(function() {
-    checkBoxArr.push($(this).val());     // 체크된 것만 값을 뽑아서 배열에 push
-    console.log(checkBoxArr);
+/*
+//실시간 체크박스 선택 이벤트 함수
+function checkEvent(){
     
-  })
 
+    $("input:checkbox[name='delete_clothes']").on("change", function(){
+        if($(this).is(":checked")){             //체크된 상태
+            $(this).prop("checked", true);      //체크된 값은 true로 반환
+            
+            deleteBtn.disabled = false;            //'삭제하기' 버튼 활성화
+            //alert($(this).prop("checked"));
+        }
+        else {  //체크 해제된 상태
+            $(this).prop("checked", false);     //체크 해제되면 false로 반환
+            //alert($(this).prop("checked"));
+
+        }
+    })
 }
 
-
-
-    
-
+*/
 </script> 
 {% endblock jsv %}
