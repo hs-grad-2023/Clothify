@@ -18,6 +18,7 @@ class clothes(models.Model):
     upload_date = models.DateTimeField(default=timezone.now)
     groupID = models.CharField(max_length=10,primary_key=True)
     ucodi = models.BooleanField(null=True,  blank=True)
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes' ,blank=True)
     # imgfile = models.ImageField(null=True, blank=True, upload_to="imgfiles/%m/%d", default='imgfiles/no_image.png')  # 이미지 컬럼 추가(사진을 여러개)    
 
     class Meta:
@@ -56,6 +57,7 @@ class Musinsa(models.Model):
     item_model = models.TextField()
     item_picture = models.URLField()
     item_page = models.URLField()
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes2' ,blank=True)
 
 class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

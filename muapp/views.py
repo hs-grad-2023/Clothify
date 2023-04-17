@@ -29,6 +29,7 @@ import base64
 from django.core.files import File
 from PIL import Image
 from itertools import chain
+from django.views.decorators.http import require_POST
 
 User = get_user_model()
 
@@ -435,7 +436,8 @@ def usercodi(request):
     paginator = Paginator(clothesobject, 9)
     page = request.GET.get('page')
     clothesobject = paginator.get_page(page)
-    return render(request,"usercodi.html",{'cloth':clothesobject})
+    comments = Comment.objects.all()
+    return render(request,"usercodi.html",{'cloth':clothesobject, 'comments': comments})
 
 def detail_usercodi(request, id):
     clothesobject = clothes.objects.filter(groupID__exact=id).get()  
@@ -476,4 +478,33 @@ def detail_usercodi(request, id):
     
     return render(request,"detail_usercodi.html", result)
 
+@login_required(login_url='login')
+def like(request):
+    # 어떤 게시물에, 어떤 사람이 like를 했는 지
+   if request.headers.get('X-Requested-With'): #ajax 방식일 때 아래 코드 실행
+        groupid = request.GET.get('groupID') #좋아요를 누른 게시물id 가지고 오기
+        post = clothes.objects.get(groupID=groupid) 
+        user = request.user #request.user : 현재 로그인한 유저
+        if post.like.filter(id=user.id).exists(): #이미 좋아요를 누른 유저일 때
+            post.like.remove(user) #like field에 현재 유저 추가
+        else: #좋아요를 누르지 않은 유저일 때
+            post.like.add(user) #like field에 현재 유저 삭제
+        # post.like.count() : 게시물이 받은 좋아요 수  
+        context = {'like_count' : post.like.count(),}
+        return HttpResponse(json.dumps(context), content_type='application/json')
+       
+@login_required(login_url='login')
+def like2(request):
+    # 어떤 게시물에, 어떤 사람이 like를 했는 지
+   if request.headers.get('X-Requested-With'): #ajax 방식일 때 아래 코드 실행
+        cid = request.GET.get('id') #좋아요를 누른 게시물id 가지고 오기
+        post = Musinsa.objects.get(id=cid) 
+        user = request.user #request.user : 현재 로그인한 유저
+        if post.like.filter(id=user.id).exists(): #이미 좋아요를 누른 유저일 때
+            post.like.remove(user) #like field에 현재 유저 삭제
+        else: #좋아요를 누르지 않은 유저일 때
+            post.like.add(user) #like field에 현재 유저 추가
+        # post.like.count() : 게시물이 받은 좋아요 수  
+        context = {'like_count' : post.like.count(),}
+        return HttpResponse(json.dumps(context), content_type='application/json')    
 

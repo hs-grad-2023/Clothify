@@ -35,8 +35,27 @@
                 <div class="col-lg-4 col-md-6 wow fadeIn" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
                     <div class="p-4 mucodi" style="background-color: #F5F5F5;">  
                         <a class="d-block h5 lh-base mb-4 jamsil text-center border-bottom pb-3" target="_blank" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white; font-size: 25px;" href="{{mu.item_page}}">{{mu.item_title}}</a>
-                        <a class="d-block h5 lh-base mb-4 jamsil text-center" target="_blank" title="{{mu.item_title}}" href="{{mu.item_page}}">
-                            <img src="{{ mu.item_picture }}" class="img-thumbnail shadow mt-2" alt="{{mu.item_title}}" style="border-radius: 20px;"></a>
+                        <div class="position-relative image-container2">
+                            <a class="d-block h5 lh-base mb-4 jamsil text-center" target="_blank" title="{{mu.item_title}}" href="{{mu.item_page}}">
+                                <img src="{{ mu.item_picture }}" class="img-thumbnail shadow mt-2" alt="{{mu.item_title}}" style="border-radius: 20px;"></a>
+
+                                <div class="d-flex justify-content-center like-container" style="position: absolute; bottom: 50%; left: 0; right: 0;">
+                                    {% if user.is_authenticated %}
+                                    <span id="like-btn-{{mu.id}}" onclick="post_like('{{ mu.id }}'); event.stopPropagation();" style="cursor: pointer;">
+                                    {% else %}
+                                    <span id="like-btn-{{mu.id}}" onclick="redirectToLogin(); event.stopPropagation();" style="cursor: pointer;"> 
+                                    {% endif %}
+                                    {% if request.user in mu.like.all %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저일때  -->
+                                    <i class="heart-icon fas fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                    {% else %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저가 아닐 때  -->
+                                    <i class="heart-icon far fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                    {% endif %}
+                                    <span id="like-count-{{mu.id}}" style="color: white; font-size: 20px;">{{mu.like.count}}</span>
+                                </div>
+                        </div>
+
                         <div class="text-muted border-top pt-4 d-flex justify-content-between">
                             <small><i class="fa fa-user text-primary me-2 jamsil"></i>{{mu.item_model}}</small>
                             <small><i class="fa fas fa-clone text-secondary me-2"></i>{{mu.item_text}}</small>
@@ -69,4 +88,27 @@
         </div>
     </div>
     <!-- Blog End -->
+
+<script type="text/javascript">
+    function post_like(id) {
+        $.ajax({
+            url: "{%url 'likes2' %}", 
+            data: {
+                'id': id
+            }, 
+            dataType: "json",
+            success: function (response) { 
+                $('#like-count-'+id).html(response.like_count);
+                $('#like-btn-'+id+' i.heart-icon').toggleClass('fas far');
+                
+              }
+            });
+          }
+    
+            
+            function redirectToLogin() {
+                window.location.href = "{% url 'login' %}";
+            }
+
+    </script>
 {% endblock %}

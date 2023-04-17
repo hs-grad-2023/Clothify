@@ -87,9 +87,31 @@
                                 </tr>
                                 {%endif%}
                         </table>
-                        
+                        <div class="d-flex wow fadeInUp" data-wow-delay="0.1s">
+                            <span class="pe-1 text-dark" style="font-size: 18px;">댓글 {{comments|length}}개</span>
+                            <i class="fas fa-comment pt-1" style="color: #57B0F5; font-size: 17px;"></i>
+                                    
+                                <div>
+                                    <span class="text-dark ps-3" style="font-size: 18px;">좋아요</span>
+                                    {% if user.is_authenticated %}
+                                    <span id="like-btn-{{clothesobject.groupID}}" onclick="post_like('{{ clothesobject.groupID }}'); event.stopPropagation();" style="cursor: pointer;">
+                                    {% else %}
+                                    <span id="like-btn-{{clothesobject.groupID}}" onclick="redirectToLogin(); event.stopPropagation();" style="cursor: pointer;"> 
+                                    {% endif %}
+                                    {% if request.user in clothesobject.like.all %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저일때  -->
+                                    <i class="heart-icon fas fa-heart" style="color: #F54C4C; font-size: 17px;"></i>
+                                    {% else %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저가 아닐 때  -->
+                                    <i class="heart-icon far fa-heart" style="color: #F54C4C; font-size: 17px;"></i>
+                                    {% endif %}
+                                    <span id="like-count-{{clothesobject.groupID}}" style="color: black; font-size: 18px;">{{clothesobject.like.count}}</span>
+                                    
+                                    </span>
+                                </div>
+                        </div>
                         {% for comment in comments%}
-                        <div class="comment shadow row mt-4 border border-2{% if forloop.counter|divisibleby:2 %} border-success {% else %} border-primary {% endif %} pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
+                        <div class="comment shadow row {% if forloop.counter == 1 %}mt-3 {% else %}mt-4 {% endif %}border border-2{% if forloop.counter|divisibleby:2 %} border-success {% else %} border-primary {% endif %} pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
                             <div class="col">
                                 <p class="comment-info text-dark" style="font-size:0.9rem;">{{ comment.author }}</p>
                             </div>
@@ -99,9 +121,11 @@
                             <p class="comment-text lh-base border border-2 p-3 shadow-sm text-dark">{{ comment.text }}</p>
                         </div>
                         {% empty %}
-                        <div class="comment shadow-sm row mt-4 border border-2 border-success pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
-                            <p>댓글이 없습니다. 댓글을 입력해주세요!</p>
+                        <div class="comment shadow-sm row mt-3 border border-2 border-success pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
+                            <p class="p-2">댓글이 없습니다. 댓글을 입력해주세요!</p>
                         </div>
+                        
+
                         {% endfor %}
 
                         <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
@@ -127,17 +151,17 @@
                         </div>
 
                         {% if user.is_authenticated %}
-                        <form method="post" class="border pb-3 pt-2 border-2 border-primary wow fadeIn" data-wow-delay="0.1s" style="border-radius:10px">
+                        <form method="post" class="border pb-3 pt-2 border-2 border-primary wow fadeIn bg-light" data-wow-delay="0.1s" style="border-radius:10px">
                         {% csrf_token %}
                         <div class="mb-3 jamsil">
-                            <p class="pt-2"><label for="comment">댓글</label></p>
+                            <p class="pt-2 text-dark"><label for="comment">댓글</label></p>
                             <textarea name="text" class="form-control shadow-sm" id="comment" cols="30" rows="5" placeholder="댓글을 입력하세요!" style="resize: none;"></textarea>
                         </div>
                         <button type="submit" class="btn btn-outline-success border-2" style="float: right;">댓글 작성</button>
                         </form>
                         {% else %}
                         <div class="mb-3 jamsil border pb-3 pt-2 border-2 border-primary wow fadeIn" data-wow-delay="0.1s" style="border-radius:10px">
-                            <p class="pt-2"><label for="comment">댓글</label></p>
+                            <p class="pt-2 text-dark"><label for="comment">댓글</label></p>
                             <input class="form-control" id="disabledInput" type="text" placeholder="로그인을 하고 댓글을 남겨보세요!" disabled>
                             <button type="button" class="btn btn-outline-primary mt-3" onclick="location.href='{% url 'login' %}?next={{ request.path }}'">로그인</button>
                         </div>
@@ -148,6 +172,26 @@
         </div>
     </div>
     <!-- Product End -->
+<script type="text/javascript">
+    function post_like(id) {
+        $.ajax({
+            url: "{%url 'likes' %}", 
+            data: {
+                'groupID': id
+            }, 
+            dataType: "json",
+            success: function (response) { 
+                $('#like-count-'+id).html(response.like_count);
+                $('#like-btn-'+id+' i.heart-icon').toggleClass('fas far');
+            }
+        });
+    }
+    
+    function redirectToLogin() {
+        window.location.href = "{% url 'login' %}";
+    }
+
+    </script>
 {% endblock content %}
 
 
