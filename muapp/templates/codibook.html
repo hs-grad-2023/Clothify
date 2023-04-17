@@ -41,14 +41,18 @@
 
                                 <div class="d-flex justify-content-center like-container" style="position: absolute; bottom: 50%; left: 0; right: 0;">
                                     {% if user.is_authenticated %}
-                                    <span style="cursor: pointer;">
-                                        <i id="like-btn-{{mu.id}}" onclick="post_like({{ mu.id }}); event.stopPropagation();" class="heart-icon {% if request.user in mu.like.all %}fas liked{% else %}far{% endif %} fa-heart change-on-hover" style="color: #F54C4C; font-size: 20px;"></i>
+                                    <span id="like-btn-{{mu.id}}" onclick="post_like('{{ mu.id }}'); event.stopPropagation();" style="cursor: pointer;">
                                     {% else %}
-                                    <span style="cursor: pointer;">
-                                        <i id="like-btn-{{mu.id}}" onclick="redirectToLogin(); event.stopPropagation();" class="heart-icon {% if request.user in mu.like.all %}fas liked{% else %}far{% endif %} fa-heart change-on-hover" style="color: #F54C4C; font-size: 20px;"></i>
+                                    <span id="like-btn-{{mu.id}}" onclick="redirectToLogin(); event.stopPropagation();" style="cursor: pointer;"> 
                                     {% endif %}
-                                        <span id="like-count-{{mu.id}}" style="color: white; font-size: 20px; cursor: default;">{{mu.like.count}}</span>
-                                    </span>
+                                    {% if request.user in mu.like.all %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저일때  -->
+                                    <i class="heart-icon fas fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                    {% else %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저가 아닐 때  -->
+                                    <i class="heart-icon far fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                    {% endif %}
+                                    <span id="like-count-{{mu.id}}" style="color: white; font-size: 20px;">{{mu.like.count}}</span>
                                 </div>
                         </div>
 
@@ -96,40 +100,11 @@
             success: function (response) { 
                 $('#like-count-'+id).html(response.like_count);
                 $('#like-btn-'+id+' i.heart-icon').toggleClass('fas far');
-                const iconElement = $('#like-btn-' + id + ' i.heart-icon');
-                const isNotLiked = iconElement.hasClass('far');
-
-                if (isNotLiked) {
-                  iconElement.removeClass('far');
-                  iconElement.addClass('fas');
-                } else {
-                  iconElement.removeClass('fas');
-                  iconElement.addClass('far');
-                }
-                iconElement.toggleClass('liked');
-          
                 
               }
             });
           }
     
-          const changeOnHoverIcons = document.querySelectorAll('.change-on-hover');
-          
-          changeOnHoverIcons.forEach((icon) => {
-              icon.addEventListener('mouseover', () => {
-                  if (icon.classList.contains('far') && !icon.classList.contains('liked')) {
-                      icon.classList.remove('far');
-                      icon.classList.add('fas');
-                    }
-                });
-                
-                icon.addEventListener('mouseout', () => {
-                    if (icon.classList.contains('fas') && !icon.classList.contains('liked') && !icon.classList.contains('hovered')) {
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                    }
-                });
-            });
             
             function redirectToLogin() {
                 window.location.href = "{% url 'login' %}";
