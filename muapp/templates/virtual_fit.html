@@ -10,28 +10,25 @@
 {% block content %}
     <!-- Page Header Start -->
     <div class="container-xxl py-5">
-        <!-- Page Header Start -->
         <div class="container">
-            <div class="col-lg-6">
-                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
-                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">가상 피팅</h1>
-                 </div>
+                <div class="col-lg-6" style="padding-top: 127px;">
+                    <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                        <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">가상 피팅</h1>
+                        <p class="jamsil">실시간으로 가상피팅 해보세요!</p>
+                    </div>
+                </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="bg-light text-center h-100 p-4 p-xl-5" style="box-shadow: 0 0 5px black; border-radius: 20px;">
+                        <img class="img-fluid mb-4" src="{% static 'img/icon-1.jpg' %}" alt="">
+                        <h4 class="mb-3 jamsil">가상피팅</h4>
+                        <p class="mb-4 jamsil">실시간으로 피팅하기</p>
+                        <a href="{% url 'virfit' %}" class="btn btn-primary btn-lg rounded-pill py-sm-2 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black; font-size:20px">가상피팅</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <!-- Page Header End -->
-
-
-    <!-- Blog Start -->
-    {% if user.is_authenticated %}
-    <div class="container-xxl py-5 justify-content-center">  
-        <div class="row justify-content-center">
-            <div class="col-md-6 ">
-                <video id="video" width="100%" height="auto" autoplay style="transform: rotateY(180deg); -webkit-transform:rotateY(180deg);"></video>
-            </div>
-        </div>       
-    </div>
-    {% endif %}
     <!-- Blog End -->
 {% endblock %}
 
@@ -40,7 +37,7 @@
 <script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
 <!-- Uppy 코드 삽입 예정,, 수정하고,, -->
 <script>
-    const video = document.querySelector('#video');
+    {% comment %} const video = document.querySelector('#video');
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
             video.srcObject = stream;
@@ -50,6 +47,6 @@
         })
         .catch(err => {
             console.error(err);
-        });
+        }); {% endcomment %}
 </script>
 {% endblock jsv %}

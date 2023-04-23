@@ -50,6 +50,7 @@ urlpatterns = [
     path('usercodi/<str:id>/',views.detail_usercodi, name='detail_usercodi'),
     path('like/',views.like, name="likes"),
     path('like2/',views.like2, name="likes2"),
+    path('virfit/', views.virfit, name='virfit'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
