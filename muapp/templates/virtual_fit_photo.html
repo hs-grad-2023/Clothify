@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+<link href="{% static 'css/view.css' %}" rel="stylesheet">
+{% endblock style %}
+
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+
+{% block closet %}
+    <a href="{% url 'view_closet' %}" class="nav-item nav-link active jamsil" >Clothes</a>
+{% endblock closet %}
+{% block content %}
+    <!-- Product Start -->
+    <div class="container-xxl py-5">
+        <form method="POST" action="{% url 'virtual_fit_photo_result' %}">
+        <div class="container">
+            <!-- product Header Start -->
+            <div class="row g-0 gx-5 align-items-end">
+                <div class="col-lg-6">
+                    <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                        <h1 class="display-5 mb-3 jamsil">가상피팅(사진)</h1>
+                        <p class="jamsil">사진으로 옷을 입어봐요!</p>
+                        <p class="jamsil">  모델과 옷을 선택하면 옷 입고 있는 모델이 등장!</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="btn-container " name="btn-container">
+                        <div class="d-inline p-2">
+                            <button type="submit" class="btn-submit" style="width:250px; height:50px; font-size: 15px;" float:right;>
+                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >가상피팅 결과 확인하기</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-start text-lg-end wow slideInRight align-items-end" data-wow-delay="0.1s">
+                        <ul class="nav nav-pills d-inline-flex justify-content-end mb-5 jamsil">
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">모델</a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">옷 </a>
+                            </li>
+                        </ul>                        
+                    </div>
+                </div>
+            </div>
+            <!-- product Header End -->
+            
+            <!-- Product item Start-->
+            <div class="tab-content">
+                {% load clothes_extra %}
+                <!-- Choose Model -->
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        {% for m in model_paging%}
+                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="product-item jamsil shadow" style="border-radius: 20px;">
+                                <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
+                                    <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{m.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                    {% csrf_token %}
+                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="model" value="{{m.name}}">
+                                </div>
+                                <div class="text-center p-4 jamsil">
+                                    <a class="d-block h5 mb-2" href="">{{m.name}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Page bar Start-->
+                    <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                        {% if model_paging.has_other_pages %}
+                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                            {% if model_paging.has_previous %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?mpage=1">처음</a>
+                                <a class="btn btn-primary rounded-pill px-3" href="?mpage={{ model_paging.previous_page_number }}">이전</a>
+                            {% endif %}
+                            {% for i in model_paging.paginator.page_range %}
+                                {% if model_paging.number == i %}
+                                    <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                                {% elif i > model_paging.number|add:'-10' and i < model_paging.number|add:'10' %}
+                                    <a class="btn btn-primary rounded-pill px-3" href="?mpage={{ i }}">{{ i }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if model_paging.has_next %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?mpage={{ model_paging.next_page_number }}">다음</a>
+                                <a class="btn btn-primary rounded-pill px-2" href="?mpage={{ model_paging.paginator.num_pages }}">마지막</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <!-- Page bar Start-->                    
+                </div>
+                <!-- Choose cloth -->
+                <div id="tab-2" class="tab-pane fade show p-0">
+                    <div class="row g-4">
+                        {% for c in cloth_paging%}
+                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="product-item jamsil shadow" style="border-radius: 20px;">
+                                <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
+                                    <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                    {% csrf_token %}
+                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="cloth" value="{{c.name}}">
+                                </div>
+                                <div class="text-center p-4 jamsil">
+                                    <a class="d-block h5 mb-2" href="">{{c.name}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}                        
+                    </div>
+                    <!-- Page bar Start-->
+                    <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                        {% if cloth_paging.has_other_pages %}
+                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                            {% if cloth_paging.has_previous %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?cpage=1">처음</a>
+                                <a class="btn btn-primary rounded-pill px-3" href="?cpage={{ cloth_paging.previous_page_number }}">이전</a>
+                            {% endif %}
+                            {% for i in cloth_paging.paginator.page_range %}
+                                {% if cloth_paging.number == i %}
+                                    <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                                {% elif i > cloth_paging.number|add:'-10' and i < cloth_paging.number|add:'10' %}
+                                    <a class="btn btn-primary rounded-pill px-3" href="?cpage={{ i }}">{{ i }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if cloth_paging.has_next %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?cpage={{ cloth_paging.next_page_number }}">다음</a>
+                                <a class="btn btn-primary rounded-pill px-2" href="?cpage={{ cloth_paging.paginator.num_pages }}">마지막</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <!-- Page bar Start-->
+                </div>
+            </div>
+            <!-- Product item End-->
+        </div>
+        </form>
+    </div>
+    <!-- Product End -->
+{% endblock content%}

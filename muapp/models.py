@@ -69,3 +69,14 @@ class Comment(models.Model):
         return f'{self.author} - {self.post} - {self.text}'
 
 
+class viton_upload_cloth(models.Model):
+    name = models.CharField(max_length=50)
+    image = models.FileField(upload_to='datasets/cloth')
+
+class viton_upload_model(models.Model):
+    name = models.CharField(max_length=50)
+    image = models.FileField(upload_to='datasets/image')
+
+class viton_upload_result(models.Model):
+    name = models.CharField(max_length=50)
+    image = models.FileField(upload_to='datasets/results')

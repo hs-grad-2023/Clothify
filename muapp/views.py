@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .models import clothes, photos, Musinsa, Comment
+from .models import clothes, photos, Musinsa, Comment,viton_upload_cloth,viton_upload_model, viton_upload_result
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, LoginForm, ModifyForm, CommentForm
 from django.contrib.auth.models import User
@@ -351,39 +351,6 @@ def mypage(request, username):
         return HttpResponseForbidden()
     return render(request,"mypage.html",{"user":user})
 
-@login_required(login_url='login')
-def virtual_fit(request, username):
-    user = get_object_or_404(User, first_name=username)
-    if user != request.user:
-        return redirect(f'/virtual_fit/{request.user.first_name}')
-    return render(request,"virtual_fit.html",{"user":user})
-
-@login_required(login_url='login')
-def virtual_fit_upload(request, username):
-    user = get_object_or_404(User, first_name=username)
-    if user != request.user:
-        return redirect(f'/virtual_fit_upload/{request.user.first_name}')
-    if request.method == 'POST':
-        if request.FILES.getlist('imgfile'):
-            for imgfile in request.FILES.getlist('imgfile'):
-                try:
-                    new_clothes = clothes.objects.create(
-                        uploadUser_id=request.user.id,
-                        uploadUserName=request.user.username,
-                        type1=request.POST.get('type1'),
-                        type2=request.POST.get('type2'),
-                        tag=request.POST.get('tags'),
-                        name=request.POST.get('clothesName'),
-                        details=request.POST.get('details'),
-                    )
-                except:
-                    print()
-                new_clothes.save()
-
-        return redirect('view_closet', username=user.first_name)
-    else: 
-        return render(request,"virtual_fit_upload.html",{"user":user})
-
 
 @login_required(login_url='login')
 def codibook(request, username):
@@ -508,3 +475,81 @@ def like2(request):
         context = {'like_count' : post.like.count(),}
         return HttpResponse(json.dumps(context), content_type='application/json')    
 
+def virtual_fit_photo(request):
+        
+    model_dataset = viton_upload_model.objects.all()
+    model_paginator = Paginator(model_dataset, 20)
+    model_page = request.GET.get('mpage')
+    model_paging = model_paginator.get_page(model_page)
+    
+    cloth_dataset = viton_upload_cloth.objects.all()
+    cloth_paginator = Paginator(cloth_dataset, 20)
+    cloth_page = request.GET.get('cpage')
+    cloth_paging = cloth_paginator.get_page(cloth_page)
+
+
+    result = {
+        'model_paging' : model_paging,
+        'cloth_paging' : cloth_paging,
+    }
+    return render(request, "virtual_fit_photo.html", result)
+
+def virtual_fit_photo_result(request):
+    if request.method == 'POST':
+        selected_model = request.POST.getlist('model')
+        selected_cloth = request.POST.getlist('cloth')
+
+        print(selected_model) # ['00017_00.jpg']
+        print(selected_cloth) # ['00013_00.jpg']
+
+        result_vition = viton_upload_result.objects.all() 
+        q_list=[]
+
+        for model in selected_model:
+            for cloth in selected_cloth:
+                result_name = model[:5] + '_' + cloth[:5] + '_00.jpg'
+                print(result_name)
+                filter = result_vition.filter(name__exact=result_name)
+                q_list.append(filter)
+
+        result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+        print(result_vition)
+        result = {'result_vition':result_vition}
+
+        return render(request, "virtual_fit_photo_result.html",result)
+    
+    return render(request, "virtual_fit_photo_result.html")
+
+
+@login_required(login_url='login')
+def virtual_fit_video(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return redirect(f'/virtual_fit_video/{request.user.first_name}')
+    return render(request,"virtual_fit_video.html",{"user":user})
+
+@login_required(login_url='login')
+def virtual_fit_upload(request, username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return redirect(f'/virtual_fit_upload/{request.user.first_name}')
+    if request.method == 'POST':
+        if request.FILES.getlist('imgfile'):
+            for imgfile in request.FILES.getlist('imgfile'):
+                try:
+                    new_clothes = clothes.objects.create(
+                        uploadUser_id=request.user.id,
+                        uploadUserName=request.user.username,
+                        type1=request.POST.get('type1'),
+                        type2=request.POST.get('type2'),
+                        tag=request.POST.get('tags'),
+                        name=request.POST.get('clothesName'),
+                        details=request.POST.get('details'),
+                    )
+                except:
+                    print()
+                new_clothes.save()
+
+        return redirect('view_closet', username=user.first_name)
+    else: 
+        return render(request,"virtual_fit_upload.html",{"user":user})
