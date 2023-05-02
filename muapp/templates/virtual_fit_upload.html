@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block style %}
+    <link href="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.css" rel="stylesheet">
+{% endblock style %}
 {% block nav %}
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">가상 피팅</a>
     <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
 {% endblock nav%}
 
@@ -24,7 +28,7 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
-                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'virtual_fit_photo' user.first_name%}">목록</a>
             </div>
             <div class="row g-0 gx-5 align-items-end pt-3">
                 <div class="col-lg-6">
@@ -46,41 +50,35 @@
                         <div>
                             <form action=""
                                   method="POST"
-                                  name="clothesInfo"
-                                  id="clothesInfo"
+                                  name="itemInfo"
+                                  id="itemInfo"
                                   enctype="multipart/form-data"
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
                                     <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
-                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" required/>
+                                    <input type="text" name="itemName" id="itemName"class="form-control col" placeholder="(필수 입력)" required/>
                                 </div>
                                 <!-- tag -->
                                 <div class="mb-3 row">
-                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">태그</label>
-                                    <input type="text" name="tag" id="tag" class="form-control col" 
-                                           placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
-                                    <button type="button" id="btn_addtag" class="btn_addtag col-sm-2" style="border:none" >추가</button>
+                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">분류</label>
+                                    <select name="itemtype" id="itemtype" size="1" class="form-select col" required>
+                                        <option selected>옷</option>
+                                        <option>모델</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-sm-2 col-form-label text-end"></label>
-                                    <div class="col tag_area">
-
-                                    </div>
-                                </div>
-                                <!--tag 추가해서 띄우는 label-->
-                                <div class="mb-3 row" style="display:none">
-                                    <label class="col-sm-2 col-form-label text-end"></label>
-                                    <input type="text" name="tags" id="tags" class="form-control col" readonly/>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label for="details" class="col-sm-2 col-form-label text-end fw-bold" >상세정보</label>
-                                    <textarea name="details" id="details" class="form-control col details" rows="5" placeholder="생략 가능"></textarea>
+                                    <label class="col-sm-2 col-form-label text-end fw-bold">유의사항</label>
+                                    <label class="col">
+                                        파일명은 반드시 영어 혹은 중복되지 않는 숫자로 넣어주세요 5자 이상<br>
+                                        이미지 사이즈는 가로 768, 세로 1024로 해주세요.<br>
+                                        사이즈가 안 맞으면 자동으로 768*1024로 변경됩니다.(비율이 안 맞을 수 있음!)
+                                    </label>
                                 </div>
                                 <!-- Uppy Dashboard -->
                                 <div class="mb-3 row">
-                                    <label class="col-sm-2"></label>
-                                    <div class="fileUploadContent col"></div>
+                                    <label class="col-sm-1"></label>
+                                    <div class="col fileUploadContent"></div>
                                 </div>
 
                                 <!-- button design -->
@@ -103,6 +101,7 @@
     </div>
     
 {% endblock content %}
+<!-- Product End -->
 
 {% block jsv %}
 <script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
@@ -116,9 +115,8 @@
     
     var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger ,
                                 meta: {
-                                    name: clothesName,
-                                    tag: tag,
-                                    details: details,
+                                    name: itemName,
+                                    type: itemtype,
                                 },
                                 locale : Uppy.locales.ko_KR,
     })
@@ -127,8 +125,8 @@
             id: 'Dashboard',
             target: '.fileUploadContent',
             inline: true,
-            height: 800,
-            width: 1000,
+            height: 500,
+            width: 1100,
             metaFields: [ //이미지 수정용 metaFields
                 { id: 'name', name: 'Name', placeholder: 'file name' },
                 { id: 'caption', name: 'Caption', placeholder: 'add description' },
@@ -141,7 +139,7 @@
         })
 
         .use(Uppy.Form, { 
-                        target: '#clothesInfo',
+                        target: '#itemInfo',
                         getMetaFromForm: true,
                         addResultToForm: true,
                         //triggerUploadOnSubmit: true, //Uppy가 업로드/인코딩을 완료한 후 양식을 제출할지 여부를 구성합니다(부울, 기본값: false).
@@ -164,9 +162,22 @@
         })
 
         .use(Uppy.ImageEditor, { target: Uppy.Dashboard })
-        .use(Uppy.Webcam, { target: Uppy.Dashboard })
-  
+        
+        
 
+        // All remote services like Instagram and Google Drive in one package
+        /*
+        .use(Uppy.RemoteSources, {
+            // You can manually specify `sources` here, by default all available are included. 
+            // See docs: https://uppy.io/docs/remote-sources/#sources.
+            companionUrl: COMPANION_URL,
+            companionAllowedHosts: COMPANION_ALLOWED_HOSTS,
+            sources: ['Instagram', 'GoogleDrive', 'Facebook', 'OneDrive', 'Url'],
+        })
+        .use(Uppy.Webcam, { target: Uppy.Dashboard })
+        */
+
+        
     uppy.upload().then((result) => {
         console.info('Successful uploads:', result.successful);
     
@@ -178,12 +189,12 @@
         }
     });
         
-    document.getElementById('clothesInfo').addEventListener('keydown', function(event) {
-        if (event.keyCode === 13) {
-            event.preventDefault(); // Enter 키 이벤트 기본 동작 중지
-        }
-    });
-    
+    document.getElementById('itemInfo').addEventListener('keydown', function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Enter 키 이벤트 기본 동작 중지
+            }
+        });
+        
     document.getElementById('btn-submit').addEventListener('click', () => {
         validationData();
         
@@ -191,88 +202,67 @@
             uppy.upload();
             document.getElementById('btn-submit').hidden=true;
         }
-        
-        setTimeout(function() {
-            my_form.submit();
-            }, 3000);
-            return false;
-    }); 
+    });
 
-
-    document.getElementById("clothesInfo").onsubmit = function() {
+    document.getElementById("itemInfo").onsubmit = function() {
         return false;
     }
+
     // ===== form 유효성 테스트 =====
     var validationData_value = false;
-    var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
-
+    var submitform = document.getElementById("itemInfo"); // form을 sumitform 변수에 저장
+    
+    const Toast = Swal.mixin({ //팝업창
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      
     function validationData(){
         const files = uppy.getFiles();
-        if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
-            alert("이름을 입력하지 않았습니다."); 
+        console.log(files == "");
+        if($('#itemName').val() == "" || $('#itemName').val() == "none" || $('#itemName').val() == null){ // input form이 비어있으면
+            Toast.fire({
+                icon: 'error',
+                title: '이름을 선택하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
             validationData_value= false;
-        }else{ // 사진이 있으면?
-            alert("등록 완료!")
+        }else if(files == "" || files == null){ // 사진이 없으면
+            Toast.fire({
+                icon: 'error',
+                title: '이미지가 없습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+            validationData_value= false;
+        }else if(files != ""){ // 사진이 있으면?
             validationData_value= true;
-            setTimeout(function() {
-                submitform.submit();
-                }, 1500);
+            uppy.on('complete', (result) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '업로드 성공!',
+                    text: '잠시 후 내 옷장으로 돌아갑니다',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        title: 'jamsil',
+                        container: 'jamsil',
+                    }
+                  });
+                // 파일 업로드가 완료되면 실행되는 콜백 함수
+                setTimeout(() => {
+                    submitform.submit(); // 폼 제출
+                }, 3000)
+            });
         }
     }
 </script>
 <script>
-    function addTag(){ //유효성 검사 + 엔터 누르면 tag label에 추가시키는 코드
-        var value = $('#tag').val();
-        var valuelist = $('#tags').val();
-        var tagarea = document.getElementsByClassName("tag_area")[0];
-        var reg = /[\s\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-        var tagvalue = value.replace(reg, "");
-    
-        if (value===''|| value==null || value ==false){
-            alert("추가할 tag를 입력해주세요.");
-        }else{
-            if (valuelist==''){
-                $('#tags').val('#' + tagvalue); // value 삽입하는 코드
-            }
-            else{
-                $('#tags').val(valuelist+', #'+tagvalue); // value 삽입하는 코드
-            }
-            //버튼 삽입
-            const btnElement = document.createElement('button');
-            btnElement.type = "button";
-            btnElement.classList.add("tag_btn");
-            btnElement.innerHTML = '<span class="tag_text">#' + tagvalue + '</span><i class="fa-sharp fa-solid fa-xmark tag_delete"></i>';
-            tagarea.appendChild(btnElement);
-    
-            const cnt_tag = document.getElementsByClassName("tag_delete").length -1
-            document.getElementsByClassName("tag_delete")[cnt_tag].addEventListener("click", deleteTag);
-            
-            // 디자인
-            document.getElementsByClassName('tag_btn')[cnt_tag].style.borderRadius = '30px';
-            document.getElementsByClassName('tag_btn')[cnt_tag].style.border = '1px solid gray';
-            document.getElementsByClassName('tag_btn')[cnt_tag].style.marginRight = '15px';
-            document.getElementsByClassName('tag_btn')[cnt_tag].style.marginTop = '10px';
-            document.getElementsByClassName('tag_btn')[cnt_tag].style.padding = '10px';
-            document.getElementsByClassName('tag_delete')[cnt_tag].style.marginLeft = '10px';
-            
-        $('#tag').val('');
-        }
-    }
 
-    function deleteTag(){
-        var tags_list = document.getElementById('tags').value.split(",");
-        var delete_tag = this.previousSibling.textContent;
-        var delete_num = tags_list.indexOf(delete_tag)
-        
-        tags_list = tags_list.splice(delete_num-1,1)
-
-        document.getElementById('tags').value = tags_list.join(',');
-        this.parentNode.remove();
-    
-    }
-
-    window.onload=function(){
-        document.getElementById("btn_addtag").addEventListener("click", addTag);
-    }
 </script>
 {% endblock jsv %}

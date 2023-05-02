@@ -15,7 +15,7 @@
 {% block content %}
     <!-- Product Start -->
     <div class="container-xxl py-5">
-        <form method="POST" action="{% url 'virtual_fit_photo_result' %}">
+        <form method="POST" action="{% url 'virtual_fit_photo_result' user.first_name %}">
         <div class="container">
             <!-- product Header Start -->
             <div class="row g-0 gx-5 align-items-end">
@@ -29,8 +29,14 @@
                 <div class="col-lg-6">
                     <div class="btn-container " name="btn-container">
                         <div class="d-inline p-2">
-                            <button type="submit" class="btn-submit" style="width:250px; height:50px; font-size: 15px;" float:right;>
-                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >가상피팅 결과 확인하기</p>
+                            <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right; onclick="location.href='{% url 'virtual_fit_upload' user.first_name%}'">
+                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >추가하기</p>
+                            </button>
+                            <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right; onclick="location.href='{% url 'virtual_fit_upload' user.first_name%}'">
+                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >삭제하기</p>
+                            </button>
+                            <button type="submit" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right;>
+                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >결과 확인</p>
                             </button>
                         </div>
                     </div>

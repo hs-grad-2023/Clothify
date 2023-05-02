@@ -1,3 +1,4 @@
+import shutil
 from sqlite3 import IntegrityError
 import sqlite3
 import sys
@@ -36,6 +37,7 @@ from cvzone.PoseModule import PoseDetector
 import os
 import numpy as np
 import datetime, time, pygame
+from muapp.viton import clothmask
 
 User = get_user_model()
 
@@ -483,8 +485,11 @@ def like2(request):
    
 @login_required(login_url='login')
 def virfit(request):
+    
     user = request.user
+    
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
     cpath = os.path.join(base_dir, "muapp", "VirtualFitting", "Resources")
 
     pygame.mixer.init()
@@ -819,6 +824,7 @@ def virfit(request):
             
 
         cv2.imshow("Virtual Fitting", img)
+
         key = cv2.waitKey(1)
 
         if key == ord('q'):
@@ -827,10 +833,11 @@ def virfit(request):
     cap.release()
     cv2.destroyAllWindows()
 
-    return redirect('virtual_fit', user.first_name)
+    return redirect('virtual_fit_video', user.first_name)
 
-def virtual_fit_photo(request):
-        
+@login_required(login_url='login')
+def virtual_fit_photo(request,username):
+    user = request.user
     model_dataset = viton_upload_model.objects.all()
     model_paginator = Paginator(model_dataset, 20)
     model_page = request.GET.get('mpage')
@@ -848,13 +855,12 @@ def virtual_fit_photo(request):
     }
     return render(request, "virtual_fit_photo.html", result)
 
-def virtual_fit_photo_result(request):
+@login_required(login_url='login')
+def virtual_fit_photo_result(request,username):
+    user = request.user
     if request.method == 'POST':
         selected_model = request.POST.getlist('model')
         selected_cloth = request.POST.getlist('cloth')
-
-        print(selected_model) # ['00017_00.jpg']
-        print(selected_cloth) # ['00013_00.jpg']
 
         result_vition = viton_upload_result.objects.all() 
         q_list=[]
@@ -862,17 +868,17 @@ def virtual_fit_photo_result(request):
         for model in selected_model:
             for cloth in selected_cloth:
                 result_name = model[:5] + '_' + cloth[:5] + '_00.jpg'
-                print(result_name)
                 filter = result_vition.filter(name__exact=result_name)
                 q_list.append(filter)
 
         result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
-        print(result_vition)
-        result = {'result_vition':result_vition}
+        result = {'result_vition':result_vition,
+                  "user":user,
+                  }
 
         return render(request, "virtual_fit_photo_result.html",result)
-    
-    return render(request, "virtual_fit_photo_result.html")
+    else:
+        return redirect('virtual_fit_photo', username=user.first_name)
 
 
 @login_required(login_url='login')
@@ -883,27 +889,55 @@ def virtual_fit_video(request, username):
     return render(request,"virtual_fit_video.html",{"user":user})
 
 @login_required(login_url='login')
-def virtual_fit_upload(request, username):
-    user = get_object_or_404(User, first_name=username)
+def virtual_fit_upload(request,username):
+    user = request.user
     if user != request.user:
-        return redirect(f'/virtual_fit_upload/{request.user.first_name}')
+        return HttpResponseForbidden()
     if request.method == 'POST':
         if request.FILES.getlist('imgfile'):
-            for imgfile in request.FILES.getlist('imgfile'):
-                try:
-                    new_clothes = clothes.objects.create(
-                        uploadUser_id=request.user.id,
-                        uploadUserName=request.user.username,
-                        type1=request.POST.get('type1'),
-                        type2=request.POST.get('type2'),
-                        tag=request.POST.get('tags'),
-                        name=request.POST.get('clothesName'),
-                        details=request.POST.get('details'),
+            getType = request.POST.get('itemtype')
+            print(getType)
+            if getType == '옷':
+                for imgfile in request.FILES.getlist('imgfile'):
+                    print("image : ",imgfile)
+                    # 조정된 이미지 저장
+                    item = viton_upload_cloth.objects.create(
+                        name=request.POST.get('itemName'),
+                        image=imgfile,
+                        uploadUser=request.user.username,
                     )
-                except:
-                    print()
-                new_clothes.save()
+                    item.save()
 
-        return redirect('view_closet', username=user.first_name)
+                    img_name = imgfile.name.split('.')
+                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/cloth/{}'.format(imgfile.name)
+                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(imgfile.name)
+                    # if img_name[1]=='jpg':
+                    #     rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(img_name[0]+'.jpeg')
+                    # else:
+                    #     rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(imgfile.name)
+
+                    shutil.copyfile(rcpath, wcpath)
+
+
+                    clothmask.cloth_mask(wcpath)
+                    # try:
+                    # except:
+                    #     print('업로드 실패')
+            elif getType == '모델':
+                for imgfile in request.FILES.getlist('imgfile'):
+                    try:
+                        item = viton_upload_model.objects.create(
+                            name=request.POST.get('itemName'),
+                            image = imgfile,
+                            uploadUser=request.user.username,
+                        )
+                        item.save()
+                    except:
+                        print('업로드 실패')
+
+        return redirect('virtual_fit_photo', username=user.first_name)
+        #return render(request,"virtual_fit_upload.html", {"user":user})
     else: 
-        return render(request,"virtual_fit_upload.html",{"user":user})
+        print("post X")
+        return render(request,"virtual_fit_upload.html", {"user":user})
+

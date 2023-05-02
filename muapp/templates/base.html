@@ -73,7 +73,7 @@
                         <a href="#" class="nav-link dropdown-toggle jamsil" data-bs-toggle="dropdown">가상피팅</a>             
                         <div class="dropdown-menu m-0" style="top: 60px;">
                             <a href="{% url 'virtual_fit_video' user.first_name %}" class="dropdown-item nav-link jamsil">가상 피팅(동영상)</a>
-                            <a href="{% url 'virtual_fit_photo' %}" class="dropdown-item nav-link jamsil">가상 피팅(사진)</a>
+                            <a href="{% url 'virtual_fit_photo' user.first_name %}" class="dropdown-item nav-link jamsil">가상 피팅(사진)</a>
                         </div>
                     </div>
                     <a href="{% url 'view_closet' user.first_name %}" class="nav-item nav-link jamsil jamsil">내 옷장</a>
@@ -140,7 +140,7 @@
                     <h4 class="text-light mb-4 jamsil">바로가기</h4>
                     {% if user.is_authenticated %}
                     <a class="btn btn-link jamsil" href="{% url 'virtual_fit_video' user.first_name %}">가상 피팅(동영상)</a>
-                    <a class="btn btn-link jamsil" href="{% url 'virtual_fit_photo'%}">가상 피팅(사진)</a>
+                    <a class="btn btn-link jamsil" href="{% url 'virtual_fit_photo' user.first_name %}">가상 피팅(사진)</a>
                     <a class="btn btn-link jamsil" href="{% url 'view_closet' user.first_name %}">옷장 관리</a>
                     <a class="btn btn-link jamsil" href="{% url 'codibook' user.first_name %}">코디 추천</a>
                     {% else %}

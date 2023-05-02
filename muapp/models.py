@@ -5,6 +5,10 @@ from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django.utils import timezone
 from django.core.mail import send_mail
+from django_resized import ResizedImageField
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 class clothes(models.Model):
@@ -69,14 +73,104 @@ class Comment(models.Model):
         return f'{self.author} - {self.post} - {self.text}'
 
 
+
+class ResizedImageField(models.ImageField):
+    def __init__(self, *args, size=None, **kwargs):
+        self.size = size
+        super().__init__(*args, **kwargs)
+
+    def _resize_image(self, img):
+        if self.size:
+            img.thumbnail(self.size)
+        return img
+
+    def to_python(self, value):
+        if isinstance(value, Image.Image):
+            return value
+
+        value = super().to_python(value)
+        if value is None:
+            return None
+
+        with open(value.path, 'rb') as f:
+            img = Image.open(BytesIO(f.read()))
+            img = self._resize_image(img)
+
+        # 이미지를 메모리에 저장
+        img_file = BytesIO()
+        img.save(img_file, 'JPEG')
+        img_file.seek(0)
+
+        return InMemoryUploadedFile(
+            img_file, None, value.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
+
 class viton_upload_cloth(models.Model):
-    name = models.CharField(max_length=50)
-    image = models.FileField(upload_to='datasets/cloth')
+    name = models.CharField(max_length=100)
+    image = ResizedImageField(size=[768, 1024], upload_to='datasets/cloth')
+    uploadUser = models.CharField(max_length=30)
+
+    class Meta:
+        ordering = ['-id']
+
+    def save(self, *args, **kwargs):
+        # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
+        if not self.pk or self.image.width > self.image.field.size[0]:
+            # 업로드된 이미지를 메모리에서 읽어와서 크기를 조정
+            with BytesIO(self.image.read()) as f:
+                img = Image.open(f)
+                img = img.resize(self.image.field.size)
+                img_file = BytesIO()
+                img.save(img_file, 'JPEG')
+                img_file.seek(0)
+
+            # InMemoryUploadedFile로 변환하여 저장
+            self.image = InMemoryUploadedFile(
+                img_file, None, self.image.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
+
+        super().save(*args, **kwargs)
 
 class viton_upload_model(models.Model):
     name = models.CharField(max_length=50)
-    image = models.FileField(upload_to='datasets/image')
+    image = ResizedImageField(size=[768, 1024], upload_to='datasets/image')
+    uploadUser = models.CharField(max_length=50, default='sample')
+    class Meta:
+        ordering = ['-id']
+    def save(self, *args, **kwargs):
+        # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
+        if not self.pk or self.image.width > self.image.field.size[0]:
+            # 업로드된 이미지를 메모리에서 읽어와서 크기를 조정
+            with BytesIO(self.image.read()) as f:
+                img = Image.open(f)
+                img = img.resize(self.image.field.size)
+                img_file = BytesIO()
+                img.save(img_file, 'JPEG')
+                img_file.seek(0)
+
+            # InMemoryUploadedFile로 변환하여 저장
+            self.image = InMemoryUploadedFile(
+                img_file, None, self.image.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
+
+        super().save(*args, **kwargs)
 
 class viton_upload_result(models.Model):
     name = models.CharField(max_length=50)
-    image = models.FileField(upload_to='datasets/results')
+    image = ResizedImageField(size=[768, 1024], upload_to='datasets/results')
+    uploadUser = models.CharField(max_length=50, default='sample')
+    class Meta:
+        ordering = ['-id']
+    def save(self, *args, **kwargs):
+        # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
+        if not self.pk or self.image.width > self.image.field.size[0]:
+            # 업로드된 이미지를 메모리에서 읽어와서 크기를 조정
+            with BytesIO(self.image.read()) as f:
+                img = Image.open(f)
+                img = img.resize(self.image.field.size)
+                img_file = BytesIO()
+                img.save(img_file, 'JPEG')
+                img_file.seek(0)
+
+            # InMemoryUploadedFile로 변환하여 저장
+            self.image = InMemoryUploadedFile(
+                img_file, None, self.image.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
+
+        super().save(*args, **kwargs)
