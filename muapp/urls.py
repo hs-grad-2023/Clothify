@@ -53,6 +53,7 @@ urlpatterns = [
     path('like/',views.like, name="likes"),
     path('like2/',views.like2, name="likes2"),
     path('virfit/', views.virfit, name='virfit'),
+    path('userlike/', views.userlike, name='userlike'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

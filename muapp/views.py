@@ -329,7 +329,7 @@ def logins(request):
             if 'next' in request.POST:
                 next_string = request.POST.get('next')
                 result = next_string.split('/')[1]
-                if result == 'modify':
+                if result == 'modify' or result == 'userlike':
                     return redirect(f'/{result}/')
                 elif result == 'usercodi':
                     return redirect(request.POST.get('next'))
@@ -491,6 +491,7 @@ def virfit(request):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
     cpath = os.path.join(base_dir, "muapp", "VirtualFitting", "Resources")
+    dpath = os.path.join(base_dir, "_media", "imgfiles")
 
     pygame.mixer.init()
     shutter_sound = pygame.mixer.Sound(os.path.join(cpath, "shutter.mp3"))
@@ -509,7 +510,7 @@ def virfit(request):
     listPants = os.listdir(pantsFolderPath)
 
     fixedRatio = 320 / 190 #셔츠의 넓이 262 / lm11에서 12의 사이 넓이
-    shirtsRatioHeight = 500 / 440 #이미지 사이즈 비율 581/440
+    shirtsRatioHeight = 500 / 440 #이미지 사이즈 비율 581/440 높이면 작아짐
 
     fixedRatio2 = 270 / 140 #셔츠의 넓이 262 / lm11에서 12의 사이 넓이
     pantsRatioHeight = 1000 / 440 #이미지 사이즈 비율 581/440
@@ -518,15 +519,19 @@ def virfit(request):
     imageNumber2 = 0
 
     cameraButton = cv2.imdecode(np.fromfile(os.path.join(cpath, "camera.png"), np.uint8), cv2.IMREAD_UNCHANGED)
+    shirtsButton = cv2.imdecode(np.fromfile(os.path.join(cpath, "shirts.png"), np.uint8), cv2.IMREAD_UNCHANGED)
+    pantsButton = cv2.imdecode(np.fromfile(os.path.join(cpath, "pants.png"), np.uint8), cv2.IMREAD_UNCHANGED)
     
     imgButtonRight = cv2.imdecode(np.fromfile(os.path.join(cpath, "button.png"), np.uint8), cv2.IMREAD_UNCHANGED)
     imgButtonLeft = cv2.flip(imgButtonRight, 1)
+    counterButton = 0
     counterRight = 0
     counterLeft = 0
     counterRight2 = 0
     counterLeft2 = 0
     counterLeft3 = 0
-    selectionSpeed = 10
+    counterRight3 = 0
+    selectionSpeed = 20
     distance_threshold = 673
     while True:
         success, img = cap.read()
@@ -553,6 +558,7 @@ def virfit(request):
             imgPant = cv2.imdecode(np.fromfile(os.path.join(cpath, os.path.join(pantsFolderPath, listPants[imageNumber2])), np.uint8), cv2.IMREAD_UNCHANGED)
 
 
+
             widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
             widthOfShirt = max(widthOfShirt, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
             imgShirt = cv2.resize(imgShirt, (widthOfShirt, int(widthOfShirt * shirtsRatioHeight)))
@@ -561,8 +567,8 @@ def virfit(request):
             widthOfPant = max(widthOfPant, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
             imgPant = cv2.resize(imgPant, (widthOfPant, int(widthOfPant * pantsRatioHeight)))
 
-            currentScale = (lm11[0] - lm12[0]) / 150 #옷 위치 190
-            offset = int(52 * currentScale), int(48 * currentScale) #좌우 44, 48 *30/48
+            currentScale = (lm11[0] - lm12[0]) / 145 #옷 위치 190
+            offset = int(50 * currentScale), int(48 * currentScale) #좌우 44, 48 *30/48
 
             currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
             offset2 = int(75 * currentScale2), int(80 * currentScale2) #좌우 44, 48 *30/48 x, y
@@ -646,8 +652,8 @@ def virfit(request):
                             widthOfPant = max(widthOfPant, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
                             imgPant = cv2.resize(imgPant, (widthOfPant, int(widthOfPant * pantsRatioHeight)))
 
-                            currentScale = (lm11[0] - lm12[0]) / 150 #옷 위치 190
-                            offset = int(52 * currentScale), int(48 * currentScale) #좌우 44, 48 *30/48
+                            currentScale = (lm11[0] - lm12[0]) / 145 #옷 위치 190 내리면 올라감
+                            offset = int(50 * currentScale), int(48 * currentScale) #좌우 44, 48 *30/48 왼쪽꺼 내리면 오른쪽으로
 
                             currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
                             offset2 = int(75 * currentScale2), int(80 * currentScale2) #좌우 44, 48 *30/48 x, y
@@ -723,13 +729,30 @@ def virfit(request):
                     cv2.waitKey(200)
                     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
-                    new_img_name = os.path.join(cpath, f"Picture\capture_{timestamp}.png")
+                    new_img_name = os.path.join(dpath, f"VirtualFitting\capture_{timestamp}.png")
                     extension = os.path.splitext(new_img_name)[1]
                     result, encoded_img = cv2.imencode(extension, img)
 
                     if result:
                         with open(new_img_name, mode='w+b') as f:
                             encoded_img.tofile(f)
+                            new_clothes = clothes.objects.create(
+                            uploadUser_id=user.id,
+                            uploadUserName=user.username,
+                            type1='코디',
+                            type2='가상피팅',
+                            name=f'{user.username}-{timestamp}',
+                            ucodi=False,
+                            tag='#가상피팅',
+                            groupID=get_random_string(length=10, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789'),
+                        )
+                            new_clothes.save()
+                            
+                            new_photo = photos.objects.create(
+                                    groupID_id=new_clothes.groupID,
+                                    imgfile = f'imgfiles\VirtualFitting\capture_{timestamp}.png',
+                            )
+                            new_photo.save()
 
 
                     print("Capture saved")
@@ -765,61 +788,80 @@ def virfit(request):
 
             img = cvzone.overlayPNG(img, cameraButton, (1074, 93))
 
+            if counterButton == 0:
+                img = cvzone.overlayPNG(img, shirtsButton, (72, 93))
+            elif counterButton == 1:
+                img = cvzone.overlayPNG(img, pantsButton, (72, 93))
+
             img = cvzone.overlayPNG(img, imgButtonRight, (1074, 293))
             img = cvzone.overlayPNG(img, imgButtonLeft, (72, 293))
 
-            img = cvzone.overlayPNG(img, imgButtonRight, (1074, 493))
-            img = cvzone.overlayPNG(img, imgButtonLeft, (72, 493))
+            # img = cvzone.overlayPNG(img, imgButtonRight, (1074, 493))
+            # img = cvzone.overlayPNG(img, imgButtonLeft, (72, 493))
 
-            if lmList[16][1] < 200 and lmList[16][1] > 100 and lmList[16][2] < 400 and lmList[16][2] > 300:
-                counterRight += 1
-                cv2.ellipse(img, (139, 360), (66, 66), 0, 0, 
-                            counterRight * selectionSpeed, (0, 255, 0), 20)
-                if counterRight * selectionSpeed > 360:
+            
+            if lmList[16][1] < 200 and lmList[16][1] > 100 and lmList[16][2] < 200 and lmList[16][2] > 100:
+                counterRight3 += 1
+                cv2.ellipse(img, (134, 160), (76, 76), 0, 0, 
+                            counterRight3 * selectionSpeed, (0, 255, 0), 20)
+                if counterRight3 * selectionSpeed > 360:
+                    counterRight3 = 0
+                    if counterButton == 0:
+                        counterButton = 1
+                    else:
+                        counterButton = 0
+
+            if counterButton == 0:
+                if lmList[16][1] < 200 and lmList[16][1] > 100 and lmList[16][2] < 400 and lmList[16][2] > 300:
+                    counterRight += 1
+                    cv2.ellipse(img, (139, 360), (66, 66), 0, 0, 
+                                counterRight * selectionSpeed, (0, 255, 0), 20)
+                    if counterRight * selectionSpeed > 360:
+                        counterRight = 0
+                        if imageNumber < len(listShirts)-1:
+                            imageNumber += 1
+                        else:
+                            imageNumber = 0
+
+                elif lmList[15][1] > 1050 and lmList[15][1] < 1200 and lmList[15][2] < 400 and lmList[15][2] > 300:
+                    counterLeft += 1
+                    cv2.ellipse(img, (1138, 360), (66, 66), 0, 0, 
+                                counterLeft * selectionSpeed, (0, 255, 0), 20)
+                    if counterLeft * selectionSpeed > 360:
+                        counterLeft = 0
+                        if imageNumber > 0:
+                            imageNumber -= 1
+                        else:
+                            imageNumber = len(listShirts)-1
+                else:
                     counterRight = 0
-                    if imageNumber < len(listShirts)-1:
-                        imageNumber += 1
-                    else:
-                        imageNumber = 0
-
-            elif lmList[15][1] > 1050 and lmList[15][1] < 1200 and lmList[15][2] < 400 and lmList[15][2] > 300:
-                counterLeft += 1
-                cv2.ellipse(img, (1138, 360), (66, 66), 0, 0, 
-                            counterLeft * selectionSpeed, (0, 255, 0), 20)
-                if counterLeft * selectionSpeed > 360:
                     counterLeft = 0
-                    if imageNumber > 0:
-                        imageNumber -= 1
-                    else:
-                        imageNumber = len(listShirts)-1
+            
+            elif counterButton == 1:
+                if lmList[16][1] < 200 and lmList[16][1] > 100 and lmList[16][2] < 400 and lmList[16][2] > 300:
+                    counterRight2 += 1
+                    cv2.ellipse(img, (139, 360), (66, 66), 0, 0, 
+                                counterRight2 * selectionSpeed, (0, 255, 0), 20)
+                    if counterRight2 * selectionSpeed > 360:
+                        counterRight2 = 0
+                        if imageNumber2 < len(listPants)-1:
+                            imageNumber2 += 1
+                        else:
+                            imageNumber2 = 0
 
-            elif lmList[16][1] < 200 and lmList[16][1] > 100 and lmList[16][2] < 600 and lmList[16][2] > 500:
-                counterRight2 += 1
-                cv2.ellipse(img, (139, 560), (66, 66), 0, 0, 
-                            counterRight2 * selectionSpeed, (0, 255, 0), 20)
-                if counterRight2 * selectionSpeed > 360:
+                elif lmList[15][1] > 1050 and lmList[15][1] < 1200 and lmList[15][2] < 400 and lmList[15][2] > 300:
+                    counterLeft2 += 1
+                    cv2.ellipse(img, (1138, 360), (66, 66), 0, 0, 
+                                counterLeft2 * selectionSpeed, (0, 255, 0), 20)
+                    if counterLeft2 * selectionSpeed > 360:
+                        counterLeft2 = 0
+                        if imageNumber2 > 0:
+                            imageNumber2 -= 1
+                        else:
+                            imageNumber2 = len(listPants)-1
+                else:
                     counterRight2 = 0
-                    if imageNumber2 < len(listPants)-1:
-                        imageNumber2 += 1
-                    else:
-                        imageNumber2 = 0
-
-            elif lmList[15][1] > 1050 and lmList[15][1] < 1200 and lmList[15][2] < 600 and lmList[15][2] > 500:
-                counterLeft2 += 1
-                cv2.ellipse(img, (1138, 560), (66, 66), 0, 0, 
-                            counterLeft2 * selectionSpeed, (0, 255, 0), 20)
-                if counterLeft2 * selectionSpeed > 360:
                     counterLeft2 = 0
-                    if imageNumber2 > 0:
-                        imageNumber2 -= 1
-                    else:
-                        imageNumber2 = len(listPants)-1
-            else:
-                counterRight = 0
-                counterLeft = 0
-
-                counterRight2 = 0
-                counterLeft2 = 0
 
             
 
@@ -940,4 +982,19 @@ def virtual_fit_upload(request,username):
     else: 
         print("post X")
         return render(request,"virtual_fit_upload.html", {"user":user})
+
+@login_required(login_url='login')
+def userlike(request):
+    user = request.user
+    clothesobject = user.likes.all()
+    paginator = Paginator(clothesobject, 9)
+    page = request.GET.get('page')
+    clothesobject = paginator.get_page(page)
+    comments = Comment.objects.all()
+    
+    musinsa = user.likes2.all()
+    paginator = Paginator(musinsa, 9)
+    page = request.GET.get('page')
+    musinsa = paginator.get_page(page)
+    return render(request,"userlike.html",{'cloth':clothesobject, 'comments': comments, 'musinsa': musinsa,})
 
