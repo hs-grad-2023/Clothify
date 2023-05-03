@@ -38,6 +38,8 @@ import os
 import numpy as np
 import datetime, time, pygame
 from muapp.viton import clothmask
+import re, random
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 User = get_user_model()
 
@@ -906,6 +908,7 @@ def virtual_fit_photo_result(request,username):
 
         result_vition = viton_upload_result.objects.all() 
         q_list=[]
+        testWrite = ''
 
         for model in selected_model:
             for cloth in selected_cloth:
@@ -944,27 +947,53 @@ def virtual_fit_upload(request,username):
                     print("image : ",imgfile)
                     # 조정된 이미지 저장
                     item = viton_upload_cloth.objects.create(
-                        name=request.POST.get('itemName'),
+                        clothesname = request.POST.get('itemName'),
+                        name= imgfile.name,
                         image=imgfile,
                         uploadUser=request.user.username,
                     )
                     item.save()
 
-                    img_name = imgfile.name.split('.')
-                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/cloth/{}'.format(imgfile.name)
+                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth/{}'.format(imgfile.name)
                     rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(imgfile.name)
-                    # if img_name[1]=='jpg':
-                    #     rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(img_name[0]+'.jpeg')
-                    # else:
-                    #     rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(imgfile.name)
-
-                    shutil.copyfile(rcpath, wcpath)
-
+                    shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
 
                     clothmask.cloth_mask(wcpath)
-                    # try:
-                    # except:
-                    #     print('업로드 실패')
+
+                    # 파일 이름 리스트를 저장할 txt 파일 경로 및 이름 지정
+                    file_list_file = 'C:/hs-grad-2023/django/muapp/viton/data/custom/custom_pairs.txt'
+                            
+                    model_all = viton_upload_model.objects.all()
+
+                    with open(file_list_file, 'w') as f:
+                        for model in model_all:
+                            result_name = model.name + ' ' + imgfile.name
+                            f.write(result_name + '\n')
+
+                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
+                    os.chdir('C:/hs-grad-2023/django/muapp/viton')
+                    os.system(
+                        "python C:/hs-grad-2023/django/muapp/viton/custom.py --name output --save_dir C:/hs-grad-2023/django/muapp/viton/data/custom/results")
+                    
+                    # 결과 DB 업로드
+                    result_dir = "C:/hs-grad-2023/django/muapp/viton/data/custom/results/output"
+                    for root, dirs, files in os.walk(result_dir):
+                        for result in files:
+                            # 이미지 파일 경로 생성
+                            result_path = os.path.join(root, result)
+
+                            with open(result_path, 'rb') as f:
+                                file = SimpleUploadedFile(f.name, f.read())
+
+                            # 모델 인스턴스 생성 및 저장
+                            values = re.split('[_|.]',result)
+                            result = viton_upload_result(name=result, image=file, model_id = (values[0]+'_00.'+values[3]), cloth_id = (values[1]+'_00.'+values[3]))
+                            result.save()
+                    
+                    # 업로드 완료한 결과 폴더 삭제
+                    shutil.rmtree(result_dir)
+
+
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):
                     try:
@@ -980,7 +1009,6 @@ def virtual_fit_upload(request,username):
         return redirect('virtual_fit_photo', username=user.first_name)
         #return render(request,"virtual_fit_upload.html", {"user":user})
     else: 
-        print("post X")
         return render(request,"virtual_fit_upload.html", {"user":user})
 
 @login_required(login_url='login')

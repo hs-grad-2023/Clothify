@@ -1,4 +1,4 @@
-import datetime
+import datetime, random, os
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -9,7 +9,6 @@ from django_resized import ResizedImageField
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
 
 class clothes(models.Model):
     uploadUser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -104,13 +103,20 @@ class ResizedImageField(models.ImageField):
         return InMemoryUploadedFile(
             img_file, None, value.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
 
-class viton_upload_cloth(models.Model):
-    name = models.CharField(max_length=100)
-    image = ResizedImageField(size=[768, 1024], upload_to='datasets/cloth')
-    uploadUser = models.CharField(max_length=30)
+def random_name(instance, filename):
 
+    filename = format(random.randint(0,99999),"05d")
+    # 파일이 저장될 경로를 지정
+    return os.path.join("datasets/cloth", filename)
+
+class viton_upload_cloth(models.Model):
+    clothesname = models.CharField(max_length=100,default="sample")
+    name = models.CharField(max_length=100,unique=True,primary_key=True)
+    image = ResizedImageField(size=[768, 1024], upload_to=random_name)
+    uploadUser = models.CharField(max_length=30)
+    uploadDate = models.DateTimeField(default=timezone.now)
     class Meta:
-        ordering = ['-id']
+        ordering = ['-uploadDate']
 
     def save(self, *args, **kwargs):
         # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
@@ -130,11 +136,12 @@ class viton_upload_cloth(models.Model):
         super().save(*args, **kwargs)
 
 class viton_upload_model(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True,primary_key=True)
     image = ResizedImageField(size=[768, 1024], upload_to='datasets/image')
     uploadUser = models.CharField(max_length=50, default='sample')
+    uploadDate = models.DateTimeField(default=timezone.now)
     class Meta:
-        ordering = ['-id']
+        ordering = ['-uploadDate']
     def save(self, *args, **kwargs):
         # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
         if not self.pk or self.image.width > self.image.field.size[0]:
@@ -153,7 +160,9 @@ class viton_upload_model(models.Model):
         super().save(*args, **kwargs)
 
 class viton_upload_result(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
+    model = models.ForeignKey("viton_upload_model", on_delete=models.CASCADE)
+    cloth = models.ForeignKey("viton_upload_cloth", on_delete=models.CASCADE)
     image = ResizedImageField(size=[768, 1024], upload_to='datasets/results')
     uploadUser = models.CharField(max_length=50, default='sample')
     class Meta:

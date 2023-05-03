@@ -29,7 +29,7 @@ from torch.nn import functional as F
 import torchgeometry as tgm
 
 from datasets import VITONDataset, VITONDataLoader
-from networks import SegGenerator, GMM, ALIASGenerator
+from network import SegGenerator, GMM, ALIASGenerator
 from utils import gen_noise, load_checkpoint, save_images
 
 
@@ -43,7 +43,7 @@ def get_opt():
     parser.add_argument('--load_width', type=int, default=768)
     parser.add_argument('--shuffle', action='store_true')
 
-    parser.add_argument('--dataset_dir', type=str, default='./datasets/')
+    parser.add_argument('--dataset_dir', type=str, default='./data')
     parser.add_argument('--dataset_mode', type=str, default='custom') #dataset 내부 폴더 이름
     parser.add_argument('--dataset_list', type=str, default='custom_pairs.txt')
     parser.add_argument('--checkpoint_dir', type=str, default='./checkpoints/')

@@ -23,7 +23,7 @@ class VITONDataset(data.Dataset):
         # load data list
         img_names = []
         c_names = []
-        with open(osp.join(opt.dataset_dir, opt.dataset_list), 'r') as f:
+        with open(osp.join(opt.dataset_dir, opt.dataset_mode, opt.dataset_list), 'r') as f:
             for line in f.readlines():
                 img_name, c_name = line.strip().split()
                 img_names.append(img_name)

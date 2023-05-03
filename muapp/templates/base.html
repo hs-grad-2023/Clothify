@@ -69,13 +69,7 @@
                     {% endblock nav %}
                     <a href="{% url 'usercodi' %}" class="nav-item nav-link jamsil{% if 'usercodi' in request.path %} active{% endif %}">옷 자랑</a>
                     {% if user.is_authenticated %}
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle jamsil" data-bs-toggle="dropdown">가상피팅</a>             
-                        <div class="dropdown-menu m-0" style="top: 60px;">
-                            <a href="{% url 'virtual_fit_video' user.first_name %}" class="dropdown-item nav-link jamsil">가상 피팅(동영상)</a>
-                            <a href="{% url 'virtual_fit_photo' user.first_name %}" class="dropdown-item nav-link jamsil">가상 피팅(사진)</a>
-                        </div>
-                    </div>
+                    <a href="{% url 'virtual_fit_video' user.first_name %}" class="dropdown-item nav-link jamsil">가상 피팅</a>
                     <a href="{% url 'view_closet' user.first_name %}" class="nav-item nav-link jamsil jamsil">내 옷장</a>
                     <a href="{% url 'codibook' user.first_name %}" class="nav-item nav-link jamsil jamsil">코디북</a>
                     <a href="{% url 'mypage' user.first_name %}" class="nav-item nav-link jamsil vis">마이페이지</a>  

@@ -7,11 +7,12 @@ import torch
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 
+# from networks.u2net import U2NET
 from muapp.viton.networks.u2net import U2NET
 device = 'cuda'
 
-image_dir = 'C:/hs-grad-2023/django/muapp/viton/data/cloth'
-result_dir = 'C:/hs-grad-2023/django/muapp/viton/data/cloth-mask'
+image_dir = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth'
+result_dir = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth-mask'
 checkpoint_path = 'C:/hs-grad-2023/django/muapp/viton/checkpoints/cloth_segm_u2net_latest.pth'
 
 def load_checkpoint_mgpu(model, checkpoint_path):
@@ -124,6 +125,8 @@ def original():
         output_img.save(os.path.join(result_dir, image_name[:-4]+'.jpg'))
 
 def cloth_mask(img_dir):
+    image_name = os.path.basename(img_dir)
+
     transforms_list = []
     transforms_list += [transforms.ToTensor()]
     transforms_list += [Normalize_image(0.5, 0.5)]
@@ -136,25 +139,23 @@ def cloth_mask(img_dir):
 
     palette = get_palette(4)
 
-    images_list = sorted(os.listdir(img_dir))
-    for image_name in images_list:
-        img = Image.open(img_dir).convert('RGB')
-        img_size = img.size
-        img = img.resize((768, 768), Image.BICUBIC)
-        image_tensor = transform_rgb(img)
-        image_tensor = torch.unsqueeze(image_tensor, 0)
-        
-        output_tensor = net(image_tensor.to(device))
-        output_tensor = F.log_softmax(output_tensor[0], dim=1)
-        output_tensor = torch.max(output_tensor, dim=1, keepdim=True)[1]
-        output_tensor = torch.squeeze(output_tensor, dim=0)
-        output_tensor = torch.squeeze(output_tensor, dim=0)
-        output_arr = output_tensor.cpu().numpy()
+    img = Image.open(img_dir).convert('RGB')
+    img_size = img.size
+    img = img.resize((768, 768), Image.BICUBIC)
+    image_tensor = transform_rgb(img)
+    image_tensor = torch.unsqueeze(image_tensor, 0)
+    
+    output_tensor = net(image_tensor.to(device))
+    output_tensor = F.log_softmax(output_tensor[0], dim=1)
+    output_tensor = torch.max(output_tensor, dim=1, keepdim=True)[1]
+    output_tensor = torch.squeeze(output_tensor, dim=0)
+    output_tensor = torch.squeeze(output_tensor, dim=0)
+    output_arr = output_tensor.cpu().numpy()
 
-        output_img = Image.fromarray(output_arr.astype('uint8'), mode='L')
-        output_img = output_img.resize(img_size, Image.BICUBIC)
-        
-        output_img.putpalette(palette)
-        output_img = output_img.convert('L')
-        output_img.save(os.path.join(result_dir, image_name[:-4]+'.jpg'))
+    output_img = Image.fromarray(output_arr.astype('uint8'), mode='L')
+    output_img = output_img.resize(img_size, Image.BICUBIC)
+    
+    output_img.putpalette(palette)
+    output_img = output_img.convert('L')
+    output_img.save(os.path.join(result_dir, image_name[:-4]+'.jpg'))
     
