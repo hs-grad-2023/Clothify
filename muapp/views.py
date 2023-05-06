@@ -955,9 +955,10 @@ def virtual_fit_upload(request,username):
                     )
                     item.save()
                     
-                    item_name = item.name
-                    print("item : ",viton_upload_cloth.objects.values('name').first())
-                    '''
+                    name_val = viton_upload_cloth.objects.values('name').first()
+                    item_name = name_val['name']
+                    print("item : ",item_name)
+                    
                     wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth/{}'.format(item_name)
                     rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(item_name)
                     shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
@@ -971,7 +972,7 @@ def virtual_fit_upload(request,username):
 
                     with open(file_list_file, 'w') as f:
                         for model in model_all:
-                            result_name = model.name + ' ' + imgfile.name
+                            result_name = model.name + ' ' + item_name
                             f.write(result_name + '\n')
 
                     # 업로드한 사진 + 모델들 합성해서 결과 만들기
@@ -991,12 +992,23 @@ def virtual_fit_upload(request,username):
 
                             # 모델 인스턴스 생성 및 저장
                             values = re.split('[_|.]',result)
-                            result = viton_upload_result(name=result, image=file, model_id = (values[0]+'_00.'+values[3]), cloth_id = (values[1]+'_00.'+values[3]))
+                            
+                            model_val = viton_upload_model.objects.filter(name__contains=values[0])
+                            cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
+
+                            model_obj = model_val.first()
+                            cloth_obj = cloth_val.first()
+
+                            model_id = model_obj.ID
+                            cloth_id = cloth_obj.ID
+
+
+                            result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
                             result.save()
                     
                     # 업로드 완료한 결과 폴더 삭제
                     shutil.rmtree(result_dir)
-                    '''
+                    
 
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):
