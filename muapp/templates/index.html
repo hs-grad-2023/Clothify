@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="{% url 'index' %}" class="nav-item nav-link active jamsil">Home</a>
-    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+    <a href="{% url 'index' %}" class="dropdown-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="dropdown-item nav-link jamsil">소개</a>
 {% endblock %}
     
 {% block content %}
@@ -244,20 +244,25 @@
 
 
     <!-- Firm Visit Start -->
-    {% if user.is_authenticated %}
-    <div class="container-fluid bg-primary bg-icon mt-3 py-6">
-    {% else %}
+    
     <div class="container-fluid bg-primary bg-icon mt-5 py-6">
-    {% endif %}
+        
         <div class="container">
             <div class="row g-5 align-items-center">
                 <div class="col-md-7 wow fadeIn" data-wow-delay="0.1s">
                     <h1 class="display-5 mb-3 jamsil" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">가상 피팅</h1>
                     <p class="text-white mb-0 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">나에게 맞는 퍼스널 컬러나 옷을 가상으로 입어보세요!</p>
                 </div>
+                {% if user.is_authenticated %}
                 <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
-                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5 jamsil" href="">하러가기</a>
+                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5 jamsil" href="{% url 'virtual_fit_video' user.first_name %}">하러가기</a>
                 </div>
+                {% else %}
+                <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
+                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5 jamsil" href="{% url 'virtual_fit_video' " " %}">로그인 하기</a>
+                </div>
+                {% endif %}
+                
             </div>
         </div>
     </div>

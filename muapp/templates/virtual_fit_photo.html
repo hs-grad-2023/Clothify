@@ -5,8 +5,8 @@
 {% endblock style %}
 
 {% block nav %}
-    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
-    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+    <a href="{% url 'index' %}" class="dropdown-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="dropdown-item nav-link jamsil">소개</a>
 {% endblock %}
 
 {% block closet %}
@@ -14,45 +14,47 @@
 {% endblock closet %}
 {% block content %}
     <!-- Product Start -->
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5 wow fadeIn">
         <form method="POST" action="{% url 'virtual_fit_photo_result' user.first_name %}">
         <div class="container">
             <!-- product Header Start -->
-            <div class="row g-0 gx-5 align-items-end">
-                <div class="col-lg-6">
-                    <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                        <h1 class="display-5 mb-3 jamsil">가상피팅(사진)</h1>
-                        <p class="jamsil">사진으로 옷을 입어봐요!</p>
-                        <p class="jamsil">  모델과 옷을 선택하면 옷 입고 있는 모델이 등장!</p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="btn-container " name="btn-container">
-                        <div class="d-inline p-2">
-                            <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right; onclick="location.href='{% url 'virtual_fit_upload' user.first_name%}'">
-                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >추가하기</p>
-                            </button>
-                            <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right; onclick="location.href='{% url 'virtual_fit_upload' user.first_name%}'">
-                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >삭제하기</p>
-                            </button>
-                            <button type="submit" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right;>
-                                <p id="btnText" class="jamsil" style="padding-top: 15px; " >결과 확인</p>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="text-start text-lg-end wow slideInRight align-items-end" data-wow-delay="0.1s">
-                        <ul class="nav nav-pills d-inline-flex justify-content-end mb-5 jamsil">
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">모델</a>
-                            </li>
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">옷 </a>
-                            </li>
-                        </ul>                        
-                    </div>
+            
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil">가상피팅(사진)</h1>
+                    <p class="jamsil">사진으로 옷을 입어봐요!</p>
+                    <p class="jamsil">  모델과 옷을 선택하면 옷 입고 있는 모델이 등장!</p>
                 </div>
             </div>
-            <!-- product Header End -->
+            <br>
+            
+            <div class="text-start text-lg-end wow slideInRight align-items-end" data-wow-delay="0.1s">
+                <div class="btn-container" name="btn-container">
+                    <div class="d-inline p-2">
+                        <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" float:right; onclick="location.href='{% url 'virtual_fit_upload' user.first_name%}'">
+                            <p id="btnText" class="jamsil" style="padding-top: 15px; " >추가하기</p>
+                        </button>
+                        <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" onclick="ClickDeletBtn('show');">
+                            <p id="btnText" class="jamsil" style="padding-top: 15px; " >삭제하기</p>
+                        </button>
+                        <button type="submit" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" >
+                            <p id="btnText" class="jamsil" style="padding-top: 15px; " >결과 확인</p>
+                        </button>
+                    </div>
+                    
+                </div>
+                <br>
+                <ul class="nav nav-pills d-inline-flex justify-content-end mb-5 jamsil">
+                    <li class="nav-item me-2">
+                        <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">모델</a>
+                    </li>
+                    <li class="nav-item me-2">
+                        <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">옷 </a>
+                    </li>
+                </ul>                        
+            </div>
+                
+        <!-- product Header End -->
             
             <!-- Product item Start-->
             <div class="tab-content">
@@ -148,3 +150,52 @@
     </div>
     <!-- Product End -->
 {% endblock content%}
+
+{%block jsv%}
+<script>
+    
+/* ------------- 옷 삭제 & 삭제 옵션 버튼 함수 ------------------*/
+function ClickDeletBtn(value){
+    
+    var v = value;          // 매개변수 값을 v에 담기
+    var deleteClothes = [];   // 삭제할 옷들의 groupID 담기
+    var deleteBtn = document.getElementById("deleteBtn");       //삭제하기 버튼
+
+    switch (v) {
+
+        case 'show':   // 옷 삭제 클릭 시 checkbox랑 삭제 옵션 보여주기
+            $(".delete_checkbox").show();    //.show()는 style"display: none;"으로 돼 있어야 실행됨
+            $(".deleteClothesBtn").show();
+        
+            break;
+
+        case 'allCheck': // 전체 선택
+            $('[name=delete_clothes]').prop('checked', true);       //checked 값을 true로 반환
+
+            break;
+        
+        case 'allCancel':  //전체 선택 취소
+            $('[name=delete_clothes]').prop('checked', false);      //checked 값을 false로 반환
+
+            break;
+        
+        case 'ClothesDelete': //삭제하기
+            $("input:checkbox[name='delete_clothes']:checked").each(function() {
+                deleteClothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                document.getElementById('del_clothes').value = deleteClothes;       // 배열을 del_clothes의 value에 담기
+                //console.log(deleteClothes);
+                document.getElementById('deleteForm').submit();  
+            })
+
+            break;
+        
+        case 'DeleteCancel':    //취소하기
+            $(".deleteClothesBtn").hide();      //전체 삭제, 전체 삭제, ... 등 숨기기              
+            $(".delete_checkbox").hide();       //체크박스 숨기기
+
+            break;
+    }
+}
+
+</script>
+{%endblock jsv%}
