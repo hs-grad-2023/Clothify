@@ -31,19 +31,9 @@
                 <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'virtual_fit_photo' user.first_name %}">다시 선택하기</a>
             </div>
             <br>
-
-            {% for r in result_vition%}
-                {% if r.row_number == 1%}
-
-                        <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
-
-                {% else %}
-
-                        <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
-
-                {% endif %}
-            {% endfor %}
-
+            {%comment%}
+            {%endcomment%}
+                        
             <div class="tab-content wow fadeIn" data-wow-delay="0.1s">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">

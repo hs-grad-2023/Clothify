@@ -218,9 +218,7 @@ def detail_closet(request, username, groupID):
                 row_number=Window(
                     expression=RowNumber(),
                     partition_by=[F('groupID')],
-                    order_by='groupID_id'
-                )
-    )
+                    order_by=[F('groupID_id')])).order_by('groupID_id')         #order_by 수정
 
     photosobject = photosobject.filter(groupID__exact=groupID)
 
@@ -906,7 +904,12 @@ def virtual_fit_photo_result(request,username):
         selected_model = request.POST.getlist('model')
         selected_cloth = request.POST.getlist('cloth')
 
-        result_vition = viton_upload_result.objects.all() 
+        result_vition = viton_upload_result.objects.all().annotate(
+                row_number=Window(
+                    expression=RowNumber(),
+                    order_by=[F('name')])).order_by('name')         #order_by 수정
+                    
+  
         q_list=[]
         testWrite = ''
 
@@ -917,6 +920,7 @@ def virtual_fit_photo_result(request,username):
                 q_list.append(filter)
 
         result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+        
         result = {'result_vition':result_vition,
                   "user":user,
                   }
