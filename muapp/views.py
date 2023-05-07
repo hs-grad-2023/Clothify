@@ -904,11 +904,11 @@ def virtual_fit_photo_result(request,username):
     if request.method == 'POST':
         selected_model = request.POST.getlist('model')
         selected_cloth = request.POST.getlist('cloth')
-
+        print('selected_model', selected_model, '/ selected_cloth', selected_cloth)
         result_vition = viton_upload_result.objects.all().annotate(
                 row_number=Window(
                     expression=RowNumber(),
-                    order_by=[F('name')])).order_by('name')         #order_by 수정
+                    order_by=[F('name')])).order_by('-id')         #order_by 수정
                     
   
         q_list=[]
@@ -916,11 +916,11 @@ def virtual_fit_photo_result(request,username):
 
         for model in selected_model:
             for cloth in selected_cloth:
-                result_name = model[:5] + '_' + cloth[:5] + '_00.jpg'
-                filter = result_vition.filter(name__exact=result_name)
+                result_name = model[:5] + '_' + cloth[:5]
+                filter = result_vition.filter(name__contains=result_name)
                 q_list.append(filter)
-
         result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+        print(result_vition)
         
         result = {'result_vition':result_vition,
                   "user":user,
