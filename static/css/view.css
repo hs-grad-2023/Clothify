@@ -1,0 +1,24 @@
+.option_container{
+    height: 170px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+#type1, #type2, #selected{
+    height: 150px;
+    width: 150px;
+    margin: 10px;
+    display: inline-block;
+
+}
+
+.searchFilter{
+    width: 100px;
+    margin: 10px 10px;
+    height: 150px;
+}

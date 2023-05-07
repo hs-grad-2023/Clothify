@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">좋아요 스타일</h1>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Blog Start -->
+    <div class="container-xxl py-6" style="padding-bottom: 20px; padding-top: 60px;">
+        <div class="container jamsil">
+            <div class="section-header text-center mx-auto wow fadeIn jamsil" data-wow-delay="0.1s" style="max-width: 500px; margin-bottom: 30px;">
+                <h1 class="display-5 mb-3 jamsil">좋아요</h1>       
+                <p>좋아요를 누른 스타일들을 확인해 보세요!</p>
+            </div>
+            <div class="col d-flex justify-content-end wow slideInRight" data-wow-delay="0.1s">
+                <ul class="nav nav-pills mb-5">
+                    <li class="nav-item me-2">
+                        <a class="btn btn-outline-primary border-2 active" data-bs-toggle="pill" href="#tab-1">옷 자랑</a>
+                    </li>
+                    <li class="nav-item me-0">
+                        <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">코디북</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        {% for c in cloth %}
+                        {% load clothes_extra %}
+                        <div class="col-lg-4 col-md-6 wow fadeIn" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
+                            <div class="p-4 mucodi" style="background-color: #F5F5F5;">  
+                                <a class="d-block h5 lh-base mb-4 jamsil text-center border-bottom pb-3" target="_blank" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white; font-size: 25px;" href="{% url 'detail_usercodi' c.groupID %}" >{{c.name}}</a>
+                                <div class="position-relative image-container">
+                                    <a class="d-block h5 lh-base mb-4 jamsil text-center" title="{{c.name}}" href="{% url 'detail_usercodi' c.groupID %}" >
+                                        <img src="{{ c.groupID|getGroupIdFirst }}" class="img-thumbnail mt-1 shadow w-75" alt="{{c.item_title}}" style="border-radius: 20px; width: 240px; height: 360px;"></a>
+                                        <div class="d-flex justify-content-center like-container" style="position: absolute; bottom: 50%; left: 0; right: 0;">
+
+                                            {% if user.is_authenticated %}
+                                            <span id="like-btn-{{c.groupID}}" onclick="post_like('{{ c.groupID }}'); event.stopPropagation();" style="cursor: pointer;">
+                                            {% else %}
+                                            <span id="like-btn-{{c.groupID}}" onclick="redirectToLogin(); event.stopPropagation();" style="cursor: pointer;"> 
+                                            {% endif %}
+                                            {% if request.user in c.like.all %}
+                                            <!-- 로그인 한 유저가 좋아요를 누른 유저일때  -->
+                                            <i class="heart-icon fas fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                            {% else %}
+                                            <!-- 로그인 한 유저가 좋아요를 누른 유저가 아닐 때  -->
+                                            <i class="heart-icon far fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                            {% endif %}
+                                            <span id="like-count-{{c.groupID}}" style="color: white; font-size: 20px;">{{c.like.count}}</span>
+                                            
+                                            </span>
+                                        <span class="ms-3">
+                                            <i class="fas fa-comment" style="color: #57B0F5; font-size: 20px;"></i>
+                                            <span id="commnet-count-{{c.groupID}}" style="color: white; font-size: 20px;">{{ comments|count_matching_comments:c.groupID }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="text-muted border-top pt-4 d-flex justify-content-between">
+                                    <small><i class="fa fa-user text-primary me-2 jamsil"></i>{{c.uploadUserName}}</small>
+                                    <small><i class="fa fas fa-clone text-secondary me-2"></i>{{c.type1}} - {{c.type2}}</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                        {% if cloth.has_other_pages %}
+                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                            {% if cloth.has_previous %}
+                            <a class="btn btn-primary rounded-pill px-3" href="?page=1">처음</a>
+                            <a class="btn btn-primary rounded-pill px-3" href="?page={{ cloth.previous_page_number }}">이전</a>
+                            {% endif %}
+                            {% for i in cloth.paginator.page_range %}
+                            {% if cloth.number == i %}
+                            <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                            {% elif i > cloth.number|add:'-3' and i < cloth.number|add:'3' %}
+                            <a class="btn btn-primary rounded-pill px-3" href="?page={{ i }}">{{ i }}</a>
+                            {% endif %}
+                            {% endfor %}
+                            {% if cloth.has_next %}
+                            <a class="btn btn-primary rounded-pill px-3" href="?page={{ cloth.next_page_number }}">다음</a>
+                            <a class="btn btn-primary rounded-pill px-2" href="?page={{ cloth.paginator.num_pages }}">마지막</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+
+                <div id="tab-2" class="tab-pane fade show p-0">
+                    <div class="row g-4">
+                        {% for mu in musinsa %}
+                        {% load clothes_extra %}
+                        <div class="col-lg-4 col-md-6 wow fadeIn" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
+                            <div class="p-4 mucodi" style="background-color: #F5F5F5;">  
+                                <a class="d-block h5 lh-base mb-4 jamsil text-center border-bottom pb-3" target="_blank" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white; font-size: 25px;" href="{{mu.item_page}}">{{mu.item_title}}</a>
+                                <div class="position-relative image-container2">
+                                    <a class="d-block h5 lh-base mb-4 jamsil text-center" target="_blank" title="{{mu.item_title}}" href="{{mu.item_page}}">
+                                        <img src="{{ mu.item_picture }}" class="img-thumbnail shadow mt-2" alt="{{mu.item_title}}" style="border-radius: 20px;"></a>
+        
+                                        <div class="d-flex justify-content-center like-container" style="position: absolute; bottom: 50%; left: 0; right: 0;">
+                                            {% if user.is_authenticated %}
+                                            <span id="like-btn-{{mu.id}}" onclick="post_like('{{ mu.id }}'); event.stopPropagation();" style="cursor: pointer;">
+                                            {% else %}
+                                            <span id="like-btn-{{mu.id}}" onclick="redirectToLogin(); event.stopPropagation();" style="cursor: pointer;"> 
+                                            {% endif %}
+                                            {% if request.user in mu.like.all %}
+                                            <!-- 로그인 한 유저가 좋아요를 누른 유저일때  -->
+                                            <i class="heart-icon fas fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                            {% else %}
+                                            <!-- 로그인 한 유저가 좋아요를 누른 유저가 아닐 때  -->
+                                            <i class="heart-icon far fa-heart" style="color: #F54C4C; font-size: 20px;"></i>
+                                            {% endif %}
+                                            <span id="like-count-{{mu.id}}" style="color: white; font-size: 20px;">{{mu.like.count}}</span>
+                                        </div>
+                                </div>
+                                <div class="text-muted border-top pt-4 d-flex justify-content-between">
+                                    <small><i class="fa fa-user text-primary me-2 jamsil"></i>{{mu.item_model}}</small>
+                                    <small><i class="fa fas fa-clone text-secondary me-2"></i>{{mu.item_text}}</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                        {% if musinsa.has_other_pages %}
+                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                            {% if musinsa.has_previous %}
+                            <a class="btn btn-primary rounded-pill px-3" href="?page=1">처음</a>
+                            <a class="btn btn-primary rounded-pill px-3" href="?page={{ musinsa.previous_page_number }}">이전</a>
+                            {% endif %}
+                            {% for i in musinsa.paginator.page_range %}
+                            {% if musinsa.number == i %}
+                            <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                            {% elif i > musinsa.number|add:'-3' and i < musinsa.number|add:'3' %}
+                            <a class="btn btn-primary rounded-pill px-3" href="?page={{ i }}">{{ i }}</a>
+                            {% endif %}
+                            {% endfor %}
+                            {% if musinsa.has_next %}
+                            <a class="btn btn-primary rounded-pill px-3" href="?page={{ musinsa.next_page_number }}">다음</a>
+                            <a class="btn btn-primary rounded-pill px-2" href="?page={{ musinsa.paginator.num_pages }}">마지막</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>            
+            </div>
+                
+            </div>
+        </div>
+    </div>
+   
+
+{% comment %} <script>
+    function sendDetailUsercodi(event, groupID, index) {
+        event.preventDefault();
+        
+        // <form> 요소 가져오기
+        var form = document.getElementById('form_detail_usercodi_'+index);
+        
+        // <input> 요소의 값 변경하기
+        var input_groupID = document.getElementById('input_groupID_'+index);
+        input_groupID.value = groupID;
+        
+        // <form> 요소 제출하기
+        form.submit();
+    }
+    </script> {% endcomment %}
+    <!-- Blog End -->
+    <script type="text/javascript">
+        function post_like(id) {
+            $.ajax({
+              url: "{%url 'likes' %}", 
+              data: {
+                'groupID': id
+              }, 
+              dataType: "json",
+              success: function (response) { 
+                $('#like-count-'+id).html(response.like_count);
+                $('#like-btn-'+id+' i.heart-icon').toggleClass('fas far');
+              }
+            });
+          }
+
+                function redirectToLogin() {
+                    window.location.href = "{% url 'login' %}";
+                }
+        </script>
+{% endblock %}

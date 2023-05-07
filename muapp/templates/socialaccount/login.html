@@ -1,0 +1,27 @@
+{% extends "socialaccount/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+{% if process == "connect" %}
+{% endif %}
+
+<div class="container-xxl py-5">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-6" style="padding-top: 150px; padding-bottom: 40px;">
+              <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                  <h1 class="display-5 mb-3 jamsil">소셜 로그인</h1>
+                  <p class="jamsil">{{ provider.name | upper }} 아이디로 로그인을 해보세요!</p>
+                  <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm jamsil" style="font-size:17px">로그인</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

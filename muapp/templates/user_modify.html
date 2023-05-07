@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load socialaccount %} 
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+{% block content %}
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6" style="padding-top: 100px;">
+                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                    <h1 class="display-5 mb-3 jamsil">회원정보 수정</h1>
+                    <p class="jamsil">정보를 수정하세요</p>
+                    <div class="container my-3" style="padding-left: 0px;">
+                        <form method="post" action="{% url 'user_modify'%}">
+                            {% csrf_token %}
+                            {% include "form_errors.html" %}
+                            <div class="mb-3 jamsil">
+                                <label for="username">아이디</label>
+                                <input type="text" class="form-control" name="username" id="username"
+                                       value="{{ user.username|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="email">이메일</label>
+                                <input type="text" class="form-control" name="email" id="email"
+                                       value="{{ user.email|default_if_none:'' }}">
+                            </div>
+                            {% comment %} <div class="mb-3 jamsil">
+                                <label for="password1">비밀번호</label>
+                                <input type="password" class="form-control" name="password1" id="password1"
+                                       value="{{ form.password1.value|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="password2">비밀번호 확인</label>
+                                <input type="password" class="form-control" name="password2" id="password2"
+                                    value="{{ form.password2.value|default_if_none:'' }}">
+                            </div> {% endcomment %}
+                            <div class="mb-3 jamsil">
+                                <label for="name">이름</label>
+                                <input type="text" class="form-control" name="name" id="name" oninput="this.value = this.value.replace(/[^\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/g, '').substring(0, 4);"
+                                    value="{{ user.name|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="sex">성별</label>
+                                <select class="form-select" name="sex" id="sex">
+                                    {% if user.sex == '남' %}
+                                    <option value="" disabled>성별을 선택해주세요.</option>
+                                    <option value="남" selected>남자</option>
+                                    <option value="여">여자</option>
+                                    {% elif user.sex == '여' %}
+                                    <option value="" disabled>성별을 선택해주세요.</option>
+                                    <option value="남">남자</option>
+                                    <option value="여" selected>여자</option>
+                                    {% else %}
+                                    <option value="" disabled selected>성별을 선택해주세요.</option>
+                                    <option value="남">남자</option>
+                                    <option value="여">여자</option>
+                                    {% endif %}    
+                                </select>
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="height">키(:cm)</label>
+                                <input type="text" class="form-control" name="height" id="height" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                    value="{{ user.height|default_if_none:'' }}">
+                            </div>
+                            <div class="mb-3 jamsil">
+                                <label for="weight">몸무게(:kg)</label>
+                                <input type="text" class="form-control" name="weight" id="weight" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                    value="{{ user.weight|default_if_none:'' }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary jamsil">수정하기</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

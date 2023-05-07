@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4rem;">옷 자랑</h1>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Blog Start -->
+    <div class="container-xxl py-6" style="padding-bottom: 20px; padding-top: 60px;">
+        <div class="container jamsil">
+            <div class="section-header text-center mx-auto wow fadeIn jamsil" data-wow-delay="0.1s" style="max-width: 500px; margin-bottom: 30px;">
+                <h1 class="display-5 mb-3 jamsil">옷 자랑</h1>       
+                <p>다른 사람들의 옷이나 코디들을 확인해 보세요!</p>
+            </div>
+            <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'usercodi' %}">목록</a>
+            </div>
+            <br>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
+                            <div class="carousel-inner">
+                                {% for p in photosobject%}
+                                    {% if p.row_number == 1%}
+                                        <div class="carousel-item active" >
+                                            <img src="{{p.imgfile.url}}" class="d-block w-50 mx-auto" alt="...">
+                                        </div>
+                                    {% else %}
+                                        <div class="carousel-item" >
+                                            <img src="{{p.imgfile.url}}" class="d-block w-50 mx-auto" alt="...">
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                            {% if photosobject.count != 1 %}
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                            {% endif %}
+                          </div>
+
+                        <table class="table" style="float:left;">
+                            <tr>
+                                <th>이름</th>
+                                <th>분류1</th>
+                                <th>분류2</th>
+                                <th>태그</th>
+                                <th>상세정보</th>
+                                <th>업로드 시간</th>
+                            </tr>
+
+                                {% if clothesobject %}
+                                <tr>
+                                    <tr>
+                                        <td>{{ clothesobject.name }}</td>
+                                        <td>{{ clothesobject.type1 }}</td>
+                                        <td>{{ clothesobject.type2 }}</td>
+                                        <td>{{ clothesobject.tag }}</td>
+                                        <td>{{ clothesobject.details }}</td>
+                                        <td>{{ clothesobject.upload_date }}</td>
+                                    </tr>
+                                </tr>
+                                {%endif%}
+                        </table>
+                        <div class="d-flex wow fadeInUp" data-wow-delay="0.1s">
+                            <span class="pe-1 text-dark" style="font-size: 18px;">댓글 {{comments|length}}개</span>
+                            <i class="fas fa-comment pt-1" style="color: #57B0F5; font-size: 17px;"></i>
+                                    
+                                <div>
+                                    <span class="text-dark ps-3" style="font-size: 18px;">좋아요</span>
+                                    {% if user.is_authenticated %}
+                                    <span id="like-btn-{{clothesobject.groupID}}" onclick="post_like('{{ clothesobject.groupID }}'); event.stopPropagation();" style="cursor: pointer;">
+                                    {% else %}
+                                    <span id="like-btn-{{clothesobject.groupID}}" onclick="redirectToLogin(); event.stopPropagation();" style="cursor: pointer;"> 
+                                    {% endif %}
+                                    {% if request.user in clothesobject.like.all %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저일때  -->
+                                    <i class="heart-icon fas fa-heart" style="color: #F54C4C; font-size: 17px;"></i>
+                                    {% else %}
+                                    <!-- 로그인 한 유저가 좋아요를 누른 유저가 아닐 때  -->
+                                    <i class="heart-icon far fa-heart" style="color: #F54C4C; font-size: 17px;"></i>
+                                    {% endif %}
+                                    <span id="like-count-{{clothesobject.groupID}}" style="color: black; font-size: 18px;">{{clothesobject.like.count}}</span>
+                                    
+                                    </span>
+                                </div>
+                        </div>
+                        {% for comment in comments%}
+                        <div class="comment shadow row {% if forloop.counter == 1 %}mt-3 {% else %}mt-4 {% endif %}border border-2{% if forloop.counter|divisibleby:2 %} border-success {% else %} border-primary {% endif %} pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
+                            <div class="col">
+                                <p class="comment-info text-dark" style="font-size:0.9rem;">{{ comment.author }}</p>
+                            </div>
+                            <div class="col text-end">
+                                <p style="font-size:0.8rem;">{{ comment.created_date }}</p>
+                            </div>
+                            <p class="comment-text lh-base border border-2 p-3 shadow-sm text-dark">{{ comment.text }}</p>
+                        </div>
+                        {% empty %}
+                        <div class="comment shadow-sm row mt-3 border border-2 border-success pt-3 wow fadeInUp" data-wow-delay="0.1s" style="margin-left: 0px;">
+                            <p class="p-2">댓글이 없습니다. 댓글을 입력해주세요!</p>
+                        </div>
+                        
+
+                        {% endfor %}
+
+                        <div class="col-12 text-center" style="margin-top: 40px; margin-bottom: 10px;">
+                            {% if comments.has_other_pages %}
+                            <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                                {% if comments.has_previous %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?page=1">처음</a>
+                                <a class="btn btn-primary rounded-pill px-3" href="?page={{ comments.previous_page_number }}">이전</a>
+                                {% endif %}
+                                {% for i in comments.paginator.page_range %}
+                                {% if comments.number == i %}
+                                <a class="btn btn-primary rounded-pill px-5 active" href="#">{{ i }}</a>
+                                {% elif i > comments.number|add:'-3' and i < comments.number|add:'3' %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?page={{ i }}">{{ i }}</a>
+                                {% endif %}
+                                {% endfor %}
+                                {% if comments.has_next %}
+                                <a class="btn btn-primary rounded-pill px-3" href="?page={{ comments.next_page_number }}">다음</a>
+                                <a class="btn btn-primary rounded-pill px-2" href="?page={{ comments.paginator.num_pages }}">마지막</a>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% if user.is_authenticated %}
+                        <form method="post" class="border pb-3 pt-2 border-2 border-primary wow fadeIn bg-light" data-wow-delay="0.1s" style="border-radius:10px">
+                        {% csrf_token %}
+                        <div class="mb-3 jamsil">
+                            <p class="pt-2 text-dark"><label for="comment">댓글</label></p>
+                            <textarea name="text" class="form-control shadow-sm" id="comment" cols="30" rows="5" placeholder="댓글을 입력하세요!" style="resize: none;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-outline-success border-2" style="float: right;">댓글 작성</button>
+                        </form>
+                        {% else %}
+                        <div class="mb-3 jamsil border pb-3 pt-2 border-2 border-primary wow fadeIn" data-wow-delay="0.1s" style="border-radius:10px">
+                            <p class="pt-2 text-dark"><label for="comment">댓글</label></p>
+                            <input class="form-control" id="disabledInput" type="text" placeholder="로그인을 하고 댓글을 남겨보세요!" disabled>
+                            <button type="button" class="btn btn-outline-primary mt-3" onclick="location.href='{% url 'login' %}?next={{ request.path }}'">로그인</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Product End -->
+<script type="text/javascript">
+    function post_like(id) {
+        $.ajax({
+            url: "{%url 'likes' %}", 
+            data: {
+                'groupID': id
+            }, 
+            dataType: "json",
+            success: function (response) { 
+                $('#like-count-'+id).html(response.like_count);
+                $('#like-btn-'+id+' i.heart-icon').toggleClass('fas far');
+            }
+        });
+    }
+    
+    function redirectToLogin() {
+        window.location.href = "{% url 'login' %}";
+    }
+
+    </script>
+{% endblock content %}
+
+
+{% block jsv %}
+{% endblock jsv %}

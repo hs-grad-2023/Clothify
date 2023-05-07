@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load socialaccount %} 
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Clothes</a>
+{% endblock closet %}
+{% block content %}
+<div class="container-xxl py-5">
+    <div class="container">
+            <div class="col-lg-6" style="padding-top: 127px;">
+                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">마이페이지</h1>
+                    <p class="jamsil">내 정보를 수정해보세요!</p>
+                </div>
+            </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="bg-light text-center h-100 p-4 p-xl-5" style="box-shadow: 0 0 5px black; border-radius: 20px;">
+                    <img class="img-fluid mb-4" src="{% static 'img/icon-1.jpg' %}" alt="">
+                    <h4 class="mb-3 jamsil">정보수정</h4>
+                    <p class="mb-4 jamsil">회원 정보 수정하러 가기</p>
+                    <a href="{% url 'user_modify' %}" class="btn btn-primary btn-lg rounded-pill py-sm-2 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black; font-size:20px">정보수정</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="bg-light text-center h-100 p-4 p-xl-5" style="box-shadow: 0 0 5px black; border-radius: 20px;">
+                    <img class="img-fluid mb-4" src="{% static 'img/icon-2.jpg' %}" alt="">
+                    <h4 class="mb-3 jamsil">선호하는 스타일</h4>
+                    <p class="mb-4 jamsil">선호하는 스타일 체크하러 가기</p>
+                    <a href="{% url 'user_style' user.first_name %}" class="btn btn-secondary btn-lg rounded-pill py-sm-2 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black; font-size:20px">선호하는 스타일</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="bg-light text-center h-100 p-4 p-xl-5" style="box-shadow: 0 0 5px black; border-radius: 20px;">
+                    <img class="img-fluid mb-4" src="{% static 'img/icon-2.jpg' %}" alt="">
+                    <h4 class="mb-3 jamsil">좋아요한 스타일</h4>
+                    <p class="mb-4 jamsil">좋아하는 스타일 보러가기</p>
+                    <a href="{% url 'userlike'%}" class="btn btn-danger btn-lg rounded-pill py-sm-2 jamsil" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black; font-size:20px;">좋아요한 스타일</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

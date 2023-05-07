@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+    <link href="{% static 'css/upload.css' %}" rel="stylesheet">
+    <link href="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.css" rel="stylesheet">
+
+
+{% endblock style %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">나만의 옷장</h1>
+                        <p class="jamsil" >👚 해당 옷을 정말로 삭제하시겠어요?!?!?! </p>
+                        <p>{{ remove_clothes.name }} <button>삭제</button></p>
+                       
+                    </form>
+
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Product Start -->
+    
+    
+{% endblock content %}
+<!-- Product End -->

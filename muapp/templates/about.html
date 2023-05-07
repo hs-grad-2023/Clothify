@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl py-5">
+    <!-- Page Header Start -->
+        <div class="container">
+        <div class="col-lg-6">
+            <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">졸업작품 소개</h1>
+        </div>
+    </div>
+    </div>
+</div>
+
+    <!-- Page Header End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="about-img position-relative overflow-hidden p-5 pe-0">
+                        <img class="img-fluid w-100" src="{% static 'img/about.png' %}">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <h1 class="display-5 mb-4 jamsil">Clothify에 대하여</h1>
+                    <p class="mb-4 jamsil">옷을 손쉽게 관리한다는 뜻으로, "Cloth"와 "Simplify"의 합성어입니다.</p>
+                    <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>가상피팅</p>
+                    <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>옷장관리</p>
+                    <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>코디추천</p>
+                    {% comment %} <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Read More</a> {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Firm Visit Start -->
+    <!-- Firm Visit End -->
+
+    <!-- Feature Start -->
+    <div class="container-fluid bg-light bg-icon py-6">
+        <div class="container">
+            <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <h1 class="display-5 mb-3 jamsil">조원 프로필</h1>
+                <p class="jamsil">9조 조원의 소개입니다.</p>
+            </div>
+            <div class="row g-4 jamsil">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="bg-white h-100 p-4 p-xl-5">
+                        <div class="text-left">
+                            <img class="img-fluid mb-4" src="img/product-1.jpg" alt="">
+                            <img class="icon" src="icon/human_icon.png" alt="">
+                            <a class="text-dark" href="">유민영</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/email_icon.png" alt="">
+                            <a class="text-dark" href="">bambooiscoming2000@gmail.com</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/pen_icon.png" alt="">
+                            <a class="text-dark" href="">협성대학교 컴퓨터공학과 20학번</a>
+                            <p></p>
+                            
+                            <img class="icon" src="icon/site_icon.png" alt="">
+                            <a class="text-dark" href="https://github.com/Wus01">https://github.com/Wus01</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/skills_icon.png" alt="">
+                            <a class="text-dark" href="">내가 잘하는 언어 써보면 오떨지</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/introduce_icon.png" alt="">
+                            <a class="text-dark" href="">~간단한 자기소개글~</a>
+                            <p></p>
+                        </div>
+
+                        {% comment %} <div class="text-center">
+                            <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
+                        </div> {% endcomment %}
+                    </div>
+                    
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="bg-white h-100 p-4 p-xl-5">
+                        <div class="text-left">
+                            <img class="img-fluid mb-4" src="img/product-2.jpg" alt="">
+                            <img class="icon" src="icon/human_icon.png" alt="">
+                            <a class="text-dark" href="">황지현</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/email_icon.png" alt="">
+                            <a class="text-dark" href="">hwgjh20@gmail.com</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/pen_icon.png" alt="">
+                            <a class="text-dark" href="">협성대학교 컴퓨터공학과 20학번</a>
+                            <p></p>
+                            
+                            <img class="icon" src="icon/site_icon.png" alt="">
+                            <a class="text-dark" href="https://github.com/Wus01">https://github.com/Wus01</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/skills_icon.png" alt="">
+                            <a class="text-dark" href="">내가 잘하는 언어 써보면 오떨지</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/introduce_icon.png" alt="">
+                            <a class="text-dark" href="">~간단한 자기소개글~</a>
+                            <p></p>
+                        </div>
+
+                        {% comment %} <div class="text-center">
+                            <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="bg-white h-100 p-4 p-xl-5">
+                        <div class="text-left">
+                            <img class="img-fluid mb-4" src="img/product-3.jpg" alt="">
+                            <img class="icon" src="icon/human_icon.png" alt="">
+                            <a class="text-dark" href="">황지현</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/email_icon.png" alt="">
+                            <a class="text-dark" href="">hwgjh20@gmail.com</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/pen_icon.png" alt="">
+                            <a class="text-dark" href="">협성대학교 컴퓨터공학과 20학번</a>
+                            <p></p>
+                            
+                            <img class="icon" src="icon/site_icon.png" alt="">
+                            <a class="text-dark" href="https://github.com/Wus01">https://github.com/Wus01</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/skills_icon.png" alt="">
+                            <a class="text-dark" href="">내가 잘하는 언어 써보면 오떨지</a>
+                            <p></p>
+    
+                            <img class="icon" src="icon/introduce_icon.png" alt="">
+                            <a class="text-dark" href="">~간단한 자기소개글~</a>
+                            <p></p>
+                        </div>
+
+                        {% comment %} <div class="text-center">
+                            <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature End -->
+{% endblock %}

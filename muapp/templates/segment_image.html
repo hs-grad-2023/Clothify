@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+{% block closet %}
+    <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">옷장</a>
+{% endblock closet %}
+{% block content %}
+<style>
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.7);
+        display: none;
+        z-index: 10;
+    }
+    .custom-img-thumbnail {
+        border-radius: 20px 20px 0 0;
+        width: 50px;
+        height: 100px;
+      }
+    
+</style>
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+                <div class="col-lg-6" style="padding-top: 127px;">
+                    <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                        <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">가상 피팅 옷장</h1>
+                        <p class="jamsil">점을 찍어서 원하는 옷을 가상 피팅 옷장에 넣어보세요!<br>(상의: 가슴 쪽, 하의: 무릎 쪽)</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <form id="segment-form" enctype="multipart/form-data" method="post">
+                            {% csrf_token %}
+                            <input type="file" id="image-upload" name="image" accept="image/*" style="display:none;">
+                            <input type="hidden" id="input-point" name="input_point" value="">
+                            <div style="position:relative; display:inline-block;">
+                                <img id="image-preview" src="#" alt="your image" style="display:none;"/>
+                                <div id="point-marker" style="position:absolute; width:20px; height:20px; border-radius:50%; background-color:blue; display:none;"></div>
+                                <div id="overlay" class="overlay">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <div class="jamsil" style="padding-top: 10px;">옷장에 넣는 중...</div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between my-3">
+                                <button class="btn btn-lg btn-primary jamsil" type="button" id="upload-button">사진 업로드</button>
+                                <button class="btn btn-lg btn-secondary jamsil" type="submit" id="segment-button" style="display:none;">가상피팅 옷장에 넣기</button>
+                            </div>
+                            <div class="mb-3">
+                                <div id="radio1" class="form-check form-check-inline" style="display:none;">
+                                    <input class="form-check-input" type="radio" name="cloth" id="tops" value="tops" checked>
+                                    <label class="form-check-label jamsil" for="tops">상의</label>
+                                </div>
+                                <div id="radio2" class="form-check form-check-inline" style="display:none;">
+                                    <input class="form-check-input" type="radio" name="cloth" id="bottoms" value="bottoms">
+                                    <label class="form-check-label jamsil" for="bottoms">하의</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="accordion hahmelt wow fadeInUp" data-wow-delay="0.1s" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                      <p class="accordion-header" id="panelsStayOpen-headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                        <strong>상의</strong>
+                        </button>
+                        </p>
+                      <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                        <div class="accordion-body">
+                            <div class="row">
+                            {% for c in clothesobject %}
+                            {% if c.uploadUser_id == user.id and c.groupID %}
+                                {% load clothes_extra %}
+                                <div class="col-md-2 col-sm-4 col-6 mucodi">
+                                    <img class="img-fluid w-100 custom-img-thumbnail" src="{{c.groupID|getGroupIdFirst}}" margin="10%" padding="10%" alt="">
+                                </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                </div>
+                <div class="accordion hahmelt wow fadeInUp mt-3" data-wow-delay="0.1s" id="accordionPanelsStayOpenExample2">
+                    <div class="accordion-item">
+                        <p class="accordion-header" id="panelsStayOpen-headingTwo">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                          <strong>하의</strong>
+                          </button>
+                          </p>
+                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                          <div class="accordion-body">
+                              <div class="row">
+                                  {% for c in clothesobject2 %}
+                                  {% if c.uploadUser_id == user.id and c.groupID %}
+                                      {% load clothes_extra %}
+                                      <div class="col-md-2 col-sm-4 col-6 mucodi">
+                                          <img class="img-fluid w-100 custom-img-thumbnail" src="{{c.groupID|getGroupIdFirst}}" margin="10%" padding="10%" alt="">
+                                      </div>
+                                  {% endif %}
+                                  {% endfor %}
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    
+                </div>
+        </div>
+    </div>
+   
+                        
+
+{% endblock content %}
+{% block jsv %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    const Toast = Swal.mixin({ //팝업창
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+
+    $("#upload-button").click(function () {
+        $("#image-upload").click();
+    });
+
+    $("#image-upload").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $("#image-preview").attr('src', e.target.result).css('display', 'block');
+            }
+            reader.readAsDataURL(this.files[0]);
+            $("#segment-button").css('display', 'block');
+            $("#radio1").css('display', 'block');
+            $("#radio2").css('display', 'block');
+        }
+    });
+
+    $("#image-preview").click(function (e) {
+        let offset = $(this).offset();
+        let x = e.pageX - offset.left;
+        let y = e.pageY - offset.top;
+        $("#input-point").val(JSON.stringify([x, y]));
+        $("#point-marker").css({left: x - 5, top: y - 5, display: 'block'});
+    });
+
+    function showLoading() {
+        $("#overlay").css('display', 'flex');
+    }
+
+    function hideLoading() {
+        $("#overlay").css('display', 'none');
+    }
+    try{
+        $("#segment-form").submit(function (e) {
+            e.preventDefault();
+            showLoading();
+            $("#image-preview").css('filter', 'blur(8px)');
+            $('input[name="cloth"]').prop("disabled", true);
+            $('#upload-button').prop("disabled", true);
+            $('#segment-button').prop("disabled", true);
+            let formData = new FormData(this);
+            formData.append('cloth', $('input[name="cloth"]:checked').val());
+            $.ajax({
+                url: '{% url "segment_image" %}',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    hideLoading();
+                    $("#image-preview").css('filter', 'none');
+                    Swal.fire({
+                        title: '옷장에 넣기 완료!',
+                        text: '이제 가상 피팅으로 입어보세요!',
+                        icon: 'success',
+                        allowOutsideClick: false,
+                        customClass: {
+                        title: 'jamsil',
+                        confirmButton: 'jamsil',
+                        content: 'jamsil',
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = window.location.href;
+                        }
+                    });
+                },
+                error: function () {
+                    hideLoading();
+                    $("#image-preview").css('filter', 'none');
+                    $('input[name="cloth"]').prop("disabled", false);
+                    $('#upload-button').prop("disabled", false);
+                    $('#segment-button').prop("disabled", false);
+
+                    Toast.fire({
+                    icon: 'error',
+                    title: '옷장에 넣는 중에 오류가 발생했습니다.',
+                    customClass: {
+                        title: 'jamsil',
+                    }
+                });
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        });
+}
+    catch{
+        
+        Toast.fire({
+            icon: 'error',
+            title: '옷장에 넣는 중에 오류가 발생했습니다.',
+            customClass: {
+                title: 'jamsil',
+            }
+          });
+          $('input[name="cloth"]').prop("disabled", false);
+    }
+</script>
+{% endblock jsv %}

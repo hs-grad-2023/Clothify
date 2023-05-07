@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+    <link href="{% static 'css/upload.css' %}" rel="stylesheet">
+    <link href="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.css" rel="stylesheet">
+
+
+{% endblock style %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5">
+        <!-- Page Header Start -->
+        <div class="container">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="font-size: 4vw">나만의 옷장</h1>
+                    <p class="jamsil">👚 옷을 등록해서 나만의 옷장을 만들어요.</p>
+    
+                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- Product Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="col text-start text-lg-end wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-lg btn-outline-primary border-2 jamsil" href="{% url 'view_closet' user.first_name %}">목록</a>
+            </div>
+            <div class="row g-0 gx-5 align-items-end pt-3">
+                <div class="col-lg-6">
+                    <div class="section-header text-start mb-5 wow fadeInUp"
+                         data-wow-delay="0.1s"
+                         style="max-width: 500px">
+                        <h1 class="display-5 mb-3 jamsil">옷장 업로드</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content jamsil wow fadeInUp" data-wow-delay="0.1s">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        <div>
+                            <div id="att_zone" data-placeholder="">
+                                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <form action=""
+                                  method="POST"
+                                  name="clothesInfo"
+                                  id="clothesInfo"
+                                  enctype="multipart/form-data"
+                                  >
+                                {% csrf_token %}
+                                <div class="mb-3 row">
+                                    <label for="type1" class="col-sm-1 col-form-label text-end fw-bold">분류 1</label>
+                                    <select name="type1" id="type1" size="1" class="form-select col" required>
+                                        <option value="none" disabled selected>=== 분류 1 ===</option>
+                                        <option>상의</option>
+                                        <option>하의</option>
+                                        <option>치마</option>
+                                        <option>원피스</option>
+                                        <option>아우터</option>
+                                        <option>가방</option>
+                                        <option>악세서리</option>
+                                        <option>신발</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="type2" class="col-sm-1 col-form-label text-end fw-bold">분류 2</label>
+                                    <select name="type2" id="type2" size="1" class="form-select col" required>
+                                        <option value="none" disabled selected>=== 분류 2 ===</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="name" class="col-sm-1 col-form-label text-end fw-bold">옷 이름</label>
+                                    <input type="text" name="clothesName" id="clothesName"class="form-control col" placeholder="(필수 입력)" required/>
+                                </div>
+                                <!-- tag -->
+                                <div class="mb-3 row">
+                                    <label for="tag" class="col-sm-1 col-form-label text-end fw-bold">태그</label>
+                                    <input type="text" name="tag" id="tag" class="form-control col" 
+                                           placeholder="#꾸안꾸 #출근룩 #가죽 #스웨이드 (특수문자🙅‍♀️)"/>
+                                    <button type="button" id="btn_addtag" class="btn_addtag col-sm-1 btn btn-outline-dark border-2" style="border-radius:6px; margin-left: 10px; width: 120px;">추가</button>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-1 col-form-label text-end"></label>
+                                    <div class="col tag_area">
+                                    </div>
+                                </div>
+                                <!--tag 추가해서 띄우는 label-->
+                                <div class="mb-3 row" style="display:none">
+                                    <label class="col-sm-1 col-form-label text-end"></label>
+                                    <input type="text" name="tags" id="tags" class="form-control col" readonly/>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="details" class="col-sm-1 col-form-label text-end fw-bold" >상세정보</label>
+                                    <textarea name="details" id="details" class="form-control col details" rows="5" placeholder="생략 가능"></textarea>
+                                </div>
+                                
+                                <div class="mb-3 row">
+                                    <label class="col-sm-1 col-form-label fw-bold"></label>
+                                    <div class="form-check col">
+                                        <label class="form-check-label jamsil" for="ucodi">내 옷 자랑하기</label>
+                                        <input class="form-check-input" name="ucodi" type="checkbox" id="ucodi" style="float:none; margin-left:0.2em;" value="True">
+                                    </div>
+                                </div>
+                                
+                                <input hidden id="groupID" type="text"></input>
+                                <!-- Uppy Dashboard -->
+                                <div class="mb-3 row">
+                                    <label class="col-sm-1"></label>
+                                    <div class="fileUploadContent col"></div>
+                                </div>
+
+                                <!-- button design -->
+                                <div class="btn-container" name="btn-container">
+                                    <button id="btn-submit" class="btn-submit">
+                                        <p class="jamsil" id="btnText" style="padding-top: 15px;">저장</p>
+                                        <div class="check-box">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                                                <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+<!-- Product End -->
+
+{% block jsv %}
+
+<script defer src="{% static 'js/upload_closet.js' %}?ver=1"></script> 
+{%comment%} '?ver=1'는 수정된 파일을 인식하게끔(숫자는 상관x) {%endcomment%}
+
+
+<script defer src="https://releases.transloadit.com/uppy/v3.6.1/uppy.min.js"></script>
+<script defer src="https://releases.transloadit.com/uppy/locales/v3.0.7/ko_KR.min.js"></script>
+<script type="module">
+    // import {Uppy, Dashboard, DropTarget, Compressor, XHRUpload, ImageEditor} from "https://releases.transloadit.com/uppy/v3.6.1/uppy.min.mjs"
+    //const COMPANION_URL = "http://companion.uppy.io"
+    // const COMPANION_ALLOWED_HOSTS = ['https://my-site.com']
+    // const COMPANION_URL = '{% url 'uploadCloset' user.username %}'
+    //const COMPANION_ALLOWED_HOSTS = ['http://127.0.0.1:8000/']
+    
+    var uppy = new Uppy.Uppy({ logger: Uppy.debugLogger ,
+                                meta: {
+                                    type1: type1,
+                                    type2: type2,
+                                    tag: tag,
+                                    name: clothesName,
+                                    details: details,
+                                    groupID: groupID,
+                                },
+                                locale : Uppy.locales.ko_KR,
+    })
+        // The main UI that shows files, progress and holds all plugins
+        .use(Uppy.Dashboard, {
+            id: 'Dashboard',
+            target: '.fileUploadContent',
+            inline: true,
+            height: 500,
+            width: 1100,
+            metaFields: [ //이미지 수정용 metaFields
+                { id: 'name', name: 'Name', placeholder: 'file name' },
+                { id: 'caption', name: 'Caption', placeholder: 'add description' },
+            ],
+            note: 'Images only, Up to 10 files',
+            produlyDisplayPoweredByUppy:false,
+            autoOpenFileEditor: false,
+            hideUploadButton : true,
+            hideProgressAfterFinish : true,
+        })
+
+        .use(Uppy.Form, { 
+                        target: '#clothesInfo',
+                        getMetaFromForm: true,
+                        addResultToForm: true,
+                        //triggerUploadOnSubmit: true, //Uppy가 업로드/인코딩을 완료한 후 양식을 제출할지 여부를 구성합니다(부울, 기본값: false).
+                        //submitOnSuccess: true, //모든 파일이 업로드된 후 양식을 실제로 제출해야 하는 경우
+                        resultName: 'FormInfo', //<input type="hidden">의 요소의 이름 (string, default: uppyResult).
+                      })
+        
+        // Allow dropping files on any element or the whole document
+        .use(Uppy.DropTarget, { target: document.body })
+        // Optimize images
+        .use(Uppy.Compressor)
+        // Upload
+        .use(Uppy.XHRUpload,{
+            endpoint: "{% url 'uploadCloset' user.first_name %}",
+            headers: {'X-CSRFToken':"{{csrf_token}}"},
+            formData: true,
+            fileData: true,
+            fieldName:'imgfile',
+            allowedMetaFields:true,
+        })
+
+        .use(Uppy.ImageEditor, { target: Uppy.Dashboard })
+        
+        
+
+        // All remote services like Instagram and Google Drive in one package
+        /*
+        .use(Uppy.RemoteSources, {
+            // You can manually specify `sources` here, by default all available are included. 
+            // See docs: https://uppy.io/docs/remote-sources/#sources.
+            companionUrl: COMPANION_URL,
+            companionAllowedHosts: COMPANION_ALLOWED_HOSTS,
+            sources: ['Instagram', 'GoogleDrive', 'Facebook', 'OneDrive', 'Url'],
+        })
+        .use(Uppy.Webcam, { target: Uppy.Dashboard })
+        */
+
+        
+    uppy.upload().then((result) => {
+        console.info('Successful uploads:', result.successful);
+    
+        if (result.failed.length > 0) {
+            console.error('Errors:');
+            result.failed.forEach((file) => {
+                console.error(file.error);
+            });
+        }
+    });
+        
+    document.getElementById('clothesInfo').addEventListener('keydown', function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Enter 키 이벤트 기본 동작 중지
+            }
+        });
+        
+    document.getElementById('btn-submit').addEventListener('click', () => {
+        validationData();
+        
+        if(validationData_value){
+            uppy.upload();
+            document.getElementById('btn-submit').hidden=true;
+        }
+    });
+
+    document.getElementById("clothesInfo").onsubmit = function() {
+        return false;
+    }
+
+    // ===== form 유효성 테스트 =====
+    var validationData_value = false;
+    var submitform = document.getElementById("clothesInfo"); // form을 sumitform 변수에 저장
+    
+    const Toast = Swal.mixin({ //팝업창
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      
+    function validationData(){
+        const files = uppy.getFiles();
+        console.log(files == "");
+        if($('#type1').val() == "" || $('#type1').val() == "none" || $('#type1').val() == null){ // input form이 비어있으면
+            Toast.fire({
+                icon: 'error',
+                title: '분류1을 선택하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+            validationData_value= false;
+        }else if($('#type2').val() == "" || $('#type2').val() == "none" || $('#type2').val() == null){ // input form이 비어있으면
+            Toast.fire({
+                icon: 'error',
+                title: '분류2를 선택하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+            validationData_value= false;
+        }else if($('#clothesName').val() == "" || $('#clothesName').val() == "none" || $('#clothesName').val() == null){ // input form이 비어있으면
+            Toast.fire({
+                icon: 'error',
+                title: '이름을 입력하지 않았습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              }); 
+            validationData_value= false;
+        }else if(files == "" || files == null){ // 사진이 없으면
+            Toast.fire({
+                icon: 'error',
+                title: '이미지가 없습니다',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+            validationData_value= false;
+        }else if(files != ""){ // 사진이 있으면?
+            validationData_value= true;
+            uppy.on('complete', (result) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '업로드 성공!',
+                    text: '잠시 후 내 옷장으로 돌아갑니다',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        title: 'jamsil',
+                        container: 'jamsil',
+                    }
+                  });
+                // 파일 업로드가 완료되면 실행되는 콜백 함수
+                setTimeout(() => {
+                    submitform.submit(); // 폼 제출
+                }, 2000)
+            });
+        }
+    }
+</script>
+
+{% endblock jsv%}

@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock %}
+    
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' and '로그인' not in message.message %}
+            <style>
+                .swal2-content {
+                    white-space: pre-wrap;
+                }
+            </style>
+            <script>
+                const message1 = "{{ message|escapejs }}".replace(/\\n/g, '\n');
+                Swal.fire({
+                    title: '회원가입이 되었습니다!',
+                    text: message1,
+                    icon: 'success',
+                    customClass: {
+                      title: 'jamsil',
+                      confirmButton: 'jamsil',
+                      content: 'jamsil',
+                    }
+                  })
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+<script>
+    
+</script>
+    <!-- 배너 -->
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="w-100" src="{% static 'img/carousel-5-1.jpg' %}" alt="Image">
+                    <div class="carousel-caption">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-8-auto">
+                                    <h1 class="display-1 mb-5 jamsil fonts animated slideInDown" style="color: white; text-shadow: 2px 2px 4px black;">집에서 사고 싶은 옷을 쉽게 피팅해봐요! </h1>
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'virtual_fit_video' user.first_name %}" class="btn btn-primary btn-lg rounded-pill py-sm-3 px-sm-5 jamsil wow fadeIn shadow" data-wow-delay="0.1s" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">피팅하기</a>
+                                    <a href="{% url 'codibook' user.first_name %}" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil wow fadeIn shadow" data-wow-delay="0.1s" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">코디북 모으기</a>
+                                    {% else %}
+                                    <a href="{% url 'login' %}" class="btn btn-secondary btn-lg rounded-pill py-sm-3 px-sm-5 ms-3 jamsil wow fadeIn shadow" data-wow-delay="0.1s" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">로그인 하기</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+    <!-- 날씨 및 위치 표시 부분 Start -->
+    <div class="container py-5 h-100">
+        <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <h1 class="display-5 mb-3 jamsil">오늘의 코디</h1>
+        </div>
+        <div class="row d-flex justify-content-start align-items-center h-100 col">
+        <div class="col-md-8 col-lg-6 col-xl-4">
+            {% if errcode != 1 %}
+            <div class="card wow flipInX" data-wow-delay="0.1s" style="color: #4B515D; border-radius: 35px;">
+            <div class="card-body p-4">
+                <div class="d-flex">
+                    <h6 class="flex-grow-1 jamsil" id="LocationNow">{{location}}</h6> 
+                    <h6 class="hahmelt" id="TodayDate">{{date}}</h6>
+                </div>
+                <div class="d-flex flex-column text-center mt-5 mb-0">
+                    <h6 id="Temperature" class="display-4 mb-0 font-weight-bold" style="color: #1C2331;">{{curTmp}}ºC</h6>
+                    {% if alertRain != 0 %} <!-- 비 오면 "오늘은 비/눈 소식이 있습니다."라고 뜨고 아니면 아예 안 뜸. -->
+                    <span id="AlertRain" class="small hahmelt" style="color: #868B94">{{alertRain}}</span>
+                    {% endif %}
+                    <br>
+                </div>
+                <div class="align-items-center">
+                    <div class="d-flex">
+                        <h6 id="humidity" class="row align-items-end justify-content-around hahmelt" style="margin-left: 0px; color: #1C2331">습도 : {{humidity}}%</h6>                  
+                        <h6 class="flex-grow-1" id="weatherIcon"><i class="{{icon}} row justify-content-end" style="color: #868B94; font-size: 6rem;"></i></h6>
+                    </div>
+                    <div class="d-flex">
+                        <h6 id="TemperatureMaxMin" class="small flex-grow-1 hahmelt" style="color: #1C2331;">최고 {{maxTmp}}º / 최저 {{minTmp}}º</h6>
+                        <h6 id="WeatherStatus" class="small hahmelt" style="color: #1C2331;">{{sky}}</h6>
+                    </div>
+                </div>
+            </div>
+            </div>
+            {% endif %}
+            
+        </div>
+        {% if user.is_authenticated %}
+
+        <div id="getAnswerBtn" class="d-flex justify-content-center col wow fadeIn" data-wow-delay="0.1s">
+            <div class="d-flex col-xl-3 justify-content-center">
+                <button class="btn btn-primary btn-lg jamsil py-sm-3 mt-3 rounded-pill w-100 shadow"{% if user.style is null %} onclick="location.href='{% url 'user_style' user.first_name %}'" {% endif %}>Clothify의 추천!</button>
+            </div>
+        </div>
+        <div id="loadingAnimation" class="d-none jamsil col-md-4 col-lg-6 col-xl-8 justify-content-center align-items-center">
+            <span class="me-2">코디 추천 중...</span>
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div id="answerContainer" class="d-flex jamsil col-md-4 col-lg-6 col-xl-8 fs-5 lh-base" style="color: black; text-shadow: -2px 0px white, 0px 2px white, 2px 0px white, 0px -2px white;">
+        </div>
+        {% else %}
+        <div id="getAnswerBtn" class="d-flex justify-content-center col wow fadeIn" data-wow-delay="0.1s">
+            <div class="d-flex col-sm-8 col-md-6 col-lg-4 col-xl-3 justify-content-center">
+                <button class="btn btn-primary btn-lg jamsil py-sm-3 mt-3 rounded-pill w-100 shadow" onclick="location.href='{% url 'login' %}'">Clothify의 추천!</button>
+            </div>
+        </div>
+        
+        {% endif %}
+        </div>
+    
+    </div>
+    
+    <!-- 날씨 및 위치 표시 템플릿 End -->
+    
+
+    
+
+
+
+    <!-- Feature Start -->
+    <div class="container-fluid bg-light bg-icon my-5 py-6">
+        <div class="container">
+            <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <h1 class="display-5 mb-3 jamsil" style="color: #0b83f7; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">C<span style="color: #6fa8dc;">loth</span><span style="color: #8fce00;">ify</span>의 기능!</h1>
+                <p class="jamsil">누구나 편하게 옷을 관리할 수 있는 Clothify</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="bg-white text-center h-100 p-4 p-xl-5 shadow" style="border-radius: 20px;">
+                        <img class="img-fluid mb-4" alt="">
+                        <h4 class="mb-3 jamsil">가상 피팅</h4>
+                        <p class="mb-4 jamsil">옷을 실제로 입지 않고도 가상에서<br>먼저 확인해 볼 수 있습니다!</p>
+                        {% if user.is_authenticated %}
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'virtual_fit_video' user.first_name %}">더보기</a>
+                        {% else %}
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'virtual_fit_video' " " %}">로그인 하기</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="bg-white text-center h-100 p-4 p-xl-5 shadow" style="border-radius: 20px;">
+                        <img class="img-fluid mb-4" alt="">
+                        <h4 class="mb-3 jamsil">옷장 관리</h4>
+                        <p class="mb-4 jamsil">내 전용 옷장을 만들어서 손쉽게 자신의 옷들을<br>관리할 수 있습니다!</p>
+                        {% if user.is_authenticated %}
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>
+                        {% else %}
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'view_closet' " " %}">로그인 하기</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="bg-white text-center h-100 p-4 p-xl-5 shadow" style="border-radius: 20px;">
+                        <img class="img-fluid mb-4" alt="">
+                        <h4 class="mb-3 jamsil">코디 추천</h4>
+                        <p class="mb-4 jamsil">오늘 날씨에 뭘 입어야할지 모를때<br>코디를 추천해줍니다!</p>
+                        {% if user.is_authenticated %}
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'codibook' user.first_name %}">더보기</a>
+                        {% else %}
+                        <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill jamsil" href="{% url 'codibook' " " %}">로그인 하기</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature End -->
+
+
+    <!-- Product Start -->
+
+    {%comment%}
+    {% if user.is_authenticated %}
+        <div class="container-xxl py-5">
+    {% else %}
+        <div class="container-xxl py-5" style="height: 500px;">
+    {% endif %}
+    {%endcomment%}
+
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-0 gx-5 align-items-end">
+                <div class="col-lg-6">
+                    <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                        <h1 class="display-5 mb-3 jamsil">옷장 관리</h1>
+                        <p class="jamsil">나의 옷장을 마음대로 꾸며보세요!</p>
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
+                    <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
+                        <li class="nav-item me-2">
+                            <a class="btn btn-outline-primary border-2 active jamsil shadow" data-bs-toggle="pill" href="#tab-1">전체</a>
+                        </li>
+                        {% comment %} <li class="nav-item me-2">
+                            <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-2">상의</a>
+                        </li>
+                        <li class="nav-item me-0">
+                            <a class="btn btn-outline-primary border-2 jamsil" data-bs-toggle="pill" href="#tab-3">하의</a>
+                        </li> {% endcomment %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if user.is_authenticated %}
+            <div class="tab-content jamsil">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        {% for c in clothesobject|slice:":8" %}
+                        
+                            {% if c.uploadUser_id == user.id and c.groupID %}
+                            {% if c.groupID %}
+                            {% load clothes_extra %}
+                            <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="{{ forloop.counter0|floatformat:1|delay:0.2 }}s">
+                                <div class="product-item jamsil shadow" style="border-radius: 20px;">
+                                    <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
+                                        {% load clothes_extra %}
+                                            <a href="{% url 'detail_closet' user.first_name c.groupID %}">
+                                                <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.groupID|getGroupIdFirst}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                            </a>
+                                    </div>
+                                    <div class="text-center p-4">
+                                        <a class="d-block p mb-2" href="{% url 'detail_closet' user.first_name c.groupID %}" style="font-size:1.3rem;">{{c.name}}</a>
+                                    </div>
+                                    <hr width="90%" align="center" style="margin-left: 14px; margin-top: 0px; margin-bottom: 0px;">
+                                    <div class="text-end p-3">
+                                        <a class="d-block p mb-2 text-black-50" href="{% url 'detail_closet' user.first_name c.groupID %}" style='padding-right: 10px;'>{{c.type1}}-{{c.type2}}</a>
+                                    </div>
+                                </div>
+                                {% if c.ucodi == True %}
+                                <a href="{% url 'detail_usercodi' c.groupID %}"><span class="translate-middle badge bg-danger rounded-pill jamsil shadow" style="position: relative; left: 98%; font-size: 1rem;">자랑!</span></a>
+                                {% endif %}            
+                            </div>
+                            {% endif%}
+                            {% endif%}
+                        {% endfor %}
+                        <div class="col-12 text-center wow fadeInUp" style="padding-top: 20px;" data-wow-delay="0.1s">
+                            <a class="btn btn-primary rounded-pill py-3 px-5 jamsil" href="{% url 'view_closet' user.first_name %}">더보기</a>    
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            {% else %}
+            <div class="bg-light text-center wow fadeInUp shadow" style="padding-bottom: 120px;" data-wow-delay="0.1s">
+                <div class="col-12 text-center wow fadeInUp" style="padding-top: 110px;" data-wow-delay="0.1s">
+                    <a class="btn btn-primary rounded-pill py-3 px-5 jamsil shadow-sm" href="{% url 'view_closet' " " %}">로그인 하기</a>
+                </div>
+            </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Product End -->
+
+
+    <!-- Firm Visit Start -->
+    
+    <div class="container-fluid bg-primary bg-icon mt-5 py-6">
+        
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-md-7 wow fadeIn" data-wow-delay="0.1s">
+                    <h1 class="display-5 mb-3 jamsil" style="color: black; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">가상 피팅</h1>
+                    <p class="text-white mb-0 jamsil fs-5" style="text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;">나에게 맞는 퍼스널 컬러나 옷을 가상으로 입어보세요!</p>
+                </div>
+                {% if user.is_authenticated %}
+                <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
+                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5 jamsil" href="{% url 'virtual_fit_video' user.first_name %}">하러가기</a>
+                </div>
+                {% else %}
+                <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
+                    <a class="btn btn-lg btn-secondary rounded-pill py-3 px-5 jamsil" href="{% url 'virtual_fit_video' " " %}">로그인 하기</a>
+                </div>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+    <!-- Firm Visit End -->
+
+
+    <!-- Testimonial Start -->
+    <div class="container-fluid bg-light bg-icon py-6 mb-0 jamsil">
+        <div class="container">
+            <div class="section-header text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <h1 class="display-5 mb-3 jamsil">사용자 리뷰</h1>
+                <p class="jamsil">리뷰를 작성해주세요!</p>
+            </div>
+            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                <div class="testimonial-item position-relative bg-white p-5 mt-4">
+                    <i class="fa fa-quote-left fa-3x text-primary position-absolute top-0 start-0 mt-n4 ms-5"></i>
+                    <p class="mb-4 jamsil">대박</p>
+                    <div class="d-flex align-items-center">
+                        <img class="flex-shrink-0 rounded-circle" src="{% static 'img/testimonial-1.jpg' %}" alt="">
+                        <div class="ms-3">
+                            <h5 class="mb-1">Client Name</h5>
+                            <span>Profession</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item position-relative bg-white p-5 mt-4">
+                    <i class="fa fa-quote-left fa-3x text-primary position-absolute top-0 start-0 mt-n4 ms-5"></i>
+                    <p class="mb-4 jamsil">짱이에요</p>
+                    <div class="d-flex align-items-center">
+                        <img class="flex-shrink-0 rounded-circle" src="{% static 'img/testimonial-2.jpg' %}" alt="">
+                        <div class="ms-3">
+                            <h5 class="mb-1">Client Name</h5>
+                            <span>Profession</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item position-relative bg-white p-5 mt-4">
+                    <i class="fa fa-quote-left fa-3x text-primary position-absolute top-0 start-0 mt-n4 ms-5"></i>
+                    <p class="mb-4 jamsil">멋있어요</p>
+                    <div class="d-flex align-items-center">
+                        <img class="flex-shrink-0 rounded-circle" src="{% static 'img/testimonial-3.jpg' %}" alt="">
+                        <div class="ms-3">
+                            <h5 class="mb-1">Client Name</h5>
+                            <span>Profession</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item position-relative bg-white p-5 mt-4">
+                    <i class="fa fa-quote-left fa-3x text-primary position-absolute top-0 start-0 mt-n4 ms-5"></i>
+                    <p class="mb-4 jamsil">굿</p>
+                    <div class="d-flex align-items-center">
+                        <img class="flex-shrink-0 rounded-circle" src="{% static 'img/testimonial-4.jpg' %}" alt="">
+                        <div class="ms-3">
+                            <h5 class="mb-1">Client Name</h5>
+                            <span>Profession</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+{% if user.is_authenticated %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+<script>
+    const Toast = Swal.mixin({ //팝업창
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      
+
+    function typeAnswer(answer) {
+        const modifiedAnswer = answer.replace(/다\./g, '다.<br>').replace(/요\./g, '요.<br>').replace(/추천\!/g, '추천!<br><br>');
+        new TypeIt("#answerContainer", {
+            strings: modifiedAnswer,
+            speed: 40,
+            html: true,
+            cursor: false,
+        }).go();
+    }
+    
+    $(document).ready(function() {
+    $("#getAnswerBtn").on("click", function() {
+        $("#getAnswerBtn").removeClass('d-flex'); // 버튼 숨기기
+        $("#getAnswerBtn").addClass('d-none'); // 버튼 숨기기
+        $("#loadingAnimation").removeClass('d-none'); // 로딩 애니메이션 표시
+        $("#loadingAnimation").addClass('d-flex'); // 로딩 애니메이션 표시
+        $.ajax({
+        url: "{% url 'get_clothes_recommendation' %}",
+        type: 'GET',
+        success: function(response) {
+            $("#loadingAnimation").removeClass('d-flex'); // 로딩 애니메이션 숨기기
+            $("#loadingAnimation").addClass('d-none'); // 로딩 애니메이션 숨기기
+            typeAnswer(response.answer);
+            $("#answerContainer").addClass('border-start border-3 pt-2 pb-2 ps-2 border-success')
+        },
+        error: function() {
+            $("#loadingAnimation").removeClass('d-flex'); // 로딩 애니메이션 숨기기
+            $("#loadingAnimation").addClass('d-none');
+            $("#getAnswerBtn").removeClass('d-none'); // 버튼 다시 표시
+            $("#getAnswerBtn").addClass('d-flex');
+            Toast.fire({
+                icon: 'error',
+                title: '코디추천의 오류가 생겼습니다.',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+        }
+        });
+    });
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
+
+
+
