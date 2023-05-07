@@ -43,6 +43,8 @@ from segment_anything import sam_model_registry, SamPredictor
 from muapp.viton import clothmask
 import re, random
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
+from io import BytesIO
 openai.api_key ="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"
 
 User = get_user_model()
@@ -795,8 +797,8 @@ def virfit(request):
                             new_clothes = clothes.objects.create(
                             uploadUser_id=user.id,
                             uploadUserName=user.username,
-                            type1='코디',
-                            type2='가상피팅',
+                            type1='가상피팅',
+                            type2='코디',
                             name=f'{user.username}-{timestamp}',
                             ucodi=False,
                             tag='#가상피팅',
@@ -1107,6 +1109,25 @@ sam.to(device=device)
 
 predictor = SamPredictor(sam)
 
+def convert_png_to_jpg(image_file):
+    # 이미지 파일 열기
+    img = Image.open(image_file)
+
+    # 알파 채널이 있는 경우, 알파 채널을 제거하고 배경색을 흰색으로 설정
+    if img.mode == "RGBA":
+        img = img.convert("RGB")
+
+    # 이미지를 BytesIO 객체로 저장
+    img_bytes = BytesIO()
+    img.save(img_bytes, "JPEG", quality=95) # 포인터가 데이터 끝으로 이동하게됨 끝으로 가면 읽어오지를 못함
+    img_bytes.seek(0) #포인터 시작지점으로 되돌림
+
+    # BytesIO 객체를 ContentFile 객체로 변환 메모리상의 데이터로부터 파일 객체를 생성
+    jpg_image = ContentFile(img_bytes.read(), image_file.name)
+
+    return jpg_image
+
+
 @login_required(login_url='login')
 def segment_image(request):
     user = request.user
@@ -1115,7 +1136,11 @@ def segment_image(request):
 
         # 이미지를 업로드해서 사용하는 경우
         image_file = request.FILES['image']
-        image = Image.open(image_file)
+        if image_file.name.split(".")[1] == 'png':
+            image_file = convert_png_to_jpg(image_file)
+            image = Image.open(image_file)
+        else:
+            image = Image.open(image_file)
         image = np.array(image)
 
         # 예측할 좌표 설정
