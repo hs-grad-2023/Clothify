@@ -54,6 +54,8 @@ urlpatterns = [
     path('like2/',views.like2, name="likes2"),
     path('virfit/', views.virfit, name='virfit'),
     path('userlike/', views.userlike, name='userlike'),
+    path('get_clothes_recommendation/', views.get_clothes_recommendation, name='get_clothes_recommendation'),
+    path('segment_image/', views.segment_image, name='segment_image'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
