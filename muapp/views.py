@@ -892,6 +892,7 @@ def virtual_fit_photo(request,username):
 
 
     result = {
+        
         'model_paging' : model_paging,
         'cloth_paging' : cloth_paging,
     }
