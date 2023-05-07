@@ -103,22 +103,32 @@ class ResizedImageField(models.ImageField):
         return InMemoryUploadedFile(
             img_file, None, value.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
 
-def random_name(instance, filename):
+def random_name_C(instance, filename):
 
     filename = format(random.randint(0,99999),"05d")
     # 파일이 저장될 경로를 지정
-    return os.path.join("datasets/cloth", filename)
+    return os.path.join("datasets/cloth", filename+'.jpg')
+
+def random_name_M(instance, filename):
+
+    filename = format(random.randint(0,99999),"05d")
+    # 파일이 저장될 경로를 지정
+    return os.path.join("datasets/model", filename+'.jpg')
+
 
 class viton_upload_cloth(models.Model):
     clothesname = models.CharField(max_length=100,default="sample")
-    name = models.CharField(max_length=100,unique=True,primary_key=True)
-    image = ResizedImageField(size=[768, 1024], upload_to=random_name)
+    name = models.CharField(max_length=100)
+    image = ResizedImageField(size=[768, 1024], upload_to=random_name_C)
+    #image = ResizedImageField(size=[768, 1024], upload_to="datasets/cloth")
     uploadUser = models.CharField(max_length=30)
     uploadDate = models.DateTimeField(default=timezone.now)
+    ID = models.AutoField(primary_key=True)
     class Meta:
-        ordering = ['-uploadDate']
+        ordering = ['-ID']
 
     def save(self, *args, **kwargs):
+        self.name = os.path.basename(self.image.name)
         # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
         if not self.pk or self.image.width > self.image.field.size[0]:
             # 업로드된 이미지를 메모리에서 읽어와서 크기를 조정
@@ -136,12 +146,15 @@ class viton_upload_cloth(models.Model):
         super().save(*args, **kwargs)
 
 class viton_upload_model(models.Model):
-    name = models.CharField(max_length=50, unique=True,primary_key=True)
-    image = ResizedImageField(size=[768, 1024], upload_to='datasets/image')
-    uploadUser = models.CharField(max_length=50, default='sample')
+    clothesname = models.CharField(max_length=100,default="sample")
+    name = models.CharField(max_length=100)
+    image = ResizedImageField(size=[768, 1024], upload_to=random_name_M)
+    #image = ResizedImageField(size=[768, 1024], upload_to="datasets/model")
+    uploadUser = models.CharField(max_length=30)
     uploadDate = models.DateTimeField(default=timezone.now)
+    ID = models.AutoField(primary_key=True)
     class Meta:
-        ordering = ['-uploadDate']
+        ordering = ['-ID']
     def save(self, *args, **kwargs):
         # 이미지가 업로드되지 않았거나 이미지 크기가 조정되지 않았다면
         if not self.pk or self.image.width > self.image.field.size[0]:

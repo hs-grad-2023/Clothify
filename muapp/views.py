@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from .api import get_loc_data, get_time, get_weather_data, get_icon
-from .models import clothes, photos, Musinsa, Comment,viton_upload_cloth,viton_upload_model, viton_upload_result
+from .models import clothes, photos, Musinsa, Comment, viton_upload_cloth,viton_upload_model, viton_upload_result
 from django.contrib.auth import authenticate, login
 from .forms import UserForm, LoginForm, ModifyForm, CommentForm
 from django.contrib.auth.models import User
@@ -946,25 +946,26 @@ def virtual_fit_upload(request,username):
     if request.method == 'POST':
         if request.FILES.getlist('imgfile'):
             getType = request.POST.get('itemtype')
-            print(getType)
             if getType == '옷':
                 for imgfile in request.FILES.getlist('imgfile'):
-                    print("image : ",imgfile)
                     # 조정된 이미지 저장
                     item = viton_upload_cloth.objects.create(
                         clothesname = request.POST.get('itemName'),
-                        name= imgfile.name,
                         image=imgfile,
                         uploadUser=request.user.username,
                     )
                     item.save()
-
-                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth/{}'.format(imgfile.name)
-                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(imgfile.name)
+                    
+                    name_val = viton_upload_cloth.objects.values('name').first()
+                    item_name = name_val['name']
+                    print("item : ",item_name)
+                    
+                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth/{}'.format(item_name)
+                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(item_name)
                     shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
 
                     clothmask.cloth_mask(wcpath)
-
+                    
                     # 파일 이름 리스트를 저장할 txt 파일 경로 및 이름 지정
                     file_list_file = 'C:/hs-grad-2023/django/muapp/viton/data/custom/custom_pairs.txt'
                             
@@ -972,7 +973,7 @@ def virtual_fit_upload(request,username):
 
                     with open(file_list_file, 'w') as f:
                         for model in model_all:
-                            result_name = model.name + ' ' + imgfile.name
+                            result_name = model.name + ' ' + item_name
                             f.write(result_name + '\n')
 
                     # 업로드한 사진 + 모델들 합성해서 결과 만들기
@@ -992,12 +993,23 @@ def virtual_fit_upload(request,username):
 
                             # 모델 인스턴스 생성 및 저장
                             values = re.split('[_|.]',result)
-                            result = viton_upload_result(name=result, image=file, model_id = (values[0]+'_00.'+values[3]), cloth_id = (values[1]+'_00.'+values[3]))
+                            
+                            model_val = viton_upload_model.objects.filter(name__contains=values[0])
+                            cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
+
+                            model_obj = model_val.first()
+                            cloth_obj = cloth_val.first()
+
+                            model_id = model_obj.ID
+                            cloth_id = cloth_obj.ID
+
+
+                            result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
                             result.save()
                     
                     # 업로드 완료한 결과 폴더 삭제
                     shutil.rmtree(result_dir)
-
+                    
 
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):
