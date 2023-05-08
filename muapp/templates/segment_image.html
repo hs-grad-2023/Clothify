@@ -25,9 +25,12 @@
     }
     .custom-img-thumbnail {
         border-radius: 20px 20px 0 0;
-        width: 50px;
-        height: 100px;
-      }
+        max-width: 200px; /* 가로 최대 크기 설정 */
+        max-height: 200px; /* 세로 최대 크기 설정 */
+        width: auto; /* 가로 크기를 비율에 맞게 자동 조절 */
+        height: auto; /* 세로 크기를 비율에 맞게 자동 조절 */
+        object-fit: contain; /* 이미지의 비율을 유지하면서 요소에 맞게 크기 조절 */
+    }
     
 </style>
     <!-- Page Header Start -->
@@ -40,7 +43,7 @@
                     </div>
                 </div>
                 <div class="row g-4">
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                         <form id="segment-form" enctype="multipart/form-data" method="post">
                             {% csrf_token %}
                             <input type="file" id="image-upload" name="image" accept="image/*" style="display:none;">
@@ -55,7 +58,7 @@
                                     <div class="jamsil" style="padding-top: 10px;">옷장에 넣는 중...</div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between my-3">
+                            <div class="d-flex justify-content-between mb-3 mt-4">
                                 <button class="btn btn-lg btn-primary jamsil" type="button" id="upload-button">사진 업로드</button>
                                 <button class="btn btn-lg btn-secondary jamsil" type="submit" id="segment-button" style="display:none;">가상피팅 옷장에 넣기</button>
                             </div>
@@ -85,7 +88,7 @@
                             {% for c in clothesobject %}
                             {% if c.uploadUser_id == user.id and c.groupID %}
                                 {% load clothes_extra %}
-                                <div class="col-md-2 col-sm-4 col-6 mucodi">
+                                <div class="col-md-2 col-sm-3 col-3 mucodi pt-3">{% comment %} 2 4 6 {% endcomment %}
                                     <img class="img-fluid w-100 custom-img-thumbnail" src="{{c.groupID|getGroupIdFirst}}" margin="10%" padding="10%" alt="">
                                 </div>
                             {% endif %}
@@ -109,7 +112,7 @@
                                   {% for c in clothesobject2 %}
                                   {% if c.uploadUser_id == user.id and c.groupID %}
                                       {% load clothes_extra %}
-                                      <div class="col-md-2 col-sm-4 col-6 mucodi">
+                                      <div class="col-md-2 col-sm-3 col-3 mucodi">
                                           <img class="img-fluid w-100 custom-img-thumbnail" src="{{c.groupID|getGroupIdFirst}}" margin="10%" padding="10%" alt="">
                                       </div>
                                   {% endif %}
