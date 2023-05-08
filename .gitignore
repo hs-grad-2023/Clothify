@@ -4,3 +4,5 @@ muapp/migrations/__pycache__/
 muapp/__pycache__/urls.cpython-310.pyc
 muapp/__pycache__/views.cpython-310.pyc
 db.sqlite3
+
+checkpoint/sam_vit_h_4b8939.pth

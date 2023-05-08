@@ -68,7 +68,7 @@
                                 <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
                                     <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{m.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
                                     {% csrf_token %}
-                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="model" value="{{m.id}}">
+                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="model" value="{{m.ID}}">
                                 </div>
                                 <div class="text-center p-4 jamsil">
                                     <a class="d-block h5 mb-2" href="">{{m.name}}</a>
@@ -110,7 +110,7 @@
                                 <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
                                     <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
                                     {% csrf_token %}
-                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="cloth" value="{{c.id}}">
+                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="cloth" value="{{c.ID}}">
                                 </div>
                                 <div class="text-center p-4 jamsil">
                                     <a class="d-block h5 mb-2" href="">{{c.clothesname}}</a>

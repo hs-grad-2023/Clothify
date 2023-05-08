@@ -1,13 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-<<<<<<< HEAD
-    <a href="{% url 'index' %}" class="dropdown-item nav-link jamsil">Home</a>
-    <a href="{% url 'about' %}" class="dropdown-item nav-link jamsil">소개</a>
-=======
     <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
     <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
->>>>>>> master
 {% endblock %}
 {% block closet %}
     <a href="#" class="nav-link dropdown-toggle active jamsil" data-bs-toggle="dropdown">Clothes</a>
@@ -37,7 +32,6 @@
             </div>
             <br>
             {%comment%}
-<<<<<<< HEAD
 
             
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -77,7 +71,6 @@
                                         <div class="carousel-item active">
                                             <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
                                             <div class="carousel-caption d-none d-md-block text-primary">
-                                                <p>row_number 값: {{r.row_number}}</p>
                                             </div>
                                         </div>
                                     {% else %}
@@ -86,29 +79,11 @@
                                             <div class="carousel-caption d-none d-md-block text-primary">
                                                 <p>row_number 값: {{r.row_number}}</p>
                                             </div>
-=======
-            {%endcomment%}
-                        
-            <div class="tab-content wow fadeIn" data-wow-delay="0.1s">
-                <div id="tab-1" class="tab-pane fade show p-0 active">
-                    <div class="row g-4">
-                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" > 
-                            <div class="carousel-inner">
-                                {% for r in result_vition%}
-                                    {% if r.row_number == 1%}
-                                        <div class="carousel-item active" >
-                                            <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
-                                        </div>
-                                    {% else %}
-                                        <div class="carousel-item" >
-                                            <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
->>>>>>> master
                                         </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>
                             {% if result_vition.count != 1 %}
-<<<<<<< HEAD
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Previous</span>
@@ -118,17 +93,6 @@
                                 <span class="visually-hidden">Next</span>
                                 </button>
                             {%endif%}
-=======
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                            {% endif %}
->>>>>>> master
                         </div>
                     </div>
                 </div>

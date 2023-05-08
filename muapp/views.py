@@ -355,11 +355,20 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             login(request, user)  # 로그인
+            dpath = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}")
+            copy = os.path.join("muapp", "VirtualFitting", "Resources", "1.png")
+
+            os.makedirs(os.path.join(dpath, "Shirts"), exist_ok=True)
+            os.makedirs(os.path.join(dpath, "Pants"), exist_ok=True)
+
+            shutil.copyfile(copy, os.path.join(dpath, "Shirts", "1.png"))#default사진 복사
+            shutil.copyfile(copy, os.path.join(dpath, "Pants", "1.png"))
+
             messages.success(request, '축하합니다!!\nClothify의 회원가입이 완료되었습니다!')
             return redirect('/')
     else:
         form = UserForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form,})
 
 def logins(request):
     if request.user.is_authenticated:
@@ -954,23 +963,19 @@ def virtual_fit_photo_result(request,username):
     if request.method == 'POST':
         selected_model = request.POST.getlist('model')
         selected_cloth = request.POST.getlist('cloth')
-        print('selected_model', selected_model, '/ selected_cloth', selected_cloth)
+
         result_vition = viton_upload_result.objects.all().annotate(
                 row_number=Window(
                     expression=RowNumber(),
                     order_by=[F('name')])).order_by('-id')         #order_by 수정
                     
-  
         q_list=[]
-        testWrite = ''
 
         for model in selected_model:
             for cloth in selected_cloth:
-                result_name = model[:5] + '_' + cloth[:5]
-                filter = result_vition.filter(name__contains=result_name)
+                filter = result_vition.filter(Q(model_id__exact=int(model)),Q(cloth_id__exact=int(cloth)))
                 q_list.append(filter)
         result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
-        print(result_vition)
         
         result = {'result_vition':result_vition,
                   "user":user,
@@ -1063,15 +1068,77 @@ def virtual_fit_upload(request,username):
 
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):
-                    try:
-                        item = viton_upload_model.objects.create(
-                            name=request.POST.get('itemName'),
-                            image = imgfile,
-                            uploadUser=request.user.username,
-                        )
-                        item.save()
-                    except:
-                        print('업로드 실패')
+                    item = viton_upload_model.objects.create(
+                        name=request.POST.get('itemName'),
+                        image = imgfile,
+                        uploadUser=request.user.username,
+                    )
+                    item.save()
+
+                    name_val = viton_upload_cloth.objects.values('name').first()
+                    item_name = name_val['name']
+                    print("item : ",item_name)
+                    
+                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/image/{}'.format(item_name)
+                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/model/{}'.format(item_name)
+                    shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
+
+                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
+                    os.chdir('C:/hs-grad-2023')
+                    os.system(
+                        "python Self-Correction-Human-Parsing/simple_extractor.py --dataset lip --model-restore C:/hs-grad-2023/django/muapp/viton/checkpoints --input-dir C:/hs-grad-2023/django/muapp/viton/data/custom/image --output-dir C:/hs-grad-2023/django/muapp/viton/data/custom/image-parse")
+                    
+                    # ---------------지정된 파일 하나만 self-correction 수행할 수 있게 simple.py 수정
+
+                    '''
+                    bin\OpenPoseDemo.exe --image_dir inputImages --hand --disable_blending --display 0 --write_json outputJson --write_images  outputImages --num_gpu 1 --num_gpu_start 0 
+                    '''
+
+                    # 파일 이름 리스트를 저장할 txt 파일 경로 및 이름 지정
+                    file_list_file = 'C:/hs-grad-2023/django/muapp/viton/data/custom/custom_pairs.txt'
+                            
+                    cloth_all = viton_upload_cloth.objects.all()
+
+                    with open(file_list_file, 'w') as f:
+                        for cloth in cloth_all:
+                            result_name = item_name + ' ' + cloth.name 
+                            f.write(result_name + '\n')
+
+                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
+                    os.chdir('C:/hs-grad-2023/django/muapp/viton')
+                    os.system(
+                        "python C:/hs-grad-2023/django/muapp/viton/custom.py --name output --save_dir C:/hs-grad-2023/django/muapp/viton/data/custom/results")
+                    
+                    # 결과 DB 업로드
+                    result_dir = "C:/hs-grad-2023/django/muapp/viton/data/custom/results/output"
+                    for root, dirs, files in os.walk(result_dir):
+                        for result in files:
+                            # 이미지 파일 경로 생성
+                            result_path = os.path.join(root, result)
+
+                            with open(result_path, 'rb') as f:
+                                file = SimpleUploadedFile(f.name, f.read())
+
+                            # 모델 인스턴스 생성 및 저장
+                            values = re.split('[_|.]',result)
+                            
+                            model_val = viton_upload_model.objects.filter(name__contains=values[0])
+                            cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
+
+                            model_obj = model_val.first()
+                            cloth_obj = cloth_val.first()
+
+                            model_id = model_obj.ID
+                            cloth_id = cloth_obj.ID
+
+
+                            result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
+                            result.save()
+                    
+                    # 업로드 완료한 결과 폴더 삭제
+                    shutil.rmtree(result_dir)
+
+
 
         return redirect('virtual_fit_photo', username=user.first_name)
         #return render(request,"virtual_fit_upload.html", {"user":user})
@@ -1096,7 +1163,7 @@ def userlike(request):
 
 sam_checkpoint = os.path.join("checkpoint", "sam_vit_h_4b8939.pth")
 model_type = "vit_h"
-device = "cpu"
+device = "cuda"
 
 sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
 sam.to(device=device)
