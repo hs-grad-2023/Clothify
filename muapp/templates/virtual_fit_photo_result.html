@@ -70,17 +70,24 @@
                                     {% if r.row_number == 1%}
                                         <div class="carousel-item active">
                                             <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
+                                            {%comment%}
                                             <div class="carousel-caption d-none d-md-block text-primary">
                                                 <p>row_number 값: {{r.row_number}}</p>
                                             </div>
+                                             {%endcomment%}
+
                                         </div>
                                     {% else %}
                                         <div class="carousel-item">
                                             <img src="{{r.image.url}}" class="d-block w-50 mx-auto" alt="...">
+                                            {%comment%}
+                                           
                                             <div class="carousel-caption d-none d-md-block text-primary">
                                                 <p>row_number 값: {{r.row_number}}</p>
                                             </div>
-                                        </div>
+
+                                             {%endcomment%}
+                                            </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>

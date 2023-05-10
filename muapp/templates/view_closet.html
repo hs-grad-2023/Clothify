@@ -401,7 +401,7 @@ function ClickDeletBtn(value){
         case 'ClothesDelete': //삭제하기
             $("input:checkbox[name='delete_clothes']:checked").each(function() {
                 deleteClothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
-                document.getElementById('del_clothes').value = deleteClothes;       // 배열을 del_clothes의 value에 담기
+                document.getElementById('del_clothes').value = deleteClothes;       // 배열을 input 타입의 del_clothes 속 value에 담기
                 //console.log(deleteClothes);
                 document.getElementById('deleteForm').submit();  
             })

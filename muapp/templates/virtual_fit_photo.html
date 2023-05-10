@@ -15,7 +15,27 @@
 {% block content %}
     <!-- Product Start -->
     <div class="container-xxl py-5 wow fadeIn">
-        <form method="POST" action="{% url 'virtual_fit_photo_result' user.first_name %}">
+
+        <!-- 결과확인할 사진 값 넘겨받는 폼-->
+        <form id="result_Form" method="POST" action="{% url 'virtual_fit_photo_result' user.first_name %}">
+            {% csrf_token %}
+            <input type="hidden" id="model_result" name="model_result" value="">
+            <input type="hidden" id="cloth_result" name="cloth_result" value="">
+        </form>
+
+        <!-- deleteModels를 넘겨받는 폼 -->
+        <form id="model_DeleteForm" method="post" action="{% url 'virtual_fit_photo' user.first_name %}">
+            {% csrf_token %}
+            <input type="hidden" id="del_model" name="del_model" value="">
+        </form>
+
+        <!-- deleteClothes를 넘겨받는 폼 -->
+        <form id="cloth_DeleteForm" method="post" action="{% url 'virtual_fit_photo' user.first_name %}">
+            {% csrf_token %}
+            <input type="hidden" id="del_cloth" name="del_cloth" value="">
+        </form>
+
+
         <div class="container">
             <!-- product Header Start -->
             
@@ -37,7 +57,7 @@
                         <button type="button" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" onclick="ClickDeletBtn('show');">
                             <p id="btnText" class="jamsil" style="padding-top: 15px; " >삭제하기</p>
                         </button>
-                        <button type="submit" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" >
+                        <button type="submit" class="btn-submit" style="width:100px; height:50px; font-size: 15px;" onclick="Result();"  >
                             <p id="btnText" class="jamsil" style="padding-top: 15px; " >결과 확인</p>
                         </button>
                     </div>
@@ -51,8 +71,10 @@
                     <li class="nav-item me-2">
                         <a class="btn btn-outline-primary border-2" data-bs-toggle="pill" href="#tab-2">옷 </a>
                     </li>
-                </ul>                        
+                </ul>
+                                        
             </div>
+            
                 
         <!-- product Header End -->
             
@@ -61,6 +83,12 @@
                 {% load clothes_extra %}
                 <!-- Choose Model -->
                 <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="deleteClothesBtn" id="deleteClothesBtn" style="display: none; width: 100%; height: auto;">
+                        <button id="check_all" class="btn jamsil" onclick="ClickDeletBtn('model_allCheck');"> 전체 선택 </button>
+                        <button id="check_cancel" class="btn jamsil" onclick="ClickDeletBtn('model_allCancel')"> 전체 선택 취소 </button>
+                        <button id="model_deleteBtn" class="btn jamsil" onclick="ClickDeletBtn('ModelDelete')"> 삭제하기 </button>
+                        <button id="ModelDeleteCancel" class="btn jamsil" onclick="location.href='{% url 'virtual_fit_photo' user.first_name %}'"> 취소하기 </button>
+                    </div>
                     <div class="row g-4">
                         {% for m in model_paging%}
                         <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -103,6 +131,12 @@
                 </div>
                 <!-- Choose cloth -->
                 <div id="tab-2" class="tab-pane fade show p-0">
+                    <div class="deleteClothesBtn" id="deleteClothesBtn" style="display: none; width: 100%; height: auto;">
+                        <button id="check_all" class="btn jamsil" onclick="ClickDeletBtn('cloth_allCheck');"> 전체 선택 </button>
+                        <button id="check_cancel" class="btn jamsil" onclick="ClickDeletBtn('cloth_allCancel')"> 전체 선택 취소 </button>
+                        <button id="cloth_deleteBtn" class="btn jamsil" onclick="ClickDeletBtn('ClothDelete')"> 삭제하기 </button>
+                        <button id="ClothDeleteCancel" class="btn jamsil" onclick="location.href='{% url 'virtual_fit_photo' user.first_name %}'"> 취소하기 </button>
+                    </div>
                     <div class="row g-4">
                         {% for c in cloth_paging%}
                         <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -146,56 +180,107 @@
             </div>
             <!-- Product item End-->
         </div>
-        </form>
+        
     </div>
     <!-- Product End -->
 {% endblock content%}
 
 {%block jsv%}
 <script>
+
     
-/* ------------- 옷 삭제 & 삭제 옵션 버튼 함수 ------------------*/
-function ClickDeletBtn(value){
+    var cloth_arr = [];
+    var model_arr= [];
     
-    var v = value;          // 매개변수 값을 v에 담기
-    var deleteClothes = [];   // 삭제할 옷들의 groupID 담기
-    var deleteBtn = document.getElementById("deleteBtn");       //삭제하기 버튼
+    function Result(){
 
-    switch (v) {
+        $("input:checkbox[name='model']:checked").each(function() {
+            model_arr.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+            document.getElementById('model_result').value = model_arr;         // 배열을 del_clothes의 value에 담기
+            //console.log(model_arr;
 
-        case 'show':   // 옷 삭제 클릭 시 checkbox랑 삭제 옵션 보여주기
-            $(".delete_checkbox").show();    //.show()는 style"display: none;"으로 돼 있어야 실행됨
-            $(".deleteClothesBtn").show();
+                
+        })
+
+        $("input:checkbox[name='cloth']:checked").each(function() {
+            cloth_arr.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+            document.getElementById('cloth_result').value = cloth_arr;       // 배열을 del_clothes의 value에 담기
+            //console.log(cloth_arr); 
+
+        })
         
-            break;
+        document.getElementById('result_Form').submit(); 
 
-        case 'allCheck': // 전체 선택
-            $('[name=delete_clothes]').prop('checked', true);       //checked 값을 true로 반환
-
-            break;
-        
-        case 'allCancel':  //전체 선택 취소
-            $('[name=delete_clothes]').prop('checked', false);      //checked 값을 false로 반환
-
-            break;
-        
-        case 'ClothesDelete': //삭제하기
-            $("input:checkbox[name='delete_clothes']:checked").each(function() {
-                deleteClothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
-                document.getElementById('del_clothes').value = deleteClothes;       // 배열을 del_clothes의 value에 담기
-                //console.log(deleteClothes);
-                document.getElementById('deleteForm').submit();  
-            })
-
-            break;
-        
-        case 'DeleteCancel':    //취소하기
-            $(".deleteClothesBtn").hide();      //전체 삭제, 전체 삭제, ... 등 숨기기              
-            $(".delete_checkbox").hide();       //체크박스 숨기기
-
-            break;
     }
-}
+
+        
+    /* ------------- 옷 삭제 & 삭제 옵션 버튼 함수 ------------------*/
+    function ClickDeletBtn(value){
+        var v = value;              // 매개변수 값을 v에 담기
+        var Models = [];            // 체크된 모델들 name 담기
+        var Clothes = [];           // 체크된 옷들의 name 담기
+        var model_deleteBtn = document.getElementById("model_deleteBtn");       //모델 tab의 삭제하기 버튼
+        var cloth_deleteBtn = document.getElementById("cloth_deleteBtn");       //옷 tab의 삭제하기 버튼
+        
+
+        switch (v) {
+
+            case 'show':   // 옷 삭제 클릭 시 checkbox랑 삭제 옵션 보여주기
+                $(".delete_checkbox").show();    //.show()는 style"display: none;"으로 돼 있어야 실행됨
+                $(".deleteClothesBtn").show();
+            
+                break;
+
+            case 'model_allCheck': // 모델-전체 선택
+                $('[name=model]').prop('checked', true);       //checked 값을 true로 반환
+
+                break;
+            
+            case 'cloth_allCheck': // 옷-전체 선택
+                $('[name=cloth]').prop('checked', true);       //checked 값을 true로 반환
+
+                break;
+            
+            case 'model_allCancel':  //전체 선택 취소
+                $('[name=model]').prop('checked', false);      //checked 값을 false로 반환
+
+                break;
+                
+            case 'cloth_allCancel':  //전체 선택 취소
+                $('[name=cloth]').prop('checked', false);      //checked 값을 false로 반환
+
+                break;
+
+            case 'ModelDelete': //삭제하기
+
+            $("input:checkbox[name='model']:checked").each(function() {
+                    Models.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                    document.getElementById('del_model').value = Models;         // 배열을 del_clothes의 value에 담기
+                    //console.log(deleteClothes);
+                        
+                    document.getElementById('model_DeleteForm').submit();  
+                })
+
+                alert(Models);
+
+                break;
+            
+            case 'ClothDelete': //삭제하기
+
+                $("input:checkbox[name='cloth']:checked").each(function() {
+                    Clothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                    document.getElementById('del_cloth').value = Clothes;       // 배열을 del_clothes의 value에 담기
+                    //console.log(deleteClothes);
+                    document.getElementById('cloth_DeleteForm').submit();  
+                })
+                
+
+                alert(Clothes);
+
+                break;
+            
+        }
+    }
 
 </script>
 {%endblock jsv%}

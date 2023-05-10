@@ -890,21 +890,45 @@ def virtual_fit_photo(request,username):
     cloth_page = request.GET.get('cpage')
     cloth_paging = cloth_paginator.get_page(cloth_page)
 
-
-    result = {
+    del_model = request.POST.getlist('del_model')     # 여러 개의 값 받아오기
+    del_cloth = request.POST.getlist('del_cloth')     
+    
+    
+    if del_model:
+        tmp = del_model[0].split(",")                     # 받아온 name 값 자르기
+        for model_name in tmp:
+            remove_model = model_dataset.filter(name__exact=model_name)
+            remove_model.delete()
         
-        'model_paging' : model_paging,
-        'cloth_paging' : cloth_paging,
-    }
+    if del_cloth:
+        tmp2 = del_cloth[0].split(",")
+        for cloth_name in tmp2:
+            remove_cloth = cloth_dataset.filter(name__exact=cloth_name)
+            remove_cloth.delete()    
+
+    result = {    
+                'model_paging' : model_paging,
+                'cloth_paging' : cloth_paging,
+            }
     return render(request, "virtual_fit_photo.html", result)
+    
+    
 
 @login_required(login_url='login')
 def virtual_fit_photo_result(request,username):
     user = request.user
     if request.method == 'POST':
-        selected_model = request.POST.getlist('model')
-        selected_cloth = request.POST.getlist('cloth')
+        model_result = request.POST.getlist('model_result')
+        cloth_result = request.POST.getlist('cloth_result')
 
+
+        selected_model = model_result[0].split(",")
+        selected_cloth = cloth_result[0].split(",")
+        
+        
+        
+        print(selected_model)
+        
         result_vition = viton_upload_result.objects.all().annotate(
                 row_number=Window(
                     expression=RowNumber(),
