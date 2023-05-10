@@ -4,7 +4,7 @@ python custom.py --name test2 --dataset_mode custom
 
 
 cd C:\hs-grad-2023
-python Self-Correction-Human-Parsing/simple_extractor.py --dataset 'lip' --model-restore '/VITON-HD/checkpoints/human_parsing_final.pth' --input-dir '/VITON-HD/datasets/custom/image' --output-dir '/VITON-HD/datasets/custom/image-parse'
+python Self-Correction-Human-Parsing/simple_extractor.py --dataset lip --model-restore C:/hs-grad-2023/VITON-HD/checkpoints/human_parsing_final.pth --input-dir C:/hs-grad-2023/VITON-HD/datasets/custom/image --output-dir C:/hs-grad-2023/VITON-HD/datasets/custom/image-parse
 '''
 
 '''

@@ -39,7 +39,16 @@ import numpy as np
 import datetime, time, pygame
 from muapp.viton import clothmask
 import re, random
+import openai
+import torch
+from segment_anything import sam_model_registry, SamPredictor
+from muapp.viton import clothmask
+import re, random
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
+from io import BytesIO
+openai.api_key ="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"
+
 
 User = get_user_model()
 
@@ -68,7 +77,16 @@ def add_social_user_name(sender, request, user, **kwargs):
     else:
         user.name = social_accounts.extra_data['name']
     user.save()
+    dpath = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}")
+    copy = os.path.join("muapp", "VirtualFitting", "Resources", "1.png")
+
+    os.makedirs(os.path.join(dpath, "Shirts"), exist_ok=True)
+    os.makedirs(os.path.join(dpath, "Pants"), exist_ok=True)
+
+    shutil.copyfile(copy, os.path.join(dpath, "Shirts", "1.png"))#default사진 복사
+    shutil.copyfile(copy, os.path.join(dpath, "Pants", "1.png"))
     messages.success(request, '축하합니다!!\nClothify의 회원가입이 완료되었습니다!')
+
 
 def index(request):
 
@@ -94,6 +112,34 @@ def index(request):
         return render(request,"index.html",results)
     except:
         return render(request,"index.html",{ 'clothesobject':clothesobject, })
+
+def get_clothes_recommendation(request):
+    user = request.user
+    if user.style is None:
+        return redirect(f'/mypage/userstyle/{user.first_name}')
+    if user.is_authenticated:
+        location = get_loc_data()
+        weather = get_weather_data()
+
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "assistant는 세계최고의 패션 코디네이터다. 대답은 1000자 이내. 대답 형식은 무조건 첫 시작은 'Clothify의 코디 추천!' 으로 시작해주고, 무조건 존댓말로 말해줘. 주요 내용은 아우터- 상의- 하의- 신발- 가방- 이런 느낌으로 설명해줘. 마지막엔 꼭 !표 붙여줘."
+                },
+                {
+                    "role": "user",
+                    "content": f"오늘 {location}의 날씨는 최고온도는 {weather['maxTmp']}도, 최저온도는 {weather['minTmp']}도, 현재기온은 {weather['curTmp']}도, 습도는 {weather['humidity']}%이고, 날씨는 {weather['sky']}이정도야. 내 키는 {user.height}cm에 체중은 {user.weight}kg이고 성별은 {user.sex}자야. 내가 좋아하는 옷의 스타일은 {user.style}이야 이걸 토대로 오늘의 옷을 코디해줘."
+                },
+            ]
+        )
+        answer = completion['choices'][0]['message']['content']
+
+        return JsonResponse({"answer": answer})
+    else:
+        return JsonResponse({"error": "User not authenticated"})
+
 
 @login_required(login_url='login')
 def view_closet(request, username):
@@ -311,11 +357,20 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)  # 사용자 인증
             login(request, user)  # 로그인
+            dpath = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}")
+            copy = os.path.join("muapp", "VirtualFitting", "Resources", "1.png")
+
+            os.makedirs(os.path.join(dpath, "Shirts"), exist_ok=True)
+            os.makedirs(os.path.join(dpath, "Pants"), exist_ok=True)
+
+            shutil.copyfile(copy, os.path.join(dpath, "Shirts", "1.png"))#default사진 복사
+            shutil.copyfile(copy, os.path.join(dpath, "Pants", "1.png"))
+
             messages.success(request, '축하합니다!!\nClothify의 회원가입이 완료되었습니다!')
             return redirect('/')
     else:
         form = UserForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form,})
 
 def logins(request):
     if request.user.is_authenticated:
@@ -492,6 +547,7 @@ def virfit(request):
     
     cpath = os.path.join(base_dir, "muapp", "VirtualFitting", "Resources")
     dpath = os.path.join(base_dir, "_media", "imgfiles")
+    epath = os.path.join(base_dir, "_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}")
 
     pygame.mixer.init()
     shutter_sound = pygame.mixer.Sound(os.path.join(cpath, "shutter.mp3"))
@@ -502,8 +558,8 @@ def virfit(request):
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 800)
     detector = PoseDetector()
 
-    shirtsFolderPath = os.path.join(cpath, "Shirts")
-    pantsFolderPath = os.path.join(cpath, "Pants")
+    shirtsFolderPath = os.path.join(epath, "Shirts")
+    pantsFolderPath = os.path.join(epath, "Pants")
 
 
     listShirts = os.listdir(shirtsFolderPath)
@@ -553,18 +609,18 @@ def virfit(request):
             # else:
             #     cv2.putText(img, f"Distance: {distance}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            imgShirt = cv2.imdecode(np.fromfile(os.path.join(cpath, os.path.join(shirtsFolderPath, listShirts[imageNumber])), np.uint8), cv2.IMREAD_UNCHANGED)
+            imgShirt = cv2.imdecode(np.fromfile(os.path.join(shirtsFolderPath, listShirts[imageNumber]), np.uint8), cv2.IMREAD_UNCHANGED)
 
-            imgPant = cv2.imdecode(np.fromfile(os.path.join(cpath, os.path.join(pantsFolderPath, listPants[imageNumber2])), np.uint8), cv2.IMREAD_UNCHANGED)
+            imgPant = cv2.imdecode(np.fromfile(os.path.join(pantsFolderPath, listPants[imageNumber2]), np.uint8), cv2.IMREAD_UNCHANGED)
 
 
 
             widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
-            widthOfShirt = max(widthOfShirt, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
+            widthOfShirt = max(widthOfShirt, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환. 0또는 음수가 되면 resize에러 후 종료 방지용
             imgShirt = cv2.resize(imgShirt, (widthOfShirt, int(widthOfShirt * shirtsRatioHeight)))
 
             widthOfPant = int((lm23[0] - lm24[0]) * fixedRatio2)
-            widthOfPant = max(widthOfPant, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
+            widthOfPant = max(widthOfPant, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환. 0또는 음수가 되면 resize에러 후 종료 방지용
             imgPant = cv2.resize(imgPant, (widthOfPant, int(widthOfPant * pantsRatioHeight)))
 
             currentScale = (lm11[0] - lm12[0]) / 145 #옷 위치 190
@@ -640,9 +696,9 @@ def virfit(request):
         
                             # else:
                             #     cv2.putText(img, f"Distance: {distance}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                            imgShirt = cv2.imdecode(np.fromfile(os.path.join(cpath, os.path.join(shirtsFolderPath, listShirts[imageNumber])), np.uint8), cv2.IMREAD_UNCHANGED)
+                            imgShirt = cv2.imdecode(np.fromfile(os.path.join(epath, os.path.join(shirtsFolderPath, listShirts[imageNumber])), np.uint8), cv2.IMREAD_UNCHANGED)
 
-                            imgPant = cv2.imdecode(np.fromfile(os.path.join(cpath, os.path.join(pantsFolderPath, listPants[imageNumber2])), np.uint8), cv2.IMREAD_UNCHANGED)
+                            imgPant = cv2.imdecode(np.fromfile(os.path.join(epath, os.path.join(pantsFolderPath, listPants[imageNumber2])), np.uint8), cv2.IMREAD_UNCHANGED)
 
                             widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
                             widthOfShirt = max(widthOfShirt, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
@@ -728,8 +784,12 @@ def virfit(request):
                     cv2.imshow("Virtual Fitting", white_img)
                     cv2.waitKey(200)
                     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
-                    new_img_name = os.path.join(dpath, f"VirtualFitting\capture_{timestamp}.png")
+                    
+                    os.makedirs(os.path.join(dpath, "VirtualFitting"), exist_ok=True)
+                    os.makedirs(os.path.join(dpath, "VirtualFitting", "User"), exist_ok=True)
+                    os.makedirs(os.path.join(dpath, "VirtualFitting", "User", f"{user.first_name}"), exist_ok=True)
+                    os.makedirs(os.path.join(dpath, "VirtualFitting", "User", f"{user.first_name}", "Capture"), exist_ok=True)
+                    new_img_name = os.path.join(dpath, rf"VirtualFitting\User\{user.first_name}\Capture\capture_{timestamp}.png")
                     extension = os.path.splitext(new_img_name)[1]
                     result, encoded_img = cv2.imencode(extension, img)
 
@@ -739,8 +799,8 @@ def virfit(request):
                             new_clothes = clothes.objects.create(
                             uploadUser_id=user.id,
                             uploadUserName=user.username,
-                            type1='코디',
-                            type2='가상피팅',
+                            type1='가상피팅',
+                            type2='코디',
                             name=f'{user.username}-{timestamp}',
                             ucodi=False,
                             tag='#가상피팅',
@@ -750,7 +810,7 @@ def virfit(request):
                             
                             new_photo = photos.objects.create(
                                     groupID_id=new_clothes.groupID,
-                                    imgfile = f'imgfiles\VirtualFitting\capture_{timestamp}.png',
+                                    imgfile = rf'imgfiles\VirtualFitting\User\{user.first_name}\Capture\capture_{timestamp}.png',
                             )
                             new_photo.save()
 
@@ -877,6 +937,7 @@ def virfit(request):
 
     return redirect('virtual_fit_video', user.first_name)
 
+
 @login_required(login_url='login')
 def virtual_fit_photo(request,username):
     user = request.user
@@ -932,18 +993,14 @@ def virtual_fit_photo_result(request,username):
         result_vition = viton_upload_result.objects.all().annotate(
                 row_number=Window(
                     expression=RowNumber(),
-                    order_by=[F('name')])).order_by('name')         #order_by 수정
+                    order_by=[F('name')])).order_by('-id')         #order_by 수정
                     
-  
         q_list=[]
-        testWrite = ''
 
         for model in selected_model:
             for cloth in selected_cloth:
-                result_name = model[:5] + '_' + cloth[:5] + '_00.jpg'
-                filter = result_vition.filter(name__exact=result_name)
+                filter = result_vition.filter(Q(model_id__exact=int(model)),Q(cloth_id__exact=int(cloth)))
                 q_list.append(filter)
-
         result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
         
         result = {'result_vition':result_vition,
@@ -1037,15 +1094,77 @@ def virtual_fit_upload(request,username):
 
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):
-                    try:
-                        item = viton_upload_model.objects.create(
-                            name=request.POST.get('itemName'),
-                            image = imgfile,
-                            uploadUser=request.user.username,
-                        )
-                        item.save()
-                    except:
-                        print('업로드 실패')
+                    item = viton_upload_model.objects.create(
+                        name=request.POST.get('itemName'),
+                        image = imgfile,
+                        uploadUser=request.user.username,
+                    )
+                    item.save()
+
+                    name_val = viton_upload_cloth.objects.values('name').first()
+                    item_name = name_val['name']
+                    print("item : ",item_name)
+                    
+                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/image/{}'.format(item_name)
+                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/model/{}'.format(item_name)
+                    shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
+
+                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
+                    os.chdir('C:/hs-grad-2023')
+                    os.system(
+                        "python Self-Correction-Human-Parsing/simple_extractor.py --dataset lip --model-restore C:/hs-grad-2023/django/muapp/viton/checkpoints --input-dir C:/hs-grad-2023/django/muapp/viton/data/custom/image --output-dir C:/hs-grad-2023/django/muapp/viton/data/custom/image-parse")
+                    
+                    # ---------------지정된 파일 하나만 self-correction 수행할 수 있게 simple.py 수정
+
+                    '''
+                    bin\OpenPoseDemo.exe --image_dir inputImages --hand --disable_blending --display 0 --write_json outputJson --write_images  outputImages --num_gpu 1 --num_gpu_start 0 
+                    '''
+
+                    # 파일 이름 리스트를 저장할 txt 파일 경로 및 이름 지정
+                    file_list_file = 'C:/hs-grad-2023/django/muapp/viton/data/custom/custom_pairs.txt'
+                            
+                    cloth_all = viton_upload_cloth.objects.all()
+
+                    with open(file_list_file, 'w') as f:
+                        for cloth in cloth_all:
+                            result_name = item_name + ' ' + cloth.name 
+                            f.write(result_name + '\n')
+
+                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
+                    os.chdir('C:/hs-grad-2023/django/muapp/viton')
+                    os.system(
+                        "python C:/hs-grad-2023/django/muapp/viton/custom.py --name output --save_dir C:/hs-grad-2023/django/muapp/viton/data/custom/results")
+                    
+                    # 결과 DB 업로드
+                    result_dir = "C:/hs-grad-2023/django/muapp/viton/data/custom/results/output"
+                    for root, dirs, files in os.walk(result_dir):
+                        for result in files:
+                            # 이미지 파일 경로 생성
+                            result_path = os.path.join(root, result)
+
+                            with open(result_path, 'rb') as f:
+                                file = SimpleUploadedFile(f.name, f.read())
+
+                            # 모델 인스턴스 생성 및 저장
+                            values = re.split('[_|.]',result)
+                            
+                            model_val = viton_upload_model.objects.filter(name__contains=values[0])
+                            cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
+
+                            model_obj = model_val.first()
+                            cloth_obj = cloth_val.first()
+
+                            model_id = model_obj.ID
+                            cloth_id = cloth_obj.ID
+
+
+                            result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
+                            result.save()
+                    
+                    # 업로드 완료한 결과 폴더 삭제
+                    shutil.rmtree(result_dir)
+
+
 
         return redirect('virtual_fit_photo', username=user.first_name)
         #return render(request,"virtual_fit_upload.html", {"user":user})
@@ -1067,3 +1186,143 @@ def userlike(request):
     musinsa = paginator.get_page(page)
     return render(request,"userlike.html",{'cloth':clothesobject, 'comments': comments, 'musinsa': musinsa,})
 
+
+sam_checkpoint = os.path.join("checkpoint", "sam_vit_h_4b8939.pth")
+model_type = "vit_h"
+device = "cuda"
+
+sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+sam.to(device=device)
+
+predictor = SamPredictor(sam)
+
+def convert_png_to_jpg(image_file):
+    # 이미지 파일 열기
+    img = Image.open(image_file)
+
+    # 알파 채널이 있는 경우, 알파 채널을 제거하고 배경색을 흰색으로 설정
+    if img.mode == "RGBA":
+        img = img.convert("RGB")
+
+    # 이미지를 BytesIO 객체로 저장
+    img_bytes = BytesIO()
+    img.save(img_bytes, "JPEG", quality=95) # 포인터가 데이터 끝으로 이동하게됨 끝으로 가면 읽어오지를 못함
+    img_bytes.seek(0) #포인터 시작지점으로 되돌림
+
+    # BytesIO 객체를 ContentFile 객체로 변환 메모리상의 데이터로부터 파일 객체를 생성
+    jpg_image = ContentFile(img_bytes.read(), image_file.name)
+
+    return jpg_image
+
+
+@login_required(login_url='login')
+def segment_image(request):
+    user = request.user
+    if request.method == 'POST':
+        checked = request.POST.get('cloth')
+
+        # 이미지를 업로드해서 사용하는 경우
+        image_file = request.FILES['image']
+        if image_file.name.split(".")[1] == 'png':
+            image_file = convert_png_to_jpg(image_file)
+            image = Image.open(image_file)
+        else:
+            image = Image.open(image_file)
+        image = np.array(image)
+
+        # 예측할 좌표 설정
+        input_point_str = request.POST['input_point']
+        input_point = np.array(json.loads(input_point_str)).reshape(1, -1)
+        input_label = np.array([1])
+
+        # 이미지 분할
+        predictor.set_image(image)
+        masks, scores, logits = predictor.predict(
+            point_coords=input_point,
+            point_labels=input_label,
+            multimask_output=True,
+        )
+        middle_index = np.argmax(scores)
+
+        mask1 = masks[middle_index]
+        mask1_3ch = np.stack([mask1, mask1, mask1], axis=-1)
+        masked_image = image * mask1_3ch
+
+        mask1_alpha = np.stack([mask1, mask1, mask1, mask1], axis=-1)
+        masked_image_alpha = np.concatenate([image, 255 * np.ones((*image.shape[:2], 1), dtype=np.uint8)], axis=-1) * mask1_alpha
+
+        # 마스크 영역의 경계를 찾습니다.
+        y, x = np.where(mask1 == 1)
+        y_min, y_max, x_min, x_max = np.min(y), np.max(y), np.min(x), np.max(x)
+
+        # 이미지를 자릅니다.
+        cropped_image_alpha = masked_image_alpha[y_min:y_max+1, x_min:x_max+1, :]
+
+
+        # 결과 이미지를 서버의 output_images 폴더에 저장합니다.
+        output_image = Image.fromarray(np.uint8(cropped_image_alpha), mode='RGBA')
+        if checked == 'tops':
+            output_folder = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}", "Shirts") 
+            
+        elif checked == 'bottoms':
+            output_folder = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}", "Pants")
+        os.makedirs(output_folder, exist_ok=True)
+        file_names = os.listdir(output_folder)
+
+        max_num = 0
+        for name in file_names:
+            try:
+                num = int(name.split('.')[0])
+                if num > max_num:
+                    max_num = num
+            except ValueError:
+                pass
+
+        times = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        output_filename = f'{max_num + 1}.png'
+        output_filepath = os.path.join(output_folder, output_filename)
+        output_image.save(output_filepath)
+
+        if checked == 'tops':
+            new_clothes = clothes.objects.create(
+                                uploadUser_id=user.id,
+                                uploadUserName=user.username,
+                                type1='가상피팅',
+                                type2='상의',
+                                name=f'상의-{output_filename.split(".")[0]}',
+                                ucodi=False,
+                                tag='#가상피팅',
+                                groupID=get_random_string(length=10, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789'),
+                            )
+            
+            new_photo = photos.objects.create(
+                groupID_id=new_clothes.groupID,
+                imgfile = rf'imgfiles\VirtualFitting\User\{user.first_name}\Shirts\{output_filename}',
+        )
+        elif checked == 'bottoms':
+            new_clothes = clothes.objects.create(
+                                uploadUser_id=user.id,
+                                uploadUserName=user.username,
+                                type1='가상피팅',
+                                type2='하의',
+                                name=f'하의-{output_filename.split(".")[0]}',
+                                ucodi=False,
+                                tag='#가상피팅',
+                                groupID=get_random_string(length=10, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789'),
+                            )
+                        
+            new_photo = photos.objects.create(
+                groupID_id=new_clothes.groupID,
+                imgfile = rf'imgfiles\VirtualFitting\User\{user.first_name}\Pants\{output_filename}',
+        )
+            
+        new_clothes.save()
+        new_photo.save()
+
+        return JsonResponse({'result': f'저장 완료!'})
+    else:
+        clothesobject = clothes.objects.filter(type1__contains='가상피팅', type2__contains='상의')   #clothes의 모든 객체를 c에 담기
+        clothesobject2 = clothes.objects.filter(type1__contains='가상피팅', type2__contains='하의')   #clothes의 모든 객체를 c에 담기
+        
+        # GET 요청에 대한 처리 (예: 폼 렌더링)
+        return render(request, 'segment_image.html', {'clothesobject':clothesobject,'clothesobject2':clothesobject2, 'user':user})
