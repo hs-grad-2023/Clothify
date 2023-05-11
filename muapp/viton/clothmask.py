@@ -11,8 +11,9 @@ import torchvision.transforms as transforms
 from muapp.viton.networks.u2net import U2NET
 device = 'cuda'
 
-image_dir = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth'
-result_dir = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth-mask'
+#image_dir = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth'
+# result_dir = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth-mask'
+#result_dir = 'C:/hs-grad-2023/django/_media/datasets/cloth-mask'
 checkpoint_path = 'C:/hs-grad-2023/django/muapp/viton/checkpoints/cloth_segm_u2net_latest.pth'
 
 def load_checkpoint_mgpu(model, checkpoint_path):
@@ -89,6 +90,7 @@ def get_palette(num_cls):
             lab >>= 3
     return palette
 
+''' 원본 코드
 def original():
     transforms_list = []
     transforms_list += [transforms.ToTensor()]
@@ -123,8 +125,8 @@ def original():
         output_img.putpalette(palette)
         output_img = output_img.convert('L')
         output_img.save(os.path.join(result_dir, image_name[:-4]+'.jpg'))
-
-def cloth_mask(img_dir):
+'''
+def cloth_mask(img_dir,result_dir):
     image_name = os.path.basename(img_dir)
 
     transforms_list = []

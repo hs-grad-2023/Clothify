@@ -64,9 +64,10 @@ typeCategory = {
         '가방': ["== 가방 ==","백팩","메신저/크로스 백","파우치 백","숄더백","에코백","토트백","클로치 백","웨이스트백/힙색"],
         '악세서리': ["== 악세서리 ==","모자","레그웨어","머플러","장갑","시계","팔찌","귀걸이","반지","발찌","목걸이","헤어 액세서리"],
         '신발': ["== 신발 ==","구두","샌들","로퍼","힐/펌프스","플랫 슈즈","부츠","캔버스/단화","스포츠 스니커즈"],
+        '가상피팅' : ["== 가상피팅 ==", "상의", "하의", "코디"],
 }
 
-allTypeCategory = [ "== 상의 ==", "== 하의 ==","== 치마 ==","== 원피스 ==","== 아우터 ==","== 가방 ==","== 악세서리 ==","== 신발 =="]
+allTypeCategory = [ "== 상의 ==", "== 하의 ==","== 치마 ==","== 원피스 ==","== 아우터 ==","== 가방 ==","== 악세서리 ==","== 신발 ==","== 가상피팅 =="]
 
 @receiver(user_signed_up)
 def add_social_user_name(sender, request, user, **kwargs):
@@ -126,11 +127,11 @@ def get_clothes_recommendation(request):
             messages=[
                 {
                     "role": "system",
-                    "content": "assistant는 세계최고의 패션 코디네이터다. 대답은 1000자 이내. 대답 형식은 무조건 첫 시작은 'Clothify의 코디 추천!' 으로 시작해주고, 무조건 존댓말로 말해줘. 주요 내용은 아우터- 상의- 하의- 신발- 가방- 이런 느낌으로 설명해줘. 마지막엔 꼭 !표 붙여줘."
+                    "content": "assistant는 세계 최고의 패션 코디네이터다. 대답은 1000자 이내. 대답 형식은 무조건 첫 시작은 'Clothify의 코디 추천!' 으로 시작해주고, 무조건 존댓말로 말해줘. 주요 내용은 아우터- 상의- 하의- 신발- 가방- 이런 느낌으로 설명해줘. 마지막엔 꼭 !표 붙여줘."
                 },
                 {
                     "role": "user",
-                    "content": f"오늘 {location}의 날씨는 최고온도는 {weather['maxTmp']}도, 최저온도는 {weather['minTmp']}도, 현재기온은 {weather['curTmp']}도, 습도는 {weather['humidity']}%이고, 날씨는 {weather['sky']}이정도야. 내 키는 {user.height}cm에 체중은 {user.weight}kg이고 성별은 {user.sex}자야. 내가 좋아하는 옷의 스타일은 {user.style}이야 이걸 토대로 오늘의 옷을 코디해줘."
+                    "content": f"오늘 {location}의 날씨는 최고 온도는 {weather['maxTmp']}도, 최저 온도는 {weather['minTmp']}도, 현재 기온은 {weather['curTmp']}도, 습도는 {weather['humidity']}%이고, 날씨는 {weather['sky']}이정도야. 내 키는 {user.height}cm에 체중은 {user.weight}kg이고 성별은 {user.sex}자야. 내가 좋아하는 옷의 스타일은 {user.style}이야. 이걸 토대로 오늘의 옷을 코디해줘."
                 },
             ]
         )
@@ -192,7 +193,8 @@ def view_closet(request, username):
             #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct()   # 타입 검색 -> queryset끼리 중복 제외하고 합병( 조건부 표현식에 대해 필터링 할 수 없다고 뜸)
                 
             clothesobject = reduce(or_, q_list).distinct()                          # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
-            
+            print('q_list',q_list)
+            print('clothesobject',clothesobject.values())
             result = {
                     'clothesobject':clothesobject,
                     'user':user,
@@ -964,26 +966,153 @@ def virtual_fit_photo_result(request,username):
     user = request.user
     if request.method == 'POST':
         selected_model = request.POST.getlist('model')
-        selected_cloth = request.POST.getlist('cloth')
-
-        result_vition = viton_upload_result.objects.all().annotate(
-                row_number=Window(
-                    expression=RowNumber(),
-                    order_by=[F('name')])).order_by('-id')         #order_by 수정
+        selected_cloth = request.POST.getlist('cloth')      #order_by 수정 
                     
         q_list=[]
+        file_list_file = os.path.join('muapp','viton','data','custom','custom_pairs.txt')
+        
+        custompath = os.path.join("muapp","viton","data","custom")
+        if os.path.exists(custompath):
+            shutil.rmtree(custompath)
+
+        imagepath = os.path.join(custompath,"image")
+        maskpath = os.path.join(custompath,"image-parse")
+        openposeIpath = os.path.join(custompath,"openpose-img")
+        openposeJpath = os.path.join(custompath,"openpose-json")
+        clothpath = os.path.join(custompath,"cloth")
+        clothmaskpath = os.path.join(custompath,"cloth-mask")
+
+        if not os.path.exists(custompath):
+            os.mkdir(custompath)
+
+        if not os.path.exists(imagepath):
+            os.mkdir(imagepath)
+
+        if not os.path.exists(maskpath):
+            os.mkdir(maskpath)
+
+        if not os.path.exists(openposeIpath):
+            os.mkdir(openposeIpath)
+
+        if not os.path.exists(openposeJpath):
+            os.mkdir(openposeJpath)
+
+        if not os.path.exists(clothpath):
+            os.mkdir(clothpath)    
+
+        if not os.path.exists(clothmaskpath):
+            os.mkdir(clothmaskpath)    
+
+
+        with open(file_list_file, 'w') as f:
+            for model in selected_model:
+                models_obj = viton_upload_model.objects.filter(ID__exact=int(model))
+                model_obj = models_obj.first()
+                model_name = model_obj.name
+                model_name_split = model_name.split('.')
+                shutil.copyfile(os.path.join('_media','datasets','image',model_name), os.path.join(imagepath,model_name)) #_media -> viton data로 복사
+                
+                if not model_obj.maskmodel: #model의 mask가 없으면
+                # if (model_obj.maskmodel is None) or (model_obj.openposeImage is None) or (model_obj.openposeJson is None): #model의 mask가 없으면
+                    print('model_obj', model_obj, 'is not exist')
+                    #image-parse 
+                    try:
+                        os.system(f"python ../Self-Correction-Human-Parsing/simple_extractor.py --dataset lip --model-restore C:/hs-grad-2023/django/muapp/viton/checkpoints/human_parsing_final.pth --input-dir {imagepath} --output-dir {maskpath}")
+                    except:
+                        raise    
+                    print('Image Parsing Done..')
+
+                    mask_file = open(os.path.join(maskpath,model_name_split[0]+'.png'),'rb')
+                    model_obj.maskmodel.save(model_name_split[0]+'.png',File(mask_file),save=True)
+                    
+                    #openpose-image, openpose-json
+                    os.chdir("../openpose_demo")
+                    try:
+                        os.system(f"bin\\OpenPoseDemo.exe --image_dir ..\\django\\{imagepath} --hand --disable_blending --display 0 --write_json ..\\django\\{openposeJpath} --write_images  ..\\django\\{openposeIpath} --num_gpu 1 --num_gpu_start 0")
+                    except:
+                        raise
+                    print('openpose Making Done..')
+
+                    os.chdir("../django")
+                    opimg_file = open(os.path.join(openposeIpath,model_name_split[0]+'_rendered.png'),'rb')
+                    model_obj.openposeImage.save(model_name_split[0]+'_rendered.png',File(opimg_file),save=True)
+
+                    opjson_file = open(os.path.join(openposeJpath,model_name_split[0]+'_keypoints.json'),'rb')
+                    model_obj.openposeJson.save(model_name_split[0]+'_keypoints.json',File(opjson_file),save=True)
+
+                else: # model의 mask가 있을때
+                    shutil.copyfile(os.path.join('_media','datasets','image-parse',os.path.basename(model_obj.maskmodel.url)), os.path.join(maskpath,model_name_split[0]+'.png')) #_media -> viton data로 복사
+                    shutil.copyfile(os.path.join('_media','datasets','openpose-img',os.path.basename(model_obj.openposeImage.url)), os.path.join(openposeIpath,model_name_split[0]+'_rendered.png')) #_media -> viton data로 복사
+                    shutil.copyfile(os.path.join('_media','datasets','openpose-json',os.path.basename(model_obj.openposeJson.url)), os.path.join(openposeJpath,model_name_split[0]+'_keypoints.json')) #_media -> viton data로 복사
+                    
+                for cloth in selected_cloth:
+                    clothes_obj = viton_upload_cloth.objects.filter(ID__exact=int(cloth))
+                    cloth_obj = clothes_obj.first()
+                    cloth_name = cloth_obj.name
+
+                    shutil.copyfile(os.path.join('_media','datasets','cloth',cloth_name), os.path.join(clothpath,cloth_name)) #_media -> viton data로 복사
+
+                    if not cloth_obj.maskimage: #cloth의 mask데이터가 없을 때
+                        cloth_obj = clothes_obj.first()
+                        impath = os.path.join('_media','datasets','cloth',cloth_name)
+
+                        clothmask.cloth_mask(img_dir=os.path.join(clothpath,cloth_name),result_dir=clothmaskpath) #cloth-mask 생성
+
+                        mask_file = open(os.path.join(clothmaskpath,cloth_name),'rb') #cloth-mask db저장
+                        cloth_obj.maskimage.save(cloth_name,File(mask_file),save=True)
+                    else: #cloth의 mask가 있을때 건너뜀
+                        shutil.copyfile(os.path.join('_media','datasets','cloth-mask',cloth_name), os.path.join(clothmaskpath, cloth_name)) #_media -> viton data로 복사
+
+                    result_obj = viton_upload_result.objects.filter(Q(model_id__exact=int(model)),Q(cloth_id__exact=int(cloth)))
+                    if not result_obj.exists(): #만들어진 결과가 없으면 
+
+                        # viton용 txt 파일 생성
+                        result_name = model_name + ' ' + cloth_name
+                        f.write(result_name + '\n')
+
+        f.close()
+
+        # 업로드한 사진 + 모델들 합성해서 결과 만들기
+        os.chdir('muapp/viton')
+        os.system("python custom.py --name output")
+        os.chdir("../../")
+
+        # 결과 DB 업로드
+        result_dir = os.path.join(custompath,"results","output")
+        
+        for root, dirs, files in os.walk(result_dir):
+            for result in files:
+                # 이미지 파일 경로 생성
+                result_path = os.path.join(root, result)
+                # 모델 인스턴스 생성 및 저장
+                values = re.split('[_|.]',result)
+                
+                model_val = viton_upload_model.objects.filter(name__contains=values[0])
+                cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
+
+                model_obj = model_val.first()
+                cloth_obj = cloth_val.first()
+
+                model_id = model_obj.ID
+                cloth_id = cloth_obj.ID
+                with open(result_path, 'rb') as f:
+                    file = SimpleUploadedFile(f.name, f.read())
+
+                # 모델 인스턴스 생성 및 저장
+                result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
+                result.save()
+        
+        # 업로드 완료한 결과 폴더 삭제
+        #shutil.rmtree(result_dir)
 
         for model in selected_model:
             for cloth in selected_cloth:
-                filter = result_vition.filter(Q(model_id__exact=int(model)),Q(cloth_id__exact=int(cloth)))
-                q_list.append(filter)
-        result_vition = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+                filtered = viton_upload_result.objects.filter(Q(model_id__exact=int(model)),Q(cloth_id__exact=int(cloth)))
+                q_list.append(filtered)
         
-        result = {'result_vition':result_vition,
-                  "user":user,
-                  }
+        result_viton = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
 
-        return render(request, "virtual_fit_photo_result.html",result)
+        return render(request, "virtual_fit_photo_result.html",{"result_viton":result_viton,"user":user,})
     else:
         return redirect('virtual_fit_photo', username=user.first_name)
 
@@ -1012,61 +1141,6 @@ def virtual_fit_upload(request,username):
                         uploadUser=request.user.username,
                     )
                     item.save()
-                    
-                    name_val = viton_upload_cloth.objects.values('name').first()
-                    item_name = name_val['name']
-                    print("item : ",item_name)
-                    
-                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/cloth/{}'.format(item_name)
-                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/cloth/{}'.format(item_name)
-                    shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
-
-                    clothmask.cloth_mask(wcpath)
-                    
-                    # 파일 이름 리스트를 저장할 txt 파일 경로 및 이름 지정
-                    file_list_file = 'C:/hs-grad-2023/django/muapp/viton/data/custom/custom_pairs.txt'
-                            
-                    model_all = viton_upload_model.objects.all()
-
-                    with open(file_list_file, 'w') as f:
-                        for model in model_all:
-                            result_name = model.name + ' ' + item_name
-                            f.write(result_name + '\n')
-
-                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
-                    os.chdir('C:/hs-grad-2023/django/muapp/viton')
-                    os.system(
-                        "python C:/hs-grad-2023/django/muapp/viton/custom.py --name output --save_dir C:/hs-grad-2023/django/muapp/viton/data/custom/results")
-                    
-                    # 결과 DB 업로드
-                    result_dir = "C:/hs-grad-2023/django/muapp/viton/data/custom/results/output"
-                    for root, dirs, files in os.walk(result_dir):
-                        for result in files:
-                            # 이미지 파일 경로 생성
-                            result_path = os.path.join(root, result)
-
-                            with open(result_path, 'rb') as f:
-                                file = SimpleUploadedFile(f.name, f.read())
-
-                            # 모델 인스턴스 생성 및 저장
-                            values = re.split('[_|.]',result)
-                            
-                            model_val = viton_upload_model.objects.filter(name__contains=values[0])
-                            cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
-
-                            model_obj = model_val.first()
-                            cloth_obj = cloth_val.first()
-
-                            model_id = model_obj.ID
-                            cloth_id = cloth_obj.ID
-
-
-                            result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
-                            result.save()
-                    
-                    # 업로드 완료한 결과 폴더 삭제
-                    shutil.rmtree(result_dir)
-                    
 
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):
@@ -1076,71 +1150,6 @@ def virtual_fit_upload(request,username):
                         uploadUser=request.user.username,
                     )
                     item.save()
-
-                    name_val = viton_upload_cloth.objects.values('name').first()
-                    item_name = name_val['name']
-                    print("item : ",item_name)
-                    
-                    wcpath = 'C:/hs-grad-2023/django/muapp/viton/data/custom/image/{}'.format(item_name)
-                    rcpath = 'C:/hs-grad-2023/django/_media/datasets/model/{}'.format(item_name)
-                    shutil.copyfile(rcpath, wcpath) #rc -> wc로 복사
-
-                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
-                    os.chdir('C:/hs-grad-2023')
-                    os.system(
-                        "python Self-Correction-Human-Parsing/simple_extractor.py --dataset lip --model-restore C:/hs-grad-2023/django/muapp/viton/checkpoints --input-dir C:/hs-grad-2023/django/muapp/viton/data/custom/image --output-dir C:/hs-grad-2023/django/muapp/viton/data/custom/image-parse")
-                    
-                    # ---------------지정된 파일 하나만 self-correction 수행할 수 있게 simple.py 수정
-
-                    '''
-                    bin\OpenPoseDemo.exe --image_dir inputImages --hand --disable_blending --display 0 --write_json outputJson --write_images  outputImages --num_gpu 1 --num_gpu_start 0 
-                    '''
-
-                    # 파일 이름 리스트를 저장할 txt 파일 경로 및 이름 지정
-                    file_list_file = 'C:/hs-grad-2023/django/muapp/viton/data/custom/custom_pairs.txt'
-                            
-                    cloth_all = viton_upload_cloth.objects.all()
-
-                    with open(file_list_file, 'w') as f:
-                        for cloth in cloth_all:
-                            result_name = item_name + ' ' + cloth.name 
-                            f.write(result_name + '\n')
-
-                    # 업로드한 사진 + 모델들 합성해서 결과 만들기
-                    os.chdir('C:/hs-grad-2023/django/muapp/viton')
-                    os.system(
-                        "python C:/hs-grad-2023/django/muapp/viton/custom.py --name output --save_dir C:/hs-grad-2023/django/muapp/viton/data/custom/results")
-                    
-                    # 결과 DB 업로드
-                    result_dir = "C:/hs-grad-2023/django/muapp/viton/data/custom/results/output"
-                    for root, dirs, files in os.walk(result_dir):
-                        for result in files:
-                            # 이미지 파일 경로 생성
-                            result_path = os.path.join(root, result)
-
-                            with open(result_path, 'rb') as f:
-                                file = SimpleUploadedFile(f.name, f.read())
-
-                            # 모델 인스턴스 생성 및 저장
-                            values = re.split('[_|.]',result)
-                            
-                            model_val = viton_upload_model.objects.filter(name__contains=values[0])
-                            cloth_val = viton_upload_cloth.objects.filter(name__contains=values[1])
-
-                            model_obj = model_val.first()
-                            cloth_obj = cloth_val.first()
-
-                            model_id = model_obj.ID
-                            cloth_id = cloth_obj.ID
-
-
-                            result = viton_upload_result(name=result, image=file, model_id=model_id, cloth_id=cloth_id, uploadUser=request.user.username)
-                            result.save()
-                    
-                    # 업로드 완료한 결과 폴더 삭제
-                    shutil.rmtree(result_dir)
-
-
 
         return redirect('virtual_fit_photo', username=user.first_name)
         #return render(request,"virtual_fit_upload.html", {"user":user})
@@ -1254,6 +1263,7 @@ def segment_image(request):
             except ValueError:
                 pass
 
+     
         times = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         output_filename = f'{max_num + 1}.png'
         output_filepath = os.path.join(output_folder, output_filename)

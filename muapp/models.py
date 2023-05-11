@@ -104,22 +104,23 @@ class ResizedImageField(models.ImageField):
             img_file, None, value.name, 'image/jpeg', img_file.getbuffer().nbytes, None)
 
 def random_name_C(instance, filename):
-
-    filename = format(random.randint(0,99999),"05d")
-    # 파일이 저장될 경로를 지정
+    filename = format(random.randint(0,99999),"05d")     # 파일이 저장될 경로를 지정
     return os.path.join("datasets/cloth", filename+'.jpg')
 
-def random_name_M(instance, filename):
-
+def random_name_CM(instance, filename):
     filename = format(random.randint(0,99999),"05d")
-    # 파일이 저장될 경로를 지정
-    return os.path.join("datasets/model", filename+'.jpg')
+    return os.path.join("datasets/cloth-mask", filename+'.jpg')
+
+def random_name_M(instance, filename):
+    filename = format(random.randint(0,99999),"05d")
+    return os.path.join("datasets/image", filename+'.jpg')
 
 
 class viton_upload_cloth(models.Model):
     clothesname = models.CharField(max_length=100,default="sample")
     name = models.CharField(max_length=100)
     image = ResizedImageField(size=[768, 1024], upload_to=random_name_C)
+    maskimage = ResizedImageField(size=[768, 1024], upload_to="datasets/cloth-mask", null=True, blank=True)
     #image = ResizedImageField(size=[768, 1024], upload_to="datasets/cloth")
     uploadUser = models.CharField(max_length=30)
     uploadDate = models.DateTimeField(default=timezone.now)
@@ -149,6 +150,9 @@ class viton_upload_model(models.Model):
     clothesname = models.CharField(max_length=100,default="sample")
     name = models.CharField(max_length=100)
     image = ResizedImageField(size=[768, 1024], upload_to=random_name_M)
+    maskmodel = ResizedImageField(size=[768, 1024], upload_to="datasets/image-parse", null=True, blank=True)
+    openposeImage = ResizedImageField(size=[768, 1024], upload_to="datasets/openpose-img", null=True, blank=True)
+    openposeJson = models.FileField(upload_to="datasets/openpose-json", null=True, blank=True)
     #image = ResizedImageField(size=[768, 1024], upload_to="datasets/model")
     uploadUser = models.CharField(max_length=30)
     uploadDate = models.DateTimeField(default=timezone.now)

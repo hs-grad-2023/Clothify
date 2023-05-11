@@ -43,11 +43,11 @@ def get_opt():
     parser.add_argument('--load_width', type=int, default=768)
     parser.add_argument('--shuffle', action='store_true')
 
-    parser.add_argument('--dataset_dir', type=str, default='./data')
+    parser.add_argument('--dataset_dir', type=str, default='.\\data')
     parser.add_argument('--dataset_mode', type=str, default='custom') #dataset 내부 폴더 이름
     parser.add_argument('--dataset_list', type=str, default='custom_pairs.txt')
-    parser.add_argument('--checkpoint_dir', type=str, default='./checkpoints/')
-    parser.add_argument('--save_dir', type=str, default='./results/')
+    parser.add_argument('--checkpoint_dir', type=str, default='.\\checkpoints')
+    parser.add_argument('--save_dir', type=str, default='./data/custom/results')
 
     parser.add_argument('--display_freq', type=int, default=1)
 
