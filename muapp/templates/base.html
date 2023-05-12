@@ -33,8 +33,12 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {%comment%} 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endcomment %}
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     
 
     {% block style %}
@@ -117,20 +121,12 @@
                 <div class="col-lg-3 col-md-6">
                     <h1 class="fw-bold mb-1 jamsil" style="color: #0b83f7; text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;">C<span class="fs-1" style="color: #6fa8dc;">lo<span class="fs-3">th</span></span><span class="fs-4" style="color: #8fce00;">ify</span></h1>
                     <p class="jamsil">옷을 손쉽게 관리한다는 뜻으로, "Cloth"와 "Simplify"의 합성어입니다.</p>
-                    {% comment %} <div class="d-flex pt-2">
-                        <a class="btn btn-square btn-outline-light rounded-circle me-1" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-square btn-outline-light rounded-circle me-1" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-square btn-outline-light rounded-circle me-1" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-square btn-outline-light rounded-circle me-0" href=""><i class="fab fa-linkedin-in"></i></a>
-                    </div> {% endcomment %}
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4 jamsil">정보</h4>
-                    <p class="hahmelt"><i class="fa fa-user me-3"></i>협성대학교 졸업작품</p>
-                    {% comment %} 
-                    <p><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p> 
-                    <p class="hahmelt"><i class="fa fa-envelope me-3"></i>sg851033@gmail.com</p>
-                    {% endcomment %}
+                    <h4 class="text-light mb-4 jamsil">조원 정보</h4>
+                    <p class="jamsil"><a href="{% url 'about' %}"><i class="fa fa-user me-3"></i>유민영(20200626)</a></p>
+                    <p class="jamsil"><a href="{% url 'about' %}"><i class="fa fa-user me-3"></i>김한영(20170670)</a></p>
+                    <p class="jamsil"><a href="{% url 'about' %}"><i class="fa fa-user me-3"></i>황지현(20200647)</a></p>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4 jamsil">바로가기</h4>
@@ -189,6 +185,7 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'assets/js/login-register.js' %}" type="text/javascript"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {% block jsv %}
 
     {% endblock jsv%}  

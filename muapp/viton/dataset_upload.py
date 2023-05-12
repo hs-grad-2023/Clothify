@@ -71,11 +71,12 @@ for root, dirs, files in os.walk(result_dir):
         with open(result_path, 'rb') as f:
             file = SimpleUploadedFile(f.name, f.read())
 
+        # 모델 인스턴스 생성 및 저장
+        values = re.split('[_|.]',result)
+        print(values)
         modelid = viton_upload_model.objects.get(name=(values[0]+'_00.'+values[3]))
         clothid = viton_upload_cloth.objects.get(name=(values[1]+'_00.'+values[3]))
 
-        # 모델 인스턴스 생성 및 저장
-        values = re.split('[_|.]',result)
         result = viton_upload_result(name=result, image=file, model_id = modelid.ID, cloth_id = clothid.ID)
         result.save()
 

@@ -55,12 +55,12 @@
                                   >
                                 {% csrf_token %}
                                 <div class="mb-3 row">
-                                    <label for="name" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
+                                    <label for="itemName" class="col-sm-2 col-form-label text-end fw-bold">옷 이름</label>
                                     <input type="text" name="itemName" id="itemName"class="form-control col" placeholder="(필수 입력)" required/>
                                 </div>
                                 <!-- tag -->
                                 <div class="mb-3 row">
-                                    <label for="tag" class="col-sm-2 col-form-label text-end fw-bold">분류</label>
+                                    <label for="itemtype" class="col-sm-2 col-form-label text-end fw-bold">분류</label>
                                     <select name="itemtype" id="itemtype" size="1" class="form-select col" required>
                                         <option selected>옷</option>
                                         <option>모델</option>

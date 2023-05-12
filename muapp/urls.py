@@ -42,6 +42,7 @@ urlpatterns = [
     path('virtual_fit_photo_result/<str:username>/',views.virtual_fit_photo_result, name='virtual_fit_photo_result'),
     path('virtual_fit_video/<str:username>/',views.virtual_fit_video, name='virtual_fit_video'),
     path('virtual_fit_upload/<str:username>/',views.virtual_fit_upload, name='virtual_fit_upload'),
+    path('virtual_fit_save/<str:username>/',views.virtual_fit_save, name='virtual_fit_save'),
     path('update_closet/<str:username>/<str:groupID>/',views.updateCloset, name='updateCloset'),
     path('remove_closet/<str:username>/<str:groupID>/',views.remove_closet, name='remove_closet'),
     path('mypage/<str:username>/',views.mypage, name='mypage'),

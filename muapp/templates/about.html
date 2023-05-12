@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block nav %}
-    <a href="{% url 'index' %}" class="dropdown-item nav-link jamsil">Home</a>
-    <a href="{% url 'about' %}" class="dropdown-item nav-link jamsil">소개</a>
-{% endblock %}
+    <a href="{% url 'index' %}" class="nav-item nav-link jamsil">Home</a>
+    <a href="{% url 'about' %}" class="nav-item nav-link jamsil">소개</a>
+{% endblock nav%}
 
+{% block style %}
+                       
+{% endblock style %}
+<style>
+    .icon{
+        width: 7%;
+        height: auto;
+        margin: 3px 10px 3px 3px;
+    }
+</style>
 {% block content %}
 
 <div class="container-xxl py-5">
@@ -36,16 +46,12 @@
                     <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>가상피팅</p>
                     <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>옷장관리</p>
                     <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>코디추천</p>
-                    {% comment %} <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Read More</a> {% endcomment %}
+                    <p class="jamsil"><i class="fa fa-check text-primary me-3"></i>옷 자랑</p>
                 </div>
             </div>
         </div>
     </div>
     <!-- About End -->
-
-
-    <!-- Firm Visit Start -->
-    <!-- Firm Visit End -->
 
     <!-- Feature Start -->
     <div class="container-fluid bg-light bg-icon py-6">
@@ -58,104 +64,103 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="bg-white h-100 p-4 p-xl-5">
                         <div class="text-left">
-                            <img class="img-fluid mb-4" src="img/product-1.jpg" alt="">
-                            <img class="icon" src="icon/human_icon.png" alt="">
+                            <img class="img-fluid mb-4" src="{% static 'img/ymy.png' %}" alt="" style="width:100%; height:auto;">
+                            <p></p>
+                            <i class="fa-solid fa-user"></i>
                             <a class="text-dark" href="">유민영</a>
                             <p></p>
     
-                            <img class="icon" src="icon/email_icon.png" alt="">
+                            <i class="fa-solid fa-envelope"></i>
                             <a class="text-dark" href="">bambooiscoming2000@gmail.com</a>
                             <p></p>
     
-                            <img class="icon" src="icon/pen_icon.png" alt="">
+                            <i class="fa-solid fa-id-card"></i>
                             <a class="text-dark" href="">협성대학교 컴퓨터공학과 20학번</a>
                             <p></p>
                             
-                            <img class="icon" src="icon/site_icon.png" alt="">
-                            <a class="text-dark" href="https://github.com/Wus01">https://github.com/Wus01</a>
+                            <i class="fa-regular fa-sidebar"></i>
+                            <a class="text-dark" href="https://github.com/m1yaaang">https://github.com/m1yaaang</a>
                             <p></p>
     
-                            <img class="icon" src="icon/skills_icon.png" alt="">
-                            <a class="text-dark" href="">내가 잘하는 언어 써보면 오떨지</a>
+                            <i class="fa">
+                                <img class="icon" src="{% static 'icon/skills_icon.png' %}" style="width:7%; height:auto; margin: 3px 10px 3px 3px;">
+                            </i>
+                            <a class="text-dark" href="">파이썬, 인공지능, HTML, CSS, JavaScript</a>
                             <p></p>
-    
-                            <img class="icon" src="icon/introduce_icon.png" alt="">
-                            <a class="text-dark" href="">~간단한 자기소개글~</a>
+                            
+                            <i>
+                                <img class="icon" src="{% static 'icon/introduce_icon.png' %}" style="width:7%; height:auto; margin: 3px 10px 3px 3px;">
+                            </i>
+                            <a class="text-dark" href="">VITON_HD와 OpenPose를 이용한 사진 가상피팅 및 옷장, 날씨 API 구현</a>
                             <p></p>
                         </div>
-
-                        {% comment %} <div class="text-center">
-                            <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
-                        </div> {% endcomment %}
                     </div>
                     
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="bg-white h-100 p-4 p-xl-5">
                         <div class="text-left">
-                            <img class="img-fluid mb-4" src="img/product-2.jpg" alt="">
-                            <img class="icon" src="icon/human_icon.png" alt="">
-                            <a class="text-dark" href="">황지현</a>
+                            <img class="img-fluid mb-4" src="{% static 'img/testimonial-2.jpg' %}" alt="" style="width:100%; height:auto;">
+                            <p></p>
+                            <i class="fa-solid fa-user"></i>
+                            <a class="text-dark" href="">김한영</a>
                             <p></p>
     
-                            <img class="icon" src="icon/email_icon.png" alt="">
-                            <a class="text-dark" href="">hwgjh20@gmail.com</a>
+                            <i class="fa-solid fa-envelope"></i>
+                            <a class="text-dark" href="">sg851044@naver.com</a>
                             <p></p>
     
-                            <img class="icon" src="icon/pen_icon.png" alt="">
-                            <a class="text-dark" href="">협성대학교 컴퓨터공학과 20학번</a>
+                            <i class="fa-solid fa-id-card"></i>
+                            <a class="text-dark" href="">협성대학교 컴퓨터공학과 17학번</a>
                             <p></p>
                             
-                            <img class="icon" src="icon/site_icon.png" alt="">
-                            <a class="text-dark" href="https://github.com/Wus01">https://github.com/Wus01</a>
+                            <i class="fa-regular fa-sidebar"></i>
+                            <a class="text-dark" href="https://github.com/Game2njoy">https://github.com/Game2njoy</a>
                             <p></p>
     
-                            <img class="icon" src="icon/skills_icon.png" alt="">
-                            <a class="text-dark" href="">내가 잘하는 언어 써보면 오떨지</a>
+                            <i class="fa">
+                                <img class="icon" src="{% static 'icon/skills_icon.png' %}" style="width:7%; height:auto; margin: 3px 10px 3px 3px;">
+                            </i>
+                            <a class="text-dark" href="">파이썬, 인공지능, HTML, CSS, JavaScript</a>
                             <p></p>
     
-                            <img class="icon" src="icon/introduce_icon.png" alt="">
-                            <a class="text-dark" href="">~간단한 자기소개글~</a>
+                            <i>
+                                <img class="icon" src="{% static 'icon/introduce_icon.png' %}" style="width:7%; height:auto; margin: 3px 10px 3px 3px;">
+                            </i>
+                            <a class="text-dark" href="">OpneCv와 SAM을 이용한 실시간 가상피팅, 코디북, 회원가입, 옷 자랑, ChatGPT를 통한 코디 추천 구현 </a>
                             <p></p>
                         </div>
-
-                        {% comment %} <div class="text-center">
-                            <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
-                        </div> {% endcomment %}
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="bg-white h-100 p-4 p-xl-5">
                         <div class="text-left">
-                            <img class="img-fluid mb-4" src="img/product-3.jpg" alt="">
-                            <img class="icon" src="icon/human_icon.png" alt="">
+                            <img class="img-fluid mb-4" src="{% static 'img/hjh.png' %}" alt="" style="width:100%; height:auto;" >
+                            <p></p>
+                            <i class="fa-solid fa-user"></i>
                             <a class="text-dark" href="">황지현</a>
                             <p></p>
     
-                            <img class="icon" src="icon/email_icon.png" alt="">
+                            <i class="fa-solid fa-envelope"></i>
                             <a class="text-dark" href="">hwgjh20@gmail.com</a>
                             <p></p>
     
-                            <img class="icon" src="icon/pen_icon.png" alt="">
+                            <i class="fa-solid fa-id-card"></i>
                             <a class="text-dark" href="">협성대학교 컴퓨터공학과 20학번</a>
                             <p></p>
                             
-                            <img class="icon" src="icon/site_icon.png" alt="">
+                            <i class="fa-regular fa-sidebar"></i>
                             <a class="text-dark" href="https://github.com/Wus01">https://github.com/Wus01</a>
                             <p></p>
     
-                            <img class="icon" src="icon/skills_icon.png" alt="">
-                            <a class="text-dark" href="">내가 잘하는 언어 써보면 오떨지</a>
+                            <img class="icon" src="{% static 'icon/skills_icon.png' %}" style="width:7%; height:auto; margin: 3px 10px 3px 3px;">
+                            <a class="text-dark" href="">파이썬, HTML, CSS, JavaScript</a>
                             <p></p>
     
-                            <img class="icon" src="icon/introduce_icon.png" alt="">
-                            <a class="text-dark" href="">~간단한 자기소개글~</a>
+                            <img class="icon" src="{% static 'icon/introduce_icon.png' %}" style="width:7%; height:auto; margin: 3px 10px 3px 3px;">
+                            <a class="text-dark" href="">옷장 및 필터 구현</a>
                             <p></p>
                         </div>
-
-                        {% comment %} <div class="text-center">
-                            <a class="btn btn-outline-primary border-2 py-2 px-4 rounded-pill" href="">Read More</a>
-                        </div> {% endcomment %}
                     </div>
                 </div>
             </div>

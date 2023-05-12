@@ -42,8 +42,8 @@
             <div class="col-lg-6">
                 <div class="section-header text-start mb-5 wow fadeInUp" style="bottom: 50px;top: 100px;" data-wow-delay="0.1s">
                     <h1 class="display-5 mb-3 jamsil">가상피팅(사진)</h1>
-                    <p class="jamsil">사진으로 옷을 입어봐요!</p>
-                    <p class="jamsil">  모델과 옷을 선택하면 옷 입고 있는 모델이 등장!</p>
+                    <p class="jamsil"> <i class="fa-duotone fa-check"></i> 사진으로 옷을 입어봐요!</p>
+                    <p class="jamsil"> <i class="fa-duotone fa-check"></i> 모델과 옷을 선택하면 옷 입고 있는 모델이 등장!</p>
                 </div>
             </div>
             <br>
@@ -83,7 +83,7 @@
                 {% load clothes_extra %}
                 <!-- Choose Model -->
                 <div id="tab-1" class="tab-pane fade show p-0 active">
-                    <div class="deleteClothesBtn" id="deleteClothesBtn" style="display: none; width: 100%; height: auto;">
+                    <div class="deleteClothesBtn" id="deleteClothesBtn" style="width: 100%; height: auto;">
                         <button id="check_all" class="btn jamsil" onclick="ClickDeletBtn('model_allCheck');"> 전체 선택 </button>
                         <button id="check_cancel" class="btn jamsil" onclick="ClickDeletBtn('model_allCancel')"> 전체 선택 취소 </button>
                         <button id="model_deleteBtn" class="btn jamsil" onclick="ClickDeletBtn('ModelDelete')"> 삭제하기 </button>
@@ -94,12 +94,14 @@
                         <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                             <div class="product-item jamsil shadow" style="border-radius: 20px;">
                                 <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
-                                    <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{m.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                    <label class="img-thumbnail w-100" for="m-{{m.ID}}" onclick="toggleCheckbox('m-{{m.ID}}')">
+                                        <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{m.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                    </label>
                                     {% csrf_token %}
-                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="model" value="{{m.ID}}">
+                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="model" id="m-{{m.ID}}" value="{{m.ID}}">
                                 </div>
                                 <div class="text-center p-4 jamsil">
-                                    <a class="d-block h5 mb-2" href="">{{m.name}}</a>
+                                    <a class="d-block h5 mb-2" >{{m.name}}</a>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +133,7 @@
                 </div>
                 <!-- Choose cloth -->
                 <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="deleteClothesBtn" id="deleteClothesBtn" style="display: none; width: 100%; height: auto;">
+                    <div class="deleteClothesBtn" id="deleteClothesBtn" style="width: 100%; height: auto;">
                         <button id="check_all" class="btn jamsil" onclick="ClickDeletBtn('cloth_allCheck');"> 전체 선택 </button>
                         <button id="check_cancel" class="btn jamsil" onclick="ClickDeletBtn('cloth_allCancel')"> 전체 선택 취소 </button>
                         <button id="cloth_deleteBtn" class="btn jamsil" onclick="ClickDeletBtn('ClothDelete')"> 삭제하기 </button>
@@ -142,12 +144,14 @@
                         <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                             <div class="product-item jamsil shadow" style="border-radius: 20px;">
                                 <div class="position-relative bg-light overflow-hidden" style="border-radius: 20px 20px 0 0;">
-                                    <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                    <label for="c-{{c.ID}}" onclick="toggleCheckbox('c-{{c.ID}}')">
+                                        <img class="img-thumbnail w-100" style="border-radius: 20px 20px 0 0; width: 300px; height: 300px;" src="{{c.image.url}}" width="200px" height="300px" margin="10%" padding="10%" alt="">
+                                    </label>
                                     {% csrf_token %}
-                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="cloth" value="{{c.ID}}">
+                                    <input class="position-absolute start-0 top-0 m-4 py-1 px-3" style="width: 20px; height: 20px;" type="checkbox" name="cloth" id="c-{{c.ID}}" value="{{c.ID}}">
                                 </div>
                                 <div class="text-center p-4 jamsil">
-                                    <a class="d-block h5 mb-2" href="">{{c.clothesname}}</a>
+                                    <a class="d-block h5 mb-2">{{c.clothesname}}</a>
                                 </div>
                             </div>
                         </div>
@@ -187,8 +191,17 @@
 
 {%block jsv%}
 <script>
-
+    function toggleCheckbox(checkboxId) {
+        $("input:checkbox[id=checkboxId]").prop("checked", true);  
+    }
     
+    const Toast = Swal.mixin({ //팝업창
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+
     var cloth_arr = [];
     var model_arr= [];
     
@@ -208,12 +221,42 @@
             //console.log(cloth_arr); 
 
         })
-        
-        document.getElementById('result_Form').submit(); 
+        if (cloth_arr.length == 0){
+            Toast.fire({
+                icon: 'error',
+                title: '옷을 선택하지 않았습니다.',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+        }
+        if(model_arr.length == 0){
+            Toast.fire({
+                icon: 'error',
+                title: '모델을 선택하지 않았습니다.',
+                customClass: {
+                    title: 'jamsil',
+                }
+              });
+        }
+        if(cloth_arr.length >0 && model_arr.length>0){
+            Swal.fire({
+                icon: 'success',
+                title: '가상피팅 결과 생성 중',
+                text: '잠시 후 결과가 나옵니다.',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                customClass: {
+                    title: 'jamsil',
+                    container: 'jamsil',
+                }
+              });
+            document.getElementById('result_Form').submit(); 
+        }
 
     }
+   
 
-        
     /* ------------- 옷 삭제 & 삭제 옵션 버튼 함수 ------------------*/
     function ClickDeletBtn(value){
         var v = value;              // 매개변수 값을 v에 담기
@@ -226,8 +269,58 @@
         switch (v) {
 
             case 'show':   // 옷 삭제 클릭 시 checkbox랑 삭제 옵션 보여주기
-                $(".delete_checkbox").show();    //.show()는 style"display: none;"으로 돼 있어야 실행됨
-                $(".deleteClothesBtn").show();
+                $("input:checkbox[name='model']:checked").each(function() {
+                    Models.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                    document.getElementById('del_model').value = Models;         // 배열을 del_clothes의 value에 담기
+                    //console.log(deleteClothes);
+                        
+                    document.getElementById('model_DeleteForm').submit();  
+                })
+                $("input:checkbox[name='cloth']:checked").each(function() {
+                    Clothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                    document.getElementById('del_cloth').value = Clothes;       // 배열을 del_clothes의 value에 담기
+                    //console.log(deleteClothes);
+                     
+                })
+                    
+                Swal.fire({
+                    title: '삭제하시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    reverseButtons: true,
+                    customClass: {
+                        title: 'jamsil'}
+                }).then((result)=>{
+                    if(result.isConfirmed){
+                        Swal.fire({
+                            title: '삭제 완료!',
+                            icon:'success',
+                            confirmButtonColor: '#3085d6',
+                            customClass: {
+                                title: 'jamsil'}
+                        }).then((result)=>{
+                            document.getElementById('model_DeleteForm').submit();
+                            document.getElementById('cloth_DeleteForm').submit();   
+                            })
+                    }else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        Swal.fire({
+                            title: '취소',
+                            icon:'error',
+                            confirmButtonColor: '#3085d6',
+                            customClass: {
+                                title: 'jamsil'}
+                        })
+                        setTimeout(() => {}, 3000)
+                    }
+                })
+                 
             
                 break;
 
@@ -253,17 +346,53 @@
 
             case 'ModelDelete': //삭제하기
 
-            $("input:checkbox[name='model']:checked").each(function() {
-                    Models.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
-                    document.getElementById('del_model').value = Models;         // 배열을 del_clothes의 value에 담기
-                    //console.log(deleteClothes);
-                        
-                    document.getElementById('model_DeleteForm').submit();  
-                })
+                $("input:checkbox[name='model']:checked").each(function() {
+                        Models.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
+                        document.getElementById('del_model').value = Models;         // 배열을 del_clothes의 value에 담기
+                        //console.log(deleteClothes);
+                            
+                        //document.getElementById('model_DeleteForm').submit();  
+                    })
 
-                alert(Models);
+                    alert(Models);
 
-                break;
+                    Swal.fire({
+                        title: '삭제하시겠습니까?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        reverseButtons: true,
+                        customClass: {
+                            title: 'jamsil'}
+                    }).then((result)=>{
+                        if(result.isConfirmed){
+                            Swal.fire({
+                                title: '삭제 완료!',
+                                icon:'success',
+                                confirmButtonColor: '#3085d6',
+                                customClass: {
+                                    title: 'jamsil'}
+                            }).then((result)=>{
+                                document.getElementById('model_DeleteForm').submit();
+                              })
+                        }else if (
+                            /* Read more about handling dismissals below */
+                            result.dismiss === Swal.DismissReason.cancel
+                        ) {
+                            Swal.fire({
+                                title: '취소',
+                                icon:'error',
+                                confirmButtonColor: '#3085d6',
+                                customClass: {
+                                    title: 'jamsil'}
+                            })
+                            setTimeout(() => {}, 3000)
+                        }
+                    })
+                    break;
             
             case 'ClothDelete': //삭제하기
 
@@ -271,12 +400,48 @@
                     Clothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
                     document.getElementById('del_cloth').value = Clothes;       // 배열을 del_clothes의 value에 담기
                     //console.log(deleteClothes);
-                    document.getElementById('cloth_DeleteForm').submit();  
+                    //document.getElementById('cloth_DeleteForm').submit();  
                 })
                 
 
                 alert(Clothes);
 
+                Swal.fire({
+                    title: '삭제하시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    reverseButtons: true,
+                    customClass: {
+                        title: 'jamsil'}
+                }).then((result)=>{
+                    if(result.isConfirmed){
+                        Swal.fire({
+                            title: '삭제 완료!',
+                            icon:'success',
+                            confirmButtonColor: '#3085d6',
+                            customClass: {
+                                title: 'jamsil'}
+                        }).then((result)=>{
+                            document.getElementById('cloth_DeleteForm').submit();   
+                          })
+                    }else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        Swal.fire({
+                            title: '취소',
+                            icon:'error',
+                            confirmButtonColor: '#3085d6',
+                            customClass: {
+                                title: 'jamsil'}
+                        })
+                        setTimeout(() => {}, 3000)
+                    }
+                })
                 break;
             
         }

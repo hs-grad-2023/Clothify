@@ -960,13 +960,13 @@ def virtual_fit_photo(request,username):
     if del_model:
         tmp = del_model[0].split(",")                     # 받아온 name 값 자르기
         for model_name in tmp:
-            remove_model = model_dataset.filter(name__exact=model_name)
+            remove_model = model_dataset.filter(ID__exact=model_name)
             remove_model.delete()
         
     if del_cloth:
         tmp2 = del_cloth[0].split(",")
         for cloth_name in tmp2:
-            remove_cloth = cloth_dataset.filter(name__exact=cloth_name)
+            remove_cloth = cloth_dataset.filter(ID__exact=cloth_name)
             remove_cloth.delete()    
 
     result = {    
@@ -990,7 +990,8 @@ def virtual_fit_photo_result(request,username):
         
         
         
-        print(selected_model)
+        print(model_result)
+        print(cloth_result)
         
         result_vition = viton_upload_result.objects.all().annotate(
                 row_number=Window(
@@ -1140,11 +1141,45 @@ def virtual_fit_photo_result(request,username):
                 q_list.append(filtered)
         
         result_viton = reduce(or_, q_list).distinct()       # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+        result = {"user":user,
+                  "result_viton":result_viton,
+                  "selected_cloth" : selected_cloth,
+                  "selected_model" : selected_model,
+                  }
 
-        return render(request, "virtual_fit_photo_result.html",{"result_viton":result_viton,"user":user,})
+        return render(request, "virtual_fit_photo_result.html",result)
     else:
         return redirect('virtual_fit_photo', username=user.first_name)
 
+@login_required(login_url='login')
+def virtual_fit_save(request,username):
+    user = get_object_or_404(User, first_name=username)
+    if user != request.user:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        result_ids = request.POST.getlist('resultID')
+        for r in result_ids:
+            result_obj = viton_upload_result.objects.filter(id__exact=int(r)).first()
+            new_clothes = clothes.objects.create(
+                            uploadUser_id=user.id,
+                            uploadUserName=user.username,
+                            type1='가상피팅',
+                            type2='상의',
+                            name=f'상의-{r}',
+                            ucodi=False,
+                            tag='#가상피팅',
+                            groupID=get_random_string(length=10, allowed_chars='abcdefghijklmnopqrstuvwxyz0123456789'),
+                        )
+                    
+            new_photo = photos.objects.create(
+                groupID_id=new_clothes.groupID,
+                imgfile = result_obj.image,
+        )
+            
+        new_clothes.save()
+        new_photo.save()
+        return redirect(f'/view_closet/{request.user.first_name}')
+    return redirect(f'/virtual_fit_result/{request.user.first_name}')
 
 @login_required(login_url='login')
 def virtual_fit_video(request, username):

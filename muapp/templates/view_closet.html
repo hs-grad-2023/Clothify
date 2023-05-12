@@ -200,6 +200,7 @@
 <!--
 <script defer src="{% static 'js/view_closet.js' %}"></script>
 -->
+
 <script>
     $.ajaxSetup({
         headers: { "X-CSRFToken": '{{csrf_token}}' }
@@ -372,9 +373,13 @@ document.getElementById("searchFilter").addEventListener("click", function () {
 
 })
 
-
-
-
+const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  })
 /* ------------- 옷 삭제 & 삭제 옵션 버튼 함수 ------------------*/
 function ClickDeletBtn(value){
     
@@ -387,7 +392,7 @@ function ClickDeletBtn(value){
         case 'show':   // 옷 삭제 클릭 시 checkbox랑 삭제 옵션 보여주기
             $(".delete_checkbox").show();    //.show()는 style"display: none;"으로 돼 있어야 실행됨
             $(".deleteClothesBtn").show();
-        
+            
             break;
 
         case 'allCheck': // 전체 선택
@@ -405,7 +410,42 @@ function ClickDeletBtn(value){
                 deleteClothes.push($(this).val());                                  // 체크된 것만 값을 뽑아서 배열에 push
                 document.getElementById('del_clothes').value = deleteClothes;       // 배열을 input 타입의 del_clothes 속 value에 담기
                 //console.log(deleteClothes);
-                document.getElementById('deleteForm').submit();  
+                Swal.fire({
+                    title: '삭제하시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    reverseButtons: true,
+                    customClass: {
+                        title: 'jamsil'}
+                  }).then((result)=>{
+                    if(result.isConfirmed){
+                        Swal.fire({
+                            title: '삭제 완료!',
+                            icon:'success',
+                            confirmButtonColor: '#3085d6',
+                            customClass: {
+                                title: 'jamsil'}
+                          }).then((result)=>{
+                            document.getElementById('deleteForm').submit();  
+                          })
+                    }else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                      ) {
+                        Swal.fire({
+                            title: '취소',
+                            icon:'error',
+                            confirmButtonColor: '#3085d6',
+                            customClass: {
+                                title: 'jamsil'}
+                          })
+                        setTimeout(() => {}, 3000)
+                      }
+                  })
             })
 
             break;
@@ -441,4 +481,5 @@ function checkEvent(){
 
 */
 </script> 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% endblock jsv %}
