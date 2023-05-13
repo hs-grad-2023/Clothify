@@ -69,7 +69,15 @@
                                 </div>
                                 <div id="radio2" class="form-check form-check-inline" style="display:none;">
                                     <input class="form-check-input" type="radio" name="cloth" id="bottoms" value="bottoms">
-                                    <label class="form-check-label jamsil" for="bottoms">하의</label>
+                                    <label class="form-check-label jamsil" for="bottoms">긴바지</label>
+                                </div>
+                                <div id="radio3" class="form-check form-check-inline" style="display:none;">
+                                    <input class="form-check-input" type="radio" name="cloth" id="bottoms-1" value="bottoms-1">
+                                    <label class="form-check-label jamsil" for="bottoms-1">반바지</label>
+                                </div>
+                                <div id="radio4" class="form-check form-check-inline" style="display:none;">
+                                    <input class="form-check-input" type="radio" name="cloth" id="bottoms-2" value="bottoms-2">
+                                    <label class="form-check-label jamsil" for="bottoms-2">치마</label>
                                 </div>
                             </div>
                         </form>
@@ -155,6 +163,8 @@
             $("#segment-button").css('display', 'block');
             $("#radio1").css('display', 'block');
             $("#radio2").css('display', 'block');
+            $("#radio3").css('display', 'block');
+            $("#radio4").css('display', 'block');
         }
     });
 
@@ -212,7 +222,17 @@
                     $('input[name="cloth"]').prop("disabled", false);
                     $('#upload-button').prop("disabled", false);
                     $('#segment-button').prop("disabled", false);
+                    if ($("#point-marker").css('display') === 'none') {
+                        Toast.fire({
+                            icon: 'error',
+                            title: '마커를 찍어주세요.',
+                            customClass: {
+                                title: 'jamsil',
+                            }
+                        });
+                      }
 
+                    else{
                     Toast.fire({
                     icon: 'error',
                     title: '옷장에 넣는 중에 오류가 발생했습니다.',
@@ -220,6 +240,7 @@
                         title: 'jamsil',
                     }
                 });
+            }
                 },
                 cache: false,
                 contentType: false,

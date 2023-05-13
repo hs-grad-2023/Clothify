@@ -384,6 +384,8 @@ def logins(request):
                 result = next_string.split('/')[1]
                 if result == 'modify' or result == 'userlike' or result == 'segment_image':
                     return redirect(f'/{result}/')
+                elif result == 'virfit':
+                    return redirect(f'/{virtual_fit_video}/{user}')
                 elif result == 'usercodi':
                     return redirect(request.POST.get('next'))
                 else:
@@ -562,15 +564,16 @@ def virfit(request):
 
     listShirts = os.listdir(shirtsFolderPath)
     listPants = os.listdir(pantsFolderPath)
+    
+    imageNumber = 0
+    imageNumber2 = 0
 
     fixedRatio = 320 / 190 #셔츠의 넓이 262 / lm11에서 12의 사이 넓이
     shirtsRatioHeight = 500 / 440 #이미지 사이즈 비율 581/440 높이면 작아짐
 
     fixedRatio2 = 270 / 140 #셔츠의 넓이 262 / lm11에서 12의 사이 넓이
-    pantsRatioHeight = 1000 / 440 #이미지 사이즈 비율 581/440
+    pantsRatioHeight = 1000 / 440 #반바지가 아닐 때 pantsRatioHeight = 1000 / 440 #이미지 사이즈 비율 581/440
 
-    imageNumber = 0
-    imageNumber2 = 0
 
     cameraButton = cv2.imdecode(np.fromfile(os.path.join(cpath, "camera.png"), np.uint8), cv2.IMREAD_UNCHANGED)
     shirtsButton = cv2.imdecode(np.fromfile(os.path.join(cpath, "shirts.png"), np.uint8), cv2.IMREAD_UNCHANGED)
@@ -587,6 +590,8 @@ def virfit(request):
     counterRight3 = 0
     selectionSpeed = 20
     distance_threshold = 673
+    
+
     while True:
         success, img = cap.read()
         img = cv2.flip(img, 1)
@@ -611,6 +616,12 @@ def virfit(request):
 
             imgPant = cv2.imdecode(np.fromfile(os.path.join(pantsFolderPath, listPants[imageNumber2]), np.uint8), cv2.IMREAD_UNCHANGED)
 
+            if '반바지' in listPants[imageNumber2]:
+                pantsRatioHeight = 600 / 440 #반바지 일 때
+            elif '치마' in listPants[imageNumber2]:
+                pantsRatioHeight = 500 / 440
+            else:
+                pantsRatioHeight = 1000 / 440 #반바지가 아닐 때 pantsRatioHeight = 1000 / 440 #이미지 사이즈 비율 581/440
 
 
             widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
@@ -623,9 +634,12 @@ def virfit(request):
 
             currentScale = (lm11[0] - lm12[0]) / 145 #옷 위치 190
             offset = int(50 * currentScale), int(48 * currentScale) #좌우 44, 48 *30/48
-
-            currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
-            offset2 = int(75 * currentScale2), int(80 * currentScale2) #좌우 44, 48 *30/48 x, y
+            if '치마' in listPants[imageNumber2]:
+                currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
+                offset2 = int(75 * currentScale2), int(150 * currentScale2) #좌 내리면 오른쪽으로 올리면 왼쪽, 우 올리면 위로 내리면 아래로
+            else:
+                currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
+                offset2 = int(75 * currentScale2), int(80 * currentScale2) #좌우 44, 48 *30/48 x, y
 
 
 
@@ -844,10 +858,10 @@ def virfit(request):
             #     draw.text((10, 10), "너무 가깝습니다.", font=font, fill=(0, 0, 255, 0))
             #     img = np.array(img_pil)
 
-            img = cvzone.overlayPNG(img, cameraButton, (1074, 93))
+            img = cvzone.overlayPNG(img, cameraButton, (1074, 93)) 
 
             if counterButton == 0:
-                img = cvzone.overlayPNG(img, shirtsButton, (72, 93))
+                img = cvzone.overlayPNG(img, shirtsButton, (72, 93)) 
             elif counterButton == 1:
                 img = cvzone.overlayPNG(img, pantsButton, (72, 93))
 
@@ -1174,10 +1188,11 @@ def segment_image(request):
 
         # 결과 이미지를 서버의 output_images 폴더에 저장합니다.
         output_image = Image.fromarray(np.uint8(cropped_image_alpha), mode='RGBA')
+
         if checked == 'tops':
             output_folder = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}", "Shirts") 
             
-        elif checked == 'bottoms':
+        elif checked == 'bottoms' or checked == 'bottoms-1' or checked == 'bottoms-2':
             output_folder = os.path.join("_media", "imgfiles", "VirtualFitting", "User" , f"{user.first_name}", "Pants")
         os.makedirs(output_folder, exist_ok=True)
         file_names = os.listdir(output_folder)
@@ -1185,14 +1200,22 @@ def segment_image(request):
         max_num = 0
         for name in file_names:
             try:
-                num = int(name.split('.')[0])
+                if '-' in name:
+                    num = int(name.split('-')[0])
+                else:
+                    num = int(name.split('.')[0])
                 if num > max_num:
                     max_num = num
             except ValueError:
                 pass
 
         times = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        output_filename = f'{max_num + 1}.png'
+        if checked == 'bottoms-1':
+            output_filename = f'{max_num + 1}-반바지.png'
+        elif checked == 'bottoms-2':
+            output_filename = f'{max_num + 1}-치마.png'
+        else:
+            output_filename = f'{max_num + 1}.png'
         output_filepath = os.path.join(output_folder, output_filename)
         output_image.save(output_filepath)
 
@@ -1212,7 +1235,7 @@ def segment_image(request):
                 groupID_id=new_clothes.groupID,
                 imgfile = rf'imgfiles\VirtualFitting\User\{user.first_name}\Shirts\{output_filename}',
         )
-        elif checked == 'bottoms':
+        elif checked == 'bottoms' or checked == 'bottoms-1' or checked == 'bottoms-2':
             new_clothes = clothes.objects.create(
                                 uploadUser_id=user.id,
                                 uploadUserName=user.username,
