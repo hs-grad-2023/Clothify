@@ -712,6 +712,13 @@ def virfit(request):
 
                             imgPant = cv2.imdecode(np.fromfile(os.path.join(epath, os.path.join(pantsFolderPath, listPants[imageNumber2])), np.uint8), cv2.IMREAD_UNCHANGED)
 
+                            if '반바지' in listPants[imageNumber2]:
+                                pantsRatioHeight = 600 / 440 #반바지 일 때
+                            elif '치마' in listPants[imageNumber2]:
+                                pantsRatioHeight = 500 / 440
+                            else:
+                                pantsRatioHeight = 1000 / 440 #반바지가 아닐 때 pantsRatioHeight = 1000 / 440 #이미지 사이즈 비율 581/440
+
                             widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
                             widthOfShirt = max(widthOfShirt, 1)#가장 큰값을 반환. wos가 1보다 작아지면 1반환.
                             imgShirt = cv2.resize(imgShirt, (widthOfShirt, int(widthOfShirt * shirtsRatioHeight)))
@@ -723,8 +730,12 @@ def virfit(request):
                             currentScale = (lm11[0] - lm12[0]) / 145 #옷 위치 190 내리면 올라감
                             offset = int(50 * currentScale), int(48 * currentScale) #좌우 44, 48 *30/48 왼쪽꺼 내리면 오른쪽으로
 
-                            currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
-                            offset2 = int(75 * currentScale2), int(80 * currentScale2) #좌우 44, 48 *30/48 x, y
+                            if '치마' in listPants[imageNumber2]:
+                                currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
+                                offset2 = int(75 * currentScale2), int(150 * currentScale2) #좌 내리면 오른쪽으로 올리면 왼쪽, 우 올리면 위로 내리면 아래로
+                            else:
+                                currentScale2 = (lm23[0] - lm24[0]) / 150 #옷 위치 190
+                                offset2 = int(75 * currentScale2), int(80 * currentScale2) #좌우 44, 48 *30/48 x, y
 
 
 
