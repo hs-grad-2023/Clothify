@@ -19,17 +19,68 @@ viton_upload_model.objects.all().delete()
 viton_upload_cloth.objects.all().delete()
 viton_upload_result.objects.all().delete()
 '''
+from muapp.models import viton_upload_model, viton_upload_cloth, viton_upload_result
+import os
+from django.core.files import File
+
+cm_dir = "C:\hs-grad-2023\VITON-HD\datasets\zalando-hd-resized\\test\cloth-mask"
+ip_dir = "C:\hs-grad-2023\VITON-HD\datasets\zalando-hd-resized\\test\image-parse"
+oi_dir = "C:\hs-grad-2023\VITON-HD\datasets\zalando-hd-resized\\test\openpose-img"
+oj_dir = "C:\hs-grad-2023\VITON-HD\datasets\zalando-hd-resized\\test\openpose-json"
+'''
+# 데이터베이스를 순회합니다.
+for obj in viton_upload_model.objects.all():
+    # 파일명을 가져옵니다.
+    filename = obj.name.split('.')[0]
+    # 파일이 존재하는지 확인합니다.
+    if os.path.exists(os.path.join(ip_dir,filename+'.png')) and os.path.exists(os.path.join(oi_dir,filename+'_rendered.png')) and os.path.exists(os.path.join(oj_dir,filename+'_keypoints.json')):
+        # 파일을 엽니다.
+        with open(os.path.join(ip_dir,filename+'.png'), "rb") as f:
+            # 파일 객체를 Django의 File 객체로 변환합니다.
+            django_file = File(f)
+            # 모델의 image 필드에 할당합니다.
+            obj.maskmodel.save(filename+'.png', django_file, save=True)
+        with open(os.path.join(oi_dir,filename+'_rendered.png'), "rb") as f:
+            # 파일 객체를 Django의 File 객체로 변환합니다.
+            django_file = File(f)
+            # 모델의 image 필드에 할당합니다.
+            obj.openposeImage.save(filename+'_rendered.png', django_file, save=True)
+        with open(os.path.join(oj_dir,filename+'_keypoints.json'), "rb") as f:
+            # 파일 객체를 Django의 File 객체로 변환합니다.
+            django_file = File(f)
+            # 모델의 image 필드에 할당합니다.
+            obj.openposeJson.save(filename+'_keypoints.json', django_file, save=True)
+'''
+for obj in viton_upload_cloth.objects.all():
+    # 파일명을 가져옵니다.
+    filename = obj.name.split('.')[0]
+    # 파일이 존재하는지 확인합니다.
+    if os.path.exists(os.path.join(cm_dir,filename+'.jpg')):
+        # 파일을 엽니다.
+        with open(os.path.join(cm_dir,filename+'.jpg'), "rb") as f:
+            # 파일 객체를 Django의 File 객체로 변환합니다.
+            django_file = File(f)
+            # 모델의 image 필드에 할당합니다.
+            obj.maskimage.save(filename+'.jpg', django_file, save=True)
+    
+
+'''
 from django.core.files.uploadedfile import SimpleUploadedFile
 from muapp.models import viton_upload_model, viton_upload_cloth, viton_upload_result
 import os
 
-'''
+
 cloth_dir = "C:/hs-grad-2023/VITON-HD/datasets/zalando-hd-resized/test/cloth"
 model_dir = "C:/hs-grad-2023/VITON-HD/datasets/zalando-hd-resized/test/image"
 result_dir = "C:/hs-grad-2023/VITON-HD/results/vitondataset_result"
+cm_dir = "C:/hs-grad-2023/VITON-HD/datasets/zalando-hd-resized/test/cloth-mask"
+ip_dir = "C:/hs-grad-2023/VITON-HD/datasets/zalando-hd-resized/test/image-parse"
+oi_dir = "C:/hs-grad-2023/VITON-HD/datasets/zalando-hd-resized/test/openpose-img"
+oj_dir = "C:/hs-grad-2023/VITON-HD/datasets/zalando-hd-resized/test/openpose-json"
+
 
 i = 1
-for root, dirs, files in os.walk(cloth_dir):
+for root, dirs, files in viton_upload_cloth.objects.all():
     for cloth_file in files:
         i+=1
         # 이미지 파일 경로 생성
@@ -61,6 +112,7 @@ with open(file_list_file, 'w') as f:
             result_name = model.name + ' ' + cloth.name
             f.write(result_name + '\n')
 '''
+'''
 import re
 result_dir = "C:/hs-grad-2023/VITON-HD/results/vitondataset_result"
 for root, dirs, files in os.walk(result_dir):
@@ -80,7 +132,7 @@ for root, dirs, files in os.walk(result_dir):
         result = viton_upload_result(name=result, image=file, model_id = modelid.ID, cloth_id = clothid.ID)
         result.save()
 
-
+'''
 
 
 

@@ -42,7 +42,6 @@ import re, random
 import openai
 import torch
 from segment_anything import sam_model_registry, SamPredictor
-from muapp.viton import clothmask
 import re, random
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.base import ContentFile
@@ -175,41 +174,49 @@ def view_closet(request, username):
         #return render(request, "view_closet.html", result)
     
     elif request.method == 'GET':
-        # ===== filtering ======
-        fl = request.GET.get('fl')  # 검색어
-        if fl: #검색어가 있고
-            filterList = fl.split(',')
-            q_list=[]                   # 필터링 하기 위한 배열
-            for item in filterList:
-                if "==" in item:
-                    type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
-                    type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
-                    q_list.append(type1_filter)                     # 조건에 맞은 type1_filter를 q_list에 넣기
-                else:
-                    type2_filter = clothesobject.filter(type2__icontains=item)&clothesobject.filter(uploadUser__exact=user.id)
-                    q_list.append(type2_filter)
-                
-                
-            #clothesobject = clothesobject.filter(reduce(or_, q_list)).distinct()   # 타입 검색 -> queryset끼리 중복 제외하고 합병( 조건부 표현식에 대해 필터링 할 수 없다고 뜸)
-                
-            clothesobject = reduce(or_, q_list).distinct()                          # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
-            print('q_list',q_list)
-            print('clothesobject',clothesobject.values())
-            result = {
-                    'clothesobject':clothesobject,
-                    'user':user,
-                    'filterList':filterList,
-                    'photoobject':photoobject,
-                }
-            return render(request, 'view_closet.html', result)
-        elif not fl: #검색어가 없으면
+        fl = request.GET.get('fl')  # 필터
+        tag = request.GET.get('tagfilter')   #태그
+
+        if not fl and not tag: #검색어가 없으면
             groupIdList = clothesobject.filter(uploadUser__exact=user.id).values_list("groupID") #<QuerySet [('vi3qalsycy',)]>
             photoobject = photoobject.filter(groupID__in = groupIdList).values()
             result = {
                     'clothesobject' : clothesobject,
                     'photoobject' : photoobject,
-                    'groupIdList' : groupIdList,
                     'user':user,
+                }
+            return render(request, 'view_closet.html', result)
+        else:
+            q_list=[]                   # 필터링 하기 위한 배열
+            filterList=[]
+
+            if(tag):
+                tag_filter = clothesobject.filter(tag__contains=tag)
+                q_list.append(tag_filter)    
+                filterList.append(tag)
+                
+            # ===== filtering ======
+            if fl: #검색어가 있고
+                filterList = fl.split(',')
+                for item in filterList:
+                    if "==" in item:
+                        type1Item = item.replace("==","").strip()       # '=='가 포함된 문자열을 ""으로 치환
+                        type1_filter = clothesobject.filter(type1__icontains=type1Item)&clothesobject.filter(uploadUser__exact=user.id)    # type1 에서 type1Item 과 대소문자를 가리지 않고 부분 일치하는 조건
+                        q_list.append(type1_filter)                     # 조건에 맞은 type1_filter를 q_list에 넣기
+                    else:
+                        type2_filter = clothesobject.filter(type2__icontains=item)&clothesobject.filter(uploadUser__exact=user.id)
+                        q_list.append(type2_filter)
+                    
+            clothesobject = reduce(or_, q_list).distinct()                          # 타입 검색 -> queryset끼리 중복 제외하고 합쳐짐
+            print('q_list',q_list)
+            print()
+            print('clothesobject',clothesobject.values())
+            print()
+            result = {
+                    'clothesobject':clothesobject,
+                    'user':user,
+                    'filterList':filterList,
+                    'photoobject':photoobject,
                 }
             return render(request, 'view_closet.html', result)
 
@@ -984,20 +991,12 @@ def virtual_fit_photo_result(request,username):
         model_result = request.POST.getlist('model_result')
         cloth_result = request.POST.getlist('cloth_result')
 
-
         selected_model = model_result[0].split(",")
         selected_cloth = cloth_result[0].split(",")
         
-        
-        
         print(model_result)
         print(cloth_result)
-        
-        result_vition = viton_upload_result.objects.all().annotate(
-                row_number=Window(
-                    expression=RowNumber(),
-                    order_by=[F('name')])).order_by('-id')         #order_by 수정
-                    
+                          
         q_list=[]
         file_list_file = os.path.join('muapp','viton','data','custom','custom_pairs.txt')
         
@@ -1079,8 +1078,9 @@ def virtual_fit_photo_result(request,username):
                     clothes_obj = viton_upload_cloth.objects.filter(ID__exact=int(cloth))
                     cloth_obj = clothes_obj.first()
                     cloth_name = cloth_obj.name
-
+                    impath = os.path.join('_media','datasets','cloth',cloth_name)
                     shutil.copyfile(os.path.join('_media','datasets','cloth',cloth_name), os.path.join(clothpath,cloth_name)) #_media -> viton data로 복사
+
 
                     if not cloth_obj.maskimage: #cloth의 mask데이터가 없을 때
                         cloth_obj = clothes_obj.first()
@@ -1205,6 +1205,35 @@ def virtual_fit_upload(request,username):
                         uploadUser=request.user.username,
                     )
                     item.save()
+
+                    impath = os.path.join('_media','datasets','cloth',item.name)
+                    clothmaskpath = os.path.join("muapp","viton","data","custom","cloth-mask")
+                    clothpath = os.path.join("muapp","viton","data","custom","cloth")
+
+                    clothmask.cloth_mask(img_dir=impath,result_dir=clothmaskpath) #cloth-mask 생성
+                    
+                    #cloth-mask db저장
+                    mask_file = open(os.path.join(clothmaskpath,item.name),'rb') 
+                    item.maskimage.save(item.name,File(mask_file),save=True)
+
+                    #옷 정보만 남기는 cloth파일 작성
+                    img = cv2.imread(impath)
+                    mask = cv2.imread(os.path.join(clothmaskpath,item.name), 0)  # 이진 마스크는 흑백 이미지이므로 0으로 읽어옵니다.
+
+                    # 이진 마스크에 따라 이미지에서 원하는 부분을 선택합니다.
+                    result = cv2.bitwise_and(img, img, mask=mask)
+                    
+                    mask_inv = cv2.bitwise_not(mask)
+                    white_bg = np.full(img.shape, (255, 255, 255), dtype=np.uint8)
+                    white_bg_masked = cv2.bitwise_and(white_bg, white_bg, mask=mask_inv)
+                    result = cv2.add(result, white_bg_masked)
+
+                    cv2.imwrite(os.path.join(clothpath,item.name), result)
+                    cv2.imwrite(impath, result)
+                    #옷 정보만 남긴 cloth 파일로 대체
+                    #shutil.copyfile(os.path.join(clothpath,item.name),impath) #_media -> viton data로 복사
+                    #cloth_file = open(os.path.join(clothpath,cloth_name),'rb') 
+                    #cloth_obj.image.save(cloth_name,File(cloth_file),save=False)
 
             elif getType == '모델':
                 for imgfile in request.FILES.getlist('imgfile'):

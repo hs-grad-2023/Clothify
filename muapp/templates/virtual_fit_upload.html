@@ -159,7 +159,15 @@
             allowedMetaFields:true,
         })
 
-        .use(Uppy.ImageEditor, { target: Uppy.Dashboard })
+        .use(Uppy.ImageEditor, {
+            target: Uppy.Dashboard,
+            cropperOptions:{
+                viewMode:2,
+                cropBoxResizable:false,
+                minCanvasHeight:1024,
+                minCanvasWidth:768,
+                },
+        })
         
         
 
