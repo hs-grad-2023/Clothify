@@ -45,7 +45,7 @@ import re, random
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.base import ContentFile
 from io import BytesIO
-openai.api_key ="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"
+openai.api_key ="YOUR KEYS"
 
 User = get_user_model()
 
