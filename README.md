@@ -48,11 +48,12 @@
       ![가상 피팅 옷장](https://github.com/hs-grad-2023/django/assets/121769819/05102643-b967-4140-b850-2dc47dc7d2ef)
       - ### 인공지능 SAM(Segment Anything Model)을 이용한 옷 분리
         ![옷 누끼](https://github.com/hs-grad-2023/django/assets/121769819/e1928538-3245-4745-95cf-8dd46770b81c)
+        - User Interface를 이용하여 홈페이지에서도 구동 가능하도록 구현
       - ### 옷장 넣기 완료
         ![옷장 넣기 완료](https://github.com/hs-grad-2023/django/assets/121769819/35bd02c0-becc-4129-813b-fb481d974dfb)
       - ### 옷장 결과
         ![누끼 결과](https://github.com/hs-grad-2023/django/assets/121769819/c0608b09-9bc4-4d34-a6c8-ede922cb172c)
-        Openpose를 이용하여 x,y 좌표값에 따라서 옷 사이즈 맞춤 변경
+        - Openpose를 이용하여 x,y 좌표값에 따라서 옷 사이즈 맞춤 변경
     - ### 웹캠 가상 피팅
       ![가상피팅](https://github.com/hs-grad-2023/django/assets/121769819/fd59589b-73a8-4cda-865e-e6a0e5c5d105)
       - ### 사진 찍기
