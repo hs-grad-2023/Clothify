@@ -160,7 +160,7 @@ def get_weather_data(): # weatehr 데이터 가공해서 list로 내보내는 �
 
 
 def get_loc_api_data(): #현재 위치 가져오는 구글API, IP를 기준으로 가져옴.
-    loc_serviceKey = 'AIzaSyC7VJJjA3IZGewIvQ5uSzUxpqQwfqoxjxI'
+    loc_serviceKey = 'YOUR KEY'
     url = f"https://www.googleapis.com/geolocation/v1/geolocate?key={loc_serviceKey}"
     options = {'considerIp': True,}
     response = requests.post(url,options)

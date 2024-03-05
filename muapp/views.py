@@ -1230,6 +1230,7 @@ def segment_image(request):
         output_filepath = os.path.join(output_folder, output_filename)
         output_image.save(output_filepath)
 
+# db에 저장
         if checked == 'tops':
             new_clothes = clothes.objects.create(
                                 uploadUser_id=user.id,
