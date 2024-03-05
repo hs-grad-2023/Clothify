@@ -6,6 +6,7 @@
 # 가상 피팅 & 나만의 옷장 서비스
 - 본 서비스는 AI와 컴퓨터 비전 기술을 중심으로 한 혁신적인 옷장 관리 웹사이트를 제시
 - 장고를 기반으로 한 웹사이트는 가상 피팅 기능을 핵심으로 다양한 기능을 제공하여 사용자들이 온라인상에서도 옷을 효과적으로 관리하고 코디할 수 있게 한다.
+- 거동이 어려운 노인이나 옷 입기 싫어하는 아이들을 위한 개인형 가상 피팅 서비스
 - 최종 버전은 branch master
 ## 메인 화면
 ![메인화면](https://github.com/hs-grad-2023/django/assets/121769819/99698443-b4fc-437f-9eb5-497ac08fcc07)
@@ -45,23 +46,25 @@
 - ### 웹캠을 이용한 실시간 가상 피팅
     - ### 가상 피팅 옷장
       ![가상 피팅 옷장](https://github.com/hs-grad-2023/django/assets/121769819/05102643-b967-4140-b850-2dc47dc7d2ef)
-      - ### SAM을 이용한 옷 분리
+      - ### 인공지능 SAM(Segment Anything Model)을 이용한 옷 분리
         ![옷 누끼](https://github.com/hs-grad-2023/django/assets/121769819/e1928538-3245-4745-95cf-8dd46770b81c)
       - ### 옷장 넣기 완료
         ![옷장 넣기 완료](https://github.com/hs-grad-2023/django/assets/121769819/35bd02c0-becc-4129-813b-fb481d974dfb)
       - ### 옷장 결과
         ![누끼 결과](https://github.com/hs-grad-2023/django/assets/121769819/c0608b09-9bc4-4d34-a6c8-ede922cb172c)
+        Openpose를 이용하여 x,y 좌표값에 따라서 옷 사이즈 맞춤 변경
     - ### 웹캠 가상 피팅
       ![가상피팅](https://github.com/hs-grad-2023/django/assets/121769819/fd59589b-73a8-4cda-865e-e6a0e5c5d105)
       - ### 사진 찍기
       ![사진찍기](https://github.com/hs-grad-2023/django/assets/121769819/9cf2cb35-546f-4f28-8352-bb7ce246209b)
-- ### Viton을 이용한 사진으로 가상 피팅
+- ### 사진으로 가상 피팅
     - ### 모델 고르기
       ![가상피팅 사진으로](https://github.com/hs-grad-2023/django/assets/121769819/80ef1777-98f7-4b1d-9d1b-326fd7d65c79)
     - ### 옷 고르기
       ![사진옷 고르기](https://github.com/hs-grad-2023/django/assets/121769819/059d59b4-289a-4414-9644-58d6d6735e7f)
-    - ### 결과
+    - ### 결과(VTON 인공지능 모델 이용)
       ![사진 결과](https://github.com/hs-grad-2023/django/assets/121769819/0fb52826-a959-4580-b27b-7e3d574e8d37)
+      - 사진은 저장하여 개인 맞춤형 옷장으로 따로 관리 가능
 
 
 
