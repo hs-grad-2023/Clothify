@@ -55,7 +55,7 @@
       ![가상피팅](https://github.com/hs-grad-2023/django/assets/121769819/fd59589b-73a8-4cda-865e-e6a0e5c5d105)
       - ### 사진 찍기
       ![사진찍기](https://github.com/hs-grad-2023/django/assets/121769819/9cf2cb35-546f-4f28-8352-bb7ce246209b)
-- ### 사진으로 가상 피팅
+- ### Viton을 이용한 사진으로 가상 피팅
     - ### 모델 고르기
       ![가상피팅 사진으로](https://github.com/hs-grad-2023/django/assets/121769819/80ef1777-98f7-4b1d-9d1b-326fd7d65c79)
     - ### 옷 고르기
