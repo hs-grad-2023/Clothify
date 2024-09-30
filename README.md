@@ -78,6 +78,8 @@
       - 사진은 저장하여 개인 맞춤형 옷장으로 따로 관리 가능
 
 
+- ## 웹사이트 플로우 차트
+    - ![flowchart](https://github.com/user-attachments/assets/cf77aa47-fa99-4a7a-865d-b31326c6963a)
 
 
 
